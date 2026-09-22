@@ -437,6 +437,19 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
       <li>Rà soát kịch bản trước giờ live: sai giá, từ cấm, thiếu thông tin bắt buộc.</li>
       <li>Live tập sự với AI đóng vai khách hàng, cùng báo cáo và AI Coach sau mỗi phiên.</li>
     </ul>
+    <details class="box" id="howBox" style="margin-top:18px">
+      <summary style="cursor:pointer"><b>Vì sao cần LiveCore AI &amp; hệ thống hoạt động thế nào</b> <span class="muted small">(bấm để xem)</span></summary>
+      <div class="stack" style="margin-top:12px">
+        <p class="small" style="margin:0">Việt Nam có khoảng 2,5 triệu phiên livestream bán hàng mỗi tháng. Từ 01/7/2026, Luật Thương mại điện tử số 122/2025/QH15 (Điều 24) buộc người livestream không được cung cấp thông tin gian dối hoặc gây nhầm lẫn về công dụng, chất lượng, xuất xứ, giá cả — một câu nói sai có thể khiến streamer và nhãn hàng vướng trách nhiệm pháp lý như vụ “kẹo Kera” từng gây xôn xao. LiveCore AI giúp bạn nói đúng ngay từ đầu, thay vì phải sửa sai sau khi đã lên sóng.</p>
+        <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+          <div class="tile"><div class="small muted">1 · Đầu vào</div><b style="font-size:15px">Hồ sơ sản phẩm chủ</b><div class="small muted">Giá, khuyến mãi, chính sách, hỏi đáp — bạn khai một lần, cả đội dùng chung</div></div>
+          <div class="tile"><div class="small muted">2 · Xử lý</div><b style="font-size:15px">Đối chiếu &amp; gắn mức tin cậy</b><div class="small muted">So khớp lời nói với hồ sơ và bộ quy tắc có trích dẫn văn bản luật</div></div>
+          <div class="tile"><div class="small muted">3 · Đầu ra</div><b style="font-size:15px">Cảnh báo kèm nguồn</b><div class="small muted">Cảnh báo tức thì có căn cứ, câu nên nói thay thế, báo cáo sau live</div></div>
+          <div class="tile"><div class="small muted">4 · Phản hồi</div><b style="font-size:15px">AI Coach học từ lịch sử</b><div class="small muted">Lỗi lặp lại qua các phiên được chỉ rõ, để phiên sau tốt hơn</div></div>
+        </div>
+        <p class="small muted" style="margin:0">Hệ thống xử lý theo 3 mức tin cậy, không coi mọi cảnh báo như nhau: <b>tự động cảnh báo</b> khi sai rõ ràng (giá, hạn khuyến mãi, cụm từ bị cấm) · <b>gợi ý xem lại</b> khi có thể gây hiểu nhầm nhưng cần bạn tự quyết · <b>từ chối đoán bừa</b> khi hồ sơ chưa có đủ thông tin — hệ thống nói rõ “hồ sơ chưa có thông tin này” thay vì bịa câu trả lời.</p>
+      </div>
+    </details>
   </div>
   <div class="box stack" id="authCard">
     <div class="seg" role="tablist" aria-label="Đăng nhập hoặc đăng ký">
@@ -533,7 +546,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
 
   <!-- 2. SCRIPT -->
   <section class="panel" id="tab-script" role="tabpanel" aria-labelledby="t-script" hidden>
-    <p class="lead">Dán kịch bản livestream. Hệ thống đối chiếu với Hồ sơ sản phẩm chủ và bộ quy tắc phát ngôn: sai giá, hết hạn khuyến mãi, từ ngữ tuyệt đối hóa, cam kết y tế, thiếu thông tin bắt buộc.</p>
+    <p class="lead">Dán kịch bản livestream. Hệ thống đối chiếu với Hồ sơ sản phẩm chủ và bộ quy tắc phát ngôn: sai giá, hết hạn khuyến mãi, từ ngữ tuyệt đối hóa, cam kết y tế, thiếu thông tin bắt buộc. Mức <b>Nghiêm trọng</b> là cảnh báo tự động vì sai rõ ràng; mức <b>Cảnh báo</b> là gợi ý xem lại, quyết định cuối vẫn ở bạn.</p>
     <div class="grid2">
       <div class="box stack">
         <h3>Kịch bản</h3>
@@ -619,6 +632,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
   <section class="panel" id="tab-report" role="tabpanel" aria-labelledby="t-report" hidden>
     <p class="lead">Báo cáo tổng hợp từ mọi thứ bạn vừa làm trong phiên này (rà soát, phòng live, live tập sự). AI Coach chỉ ra điểm cần cải thiện.</p>
     <div class="row noprint" style="margin-bottom:12px"><button class="btn" id="rPrint">In / lưu PDF báo cáo</button></div>
+    <div class="box stack" style="margin-bottom:18px"><h3>Độ chính xác của hệ thống cảnh báo</h3><p class="small muted" style="margin:0">Đo trên bộ câu kiểm định độc lập (chưa dùng để soạn quy tắc): cảnh báo đúng bao nhiêu, bỏ sót bao nhiêu, báo nhầm bao nhiêu.</p><div id="sysAcc"></div></div>
     <div class="grid2">
       <div class="box stack"><h3>4 tiêu chí</h3><div class="bars" id="bars"></div></div>
       <div class="box stack"><h3>AI Coach</h3><div id="coach"></div><button class="btn primary" id="coachBtn">Nhờ AI Coach nhận xét</button></div>
@@ -966,27 +980,29 @@ renderProfile();wireCsv();
 /* ===== Bộ máy kiểm soát phát ngôn (quy tắc mẫu + đối chiếu Hồ sơ) ===== */
 /* Quy tắc mẫu do nhóm soạn dựa trên các văn bản trong REF; cần đối chiếu văn bản hiện hành hoặc tư vấn pháp lý trước khi dùng thật. ind = ngành áp dụng (bỏ trống = mọi ngành) */
 const RULES=[
- {id:'nhat',re:/rẻ nhất|tốt nhất|số 1|số một|hàng đầu|độc nhất|duy nhất|nhất thị trường|nhất việt nam|nhất hiện nay|hiệu quả nhất|an toàn nhất|không đâu (?:rẻ|tốt) bằng|rẻ hơn (?:mọi|tất cả)/giu,sev:'warn',title:'So sánh tuyệt đối',ref:'qc',
+ {id:'nhat',negGuard:1,re:/rẻ nhất|tốt nhất|số 1|số một|hàng đầu(?!\s*tiên)|độc nhất|duy nhất|nhất thị trường|nhất việt nam|nhất hiện nay|hiệu quả nhất|an toàn nhất|không đâu (?:rẻ|tốt) bằng|rẻ hơn (?:mọi|tất cả)/giu,sev:'warn',title:'So sánh tuyệt đối',ref:'qc',
   fix:'Chỉ nói “nhất/số một/duy nhất” khi có tài liệu chứng minh hợp pháp và nêu rõ trong quảng cáo. Nếu chưa có, dùng: “giá ưu đãi trong phiên live hôm nay”.'},
- {id:'tpcn-thuoc',ind:['tpcn'],re:/(?:chữa|điều trị|đặc trị|ngăn ngừa)\s+(?:bệnh|tiểu đường|huyết áp|mỡ máu|ung thư|gout|tim mạch|dạ dày|xương khớp)|hết bệnh|thay (?:thế )?thuốc|không cần (?:uống )?thuốc/giu,sev:'bad',title:'Thực phẩm chức năng nói như thuốc chữa bệnh',ref:'tpcn',
+ {id:'tpcn-thuoc',ind:['tpcn'],negGuard:1,re:/(?:chữa|điều trị|đặc trị|ngăn ngừa)\s+(?:bệnh|tiểu đường|huyết áp|mỡ máu|ung thư|gout|tim mạch|dạ dày|xương khớp)|hết bệnh|thay (?:thế )?thuốc|không cần (?:uống )?thuốc|khỏi cần (?:đi )?(?:khám|uống thuốc|thuốc)|là thuốc bổ|(?:hết|khỏi)\s+đau\s+(?:xương khớp|dạ dày|đầu|lưng)/giu,sev:'bad',title:'Thực phẩm chức năng nói như thuốc chữa bệnh',ref:'tpcn',
   fix:'Thực phẩm chức năng chỉ được nói công dụng đã công bố. Nhắc rõ: “Sản phẩm này không phải là thuốc, không có tác dụng thay thế thuốc chữa bệnh”.'},
  {id:'tpcn-bacsi',ind:['tpcn'],re:/(?:bác sĩ|dược sĩ|chuyên gia y tế|giáo sư|bệnh viện)\s*(?:đã\s*)?(?:khuyên|khuyến cáo|khuyến nghị|tin dùng|giới thiệu|kiểm nghiệm|chứng nhận|đảm bảo)/giu,sev:'bad',title:'Dùng danh nghĩa bác sĩ hoặc cơ sở y tế',ref:'tpcn',
   fix:'Không nói bác sĩ, dược sĩ hay bệnh viện “khuyên dùng/chứng nhận” khi quảng cáo thực phẩm chức năng.'},
- {id:'mp-vuot',ind:['mypham'],re:/đặc trị|tái tạo (?:tế bào|da)|thay da|xóa (?:nhăn|sẹo|thâm|nám)|mọc tóc|tăng chiều cao|lành (?:sẹo|vết thương)|diệt (?:vi khuẩn|nấm)|kháng viêm/giu,sev:'bad',title:'Công dụng vượt phạm vi mỹ phẩm',ref:'mp',
+ {id:'mp-vuot',ind:['mypham'],negGuard:1,re:/đặc trị|tái tạo (?:tế bào|da)|thay da|xóa (?:nhăn|sẹo|thâm|nám)|mọc tóc|tăng chiều cao|lành (?:sẹo|vết thương)|diệt (?:vi khuẩn|nấm)|kháng viêm/giu,sev:'bad',title:'Công dụng vượt phạm vi mỹ phẩm',ref:'mp',
   fix:'Mỹ phẩm chỉ nói công dụng làm đẹp đã công bố, ví dụ “hỗ trợ làm sáng da, tùy cơ địa”. Không nói tác dụng chữa bệnh hoặc tái tạo mô.'},
- {id:'thuoc',re:/(?:khỏi|trị|hết|chữa|điều trị)\s+(?:mụn|nám|thâm|bệnh)|(?:mụn|nám|thâm|sẹo|nhăn)\s+(?:biến mất|tan biến|sạch bóng)|chữa khỏi|dứt điểm|thay thế thuốc/giu,sev:'bad',title:'Nói công dụng như thuốc',ref:{mypham:'mp',tpcn:'tpcn',_:'tmdt'},
+ {id:'thuoc',negGuard:1,re:/(?:khỏi|trị|hết|chữa|điều trị)\s+(?:mụn|nám|thâm|bệnh)|(?:mụn|nám|thâm|sẹo|nhăn)\s+(?:biến mất|tan biến|sạch bóng)|hết sạch\s*(?:mụn|nám|thâm|sẹo)?|chữa khỏi|dứt điểm|thay thế thuốc/giu,sev:'bad',title:'Nói công dụng như thuốc',ref:{mypham:'mp',tpcn:'tpcn',_:'tmdt'},
   fix:'Chỉ nói công dụng có trong hồ sơ, ví dụ: “hỗ trợ làm sáng da sau 4–8 tuần dùng đều, tùy cơ địa”.'},
- {id:'camket',re:/cam kết\s+(?:100%|hiệu quả|khỏi)|đảm bảo\s+(?:hiệu quả|khỏi|thành công)|chắc chắn\s+(?:hiệu quả|khỏi)|không tác dụng phụ|an toàn tuyệt đối|không kích ứng/giu,sev:'bad',title:'Cam kết tuyệt đối',ref:'tmdt',
+ {id:'camket',re:/cam kết\s+(?:100%|hiệu quả|khỏi|luôn|chắc chắn)|đảm bảo\s+(?:hiệu quả|khỏi|thành công)|chắc chắn\s+(?:hiệu quả|khỏi)|không tác dụng phụ|an toàn tuyệt đối|không kích ứng/giu,sev:'bad',title:'Cam kết tuyệt đối',ref:'tmdt',
   fix:'Tránh cam kết tuyệt đối. Hướng dẫn thử một vùng nhỏ và nhắc “tùy cơ địa từng người”.'},
  {id:'hua',re:/trẻ (?:ra|lại)\s+\S+\s+tuổi|biến mất (?:luôn|hoàn toàn|sạch)|sạch bóng|hết sạch|đẹp ngay lập tức|hiệu quả ngay (?:lập tức|tức thì)/giu,sev:'warn',title:'Hứa kết quả phi thực tế',ref:'tmdt',
   fix:'Không hứa kết quả tức thì hay tuyệt đối. Nói theo hồ sơ: “hỗ trợ cải thiện dần, tùy cơ địa từng người”.'},
  {id:'thoigian',re:/(?:dùng|xài|uống|bôi|thoa)(?:\s+[^\d\s.,!?]+){0,3}\s*\d+\s*(?:ngày|tuần)\s*(?:là|thì)?\s*(?:khỏi|hết|trắng|sáng|giảm|mất)|(?:sau|chỉ sau)\s*\d+\s*(?:ngày|giờ|tiếng)[^.!?\n]{0,25}(?:khỏi|hết|trắng|sáng|giảm)/giu,sev:'warn',title:'Hứa thời gian có kết quả',ref:'tmdt',
   fix:'Dùng khoảng thời gian ghi trong hồ sơ và nói rõ kết quả khác nhau theo từng người.'},
- {id:'khan',re:/chỉ còn\s*\d+\s*(?:suất|chiếc|cái|sản phẩm|món|hộp)|hết ngay|cơ hội cuối/giu,sev:'warn',title:'Tạo khan hiếm',ref:'tmdt',
+ {id:'khan',re:/(?:chỉ\s+)?còn\s*\d+\s*(?:suất|chiếc|cái|sản phẩm|món|hộp)|chỉ còn\s*\d+\s*phút|hết ngay|cơ hội cuối/giu,sev:'warn',title:'Tạo khan hiếm',ref:'tmdt',
   fix:'Chỉ nói số lượng còn lại khi khớp tồn kho thật. Ưu tiên nói hạn khuyến mãi có thật.'},
- {id:'tt-chatlieu',ind:['thoitrang'],re:/100%\s*(?:cotton|lụa|len|da thật|tơ tằm|cashmere)|chống (?:nắng|tia uv)\s*100%|chặn (?:hoàn toàn|100%)\s*(?:tia )?uv/giu,sev:'warn',title:'Cam kết chất liệu hoặc chỉ số tuyệt đối',ref:'nhan',
-  fix:'Nói đúng chất liệu và chỉ số ghi trên nhãn, ví dụ “UPF 50+ theo công bố của nhà sản xuất”.'},
- {id:'gd-ben',ind:['giadung'],re:/không bao giờ hỏng|bền vĩnh viễn|bảo hành trọn đời|xay được mọi thứ|dùng được mọi|tiết kiệm điện 100%|không tốn điện/giu,sev:'warn',title:'Hứa độ bền hoặc công năng tuyệt đối',ref:'tmdt',
+ {id:'tt-chatlieu',ind:['thoitrang'],re:/100%\s*(?:cotton|lụa|len|da thật|tơ tằm|cashmere)/giu,sev:'warn',title:'Cam kết chất liệu tuyệt đối',ref:'nhan',
+  fix:'Nói đúng chất liệu ghi trên nhãn, ví dụ “vải cotton pha” thay vì “100% cotton” nếu chưa chắc chắn.'},
+ {id:'tt-uv',ind:['thoitrang'],negGuard:1,re:/chống (?:nắng|tia uv)\s*(?:100%|tuyệt đối)|chặn (?:hoàn toàn|100%)\s*(?:tia )?uv/giu,sev:'bad',title:'Cam kết khả năng chống nắng tuyệt đối',ref:'nhan',
+  fix:'Không nói chống nắng “100%/tuyệt đối”. Chỉ nói đúng chỉ số công bố, ví dụ “UPF 50+ theo công bố của nhà sản xuất”.'},
+ {id:'gd-ben',ind:['giadung'],re:/không (?:bao giờ |dễ )?hỏng|bền vĩnh viễn|bảo hành trọn đời|xay được mọi thứ|dùng được mọi|tiết kiệm điện 100%|không tốn điện/giu,sev:'warn',title:'Hứa độ bền hoặc công năng tuyệt đối',ref:'tmdt',
   fix:'Nói đúng thông số và thời hạn bảo hành trong hồ sơ, ví dụ “bảo hành 12 tháng”.'}
 ];
 const CHECKS=[
@@ -1019,6 +1035,13 @@ function toVND(num,unit){
   const n=Number(num.replace(',','.'));
   return Math.round(n*(unit==='k'||unit==='nghìn'||unit==='ngàn'?1e3:1e6));
 }
+const NEGWORD=/\b(không|chưa|chẳng|hổng|hông)\b/iu;
+function negBefore(text,pos){
+  let s=pos-1;
+  while(s>=0&&!',.!?\n'.includes(text[s])&&pos-s<60)s--;
+  return NEGWORD.test(text.slice(s+1,pos));
+}
+const SHIPCUE=/phí ship|tiền ship|phí vận chuyển|freeship|quà tặng|tặng kèm|mua kèm|đặt cọc|tiền cọc|mã giảm giá|voucher/iu;
 function analyze(text,opts={}){
   const findings=[];const low=text.toLowerCase();
   const add=f=>{if(!findings.some(x=>x.start===f.start&&x.end===f.end&&(x.title===f.title||x.sev===f.sev)))findings.push(f)};
@@ -1033,6 +1056,7 @@ function analyze(text,opts={}){
   const ctxAt=pos=>sctx.find(c=>pos>=c.a&&pos<c.b)||{};
   const refFor=(r,ind)=>{const k=typeof r.ref==='string'?r.ref:(r.ref&&(r.ref[ind]||r.ref._));return k?REF[k]:null};
   RULES.forEach(r=>{r.re.lastIndex=0;let m;while((m=r.re.exec(text))){
+    if(r.negGuard&&negBefore(text,m.index))continue;
     const pc=ctxAt(m.index).p,ind=pc?industryOf(pc):null;
     if(r.ind&&!(ind&&r.ind.includes(ind)))continue;
     add({sev:r.sev,title:r.title,fix:r.fix,ref:refFor(r,ind),start:m.index,end:m.index+m[0].length,phrase:m[0],rule:r.id});
@@ -1040,6 +1064,7 @@ function analyze(text,opts={}){
   products.forEach(p=>{
     (p.banned||'').split('\n').map(s=>s.trim().toLowerCase()).filter(Boolean).forEach(ph=>{
       let i=-1;while((i=low.indexOf(ph,i+1))>=0){
+        if(negBefore(text,i))continue;
         const cp=ctxAt(i).p;if(cp&&cp!==p)continue;
         const ex=findings.findIndex(x=>x.start===i&&x.end===i+ph.length);
         let keepRef=null;
@@ -1051,6 +1076,7 @@ function analyze(text,opts={}){
   /* đối chiếu giá */
   let priceErr=0;
   sctx.forEach(({a,s,hit,p:ctxP})=>{
+    if(SHIPCUE.test(s))return;
     PRICE_RE.lastIndex=0;let m;
     while((m=PRICE_RE.exec(s))){
       const v=toVND(m[1],m[2]);if(!v||v<1000)continue;
@@ -1145,7 +1171,8 @@ function renderRulesPanel(){
   }).join('');
   $('#rulesBody').innerHTML=`<div class="tscroll"><table><thead><tr><th>Quy tắc</th><th>Ngành áp dụng</th><th>Mức</th><th>Căn cứ</th></tr></thead><tbody>${rows}</tbody></table></div>
     <div class="stack"><h4>Nội dung các văn bản được dẫn</h4>${Object.values(REF).map(r=>`<div class="small"><b>${esc(r.s)}</b><div class="muted">${esc(r.l)}</div></div>`).join('')}</div>
-    <div class="find warn"><b>Lưu ý</b><div class="fix">Đây là bộ quy tắc mẫu do nhóm soạn, tổng hợp từ nguồn công khai (cập nhật 09/2026), chưa phải tư vấn pháp lý. Văn bản có thể được sửa đổi, hãy đối chiếu bản hiện hành hoặc hỏi luật sư trước khi áp dụng thật. Ngoài ra hệ thống còn kiểm tra giá, khuyến mãi hết hạn, cụm bị cấm riêng của từng sản phẩm và câu trả lời chuẩn trong hồ sơ.</div></div>`;
+    <div class="find warn"><b>Lưu ý</b><div class="fix">Đây là bộ quy tắc mẫu do nhóm soạn, tổng hợp từ nguồn công khai (cập nhật 09/2026), chưa phải tư vấn pháp lý. Văn bản có thể được sửa đổi, hãy đối chiếu bản hiện hành hoặc hỏi luật sư trước khi áp dụng thật. Ngoài ra hệ thống còn kiểm tra giá, khuyến mãi hết hạn, cụm bị cấm riêng của từng sản phẩm và câu trả lời chuẩn trong hồ sơ.</div></div>
+    <div class="find ok"><b>Ranh giới của hệ thống</b><div class="fix">LiveCore AI chỉ đối chiếu lời nói với những gì <i>bạn</i> khai trong Hồ sơ sản phẩm chủ và bộ quy tắc mẫu ở trên — hệ thống không tự chỉnh sửa hay chặn phát ngôn của bạn, không thay bạn quyết định, và không đảm bảo tuân thủ mọi quy định (kể cả quy định riêng của sàn/nền tảng livestream). Rủi ro nói sai vẫn có thật: mức phạt hành chính với quảng cáo sai công dụng có thể tới 10–20 triệu đồng/lần (Nghị định 87/2026/NĐ-CP, Điều 50 khoản 2), chưa kể rủi ro hình sự với trường hợp nghiêm trọng như vụ “kẹo Kera”. Hồ sơ càng đầy đủ, hệ thống càng đối chiếu được nhiều — phần bạn chưa khai, hệ thống sẽ không đoán.</div></div>`;
 }
 renderRulesPanel();
 /* ===== Kiểm định độ chính xác trên bộ câu mẫu nội bộ ===== */
@@ -1197,7 +1224,7 @@ const EVALSET=[
  ['Cơ hội cuối cùng, hết ngay thôi các bạn ơi.','warn'],
  ['Áo Nami chỉ còn 3 chiếc size L thôi.','warn'],
  ['Áo Nami làm từ 100% cotton mềm mịn.','warn'],
- ['Áo Nami chống tia UV 100%.','warn'],
+ ['Áo Nami chống tia UV 100%.','bad'],
  ['Blendy bảo hành trọn đời.','warn'],
  ['Blendy tiết kiệm điện 100% luôn.','warn'],
  ['Lumi trẻ lại mười tuổi.','warn'],
@@ -1267,7 +1294,16 @@ const EVALSET_HO=[
  ['Cảm ơn bạn Ngọc Anh đã ủng hộ shop.','ok'],
  ['Uống Kira xong là hết đau xương khớp, khỏi cần thuốc.','bad'],
  ['Chỉ còn 10 phút nữa là hết khuyến mãi, ai cần thì chốt nha.','warn'],
- ['Bà bầu dùng Kira được hông ạ? Được, an toàn hết nha.','bad']
+ ['Bà bầu dùng Kira được hông ạ? Được, an toàn hết nha.','bad'],
+ ['Kira là thực phẩm chức năng, không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh nha cả nhà.','ok'],
+ ['Serum Lumi này không trị mụn đâu nha, chỉ hỗ trợ làm sáng da thôi các bạn.','ok'],
+ ['Áo Nami không phải chống nắng tuyệt đối đâu nha, có UPF 50+ theo công bố thôi.','ok'],
+ ['Lumi không phải là tốt nhất thị trường đâu, nhưng giá hợp lý cho chất lượng này.','ok'],
+ ['Phí ship hôm nay 20 nghìn cho đơn dưới 300 nghìn nha cả nhà.','ok'],
+ ['Mua Lumi hôm nay tặng kèm túi vải trị giá 30 nghìn.','ok'],
+ ['Áp mã giảm giá 50 nghìn cho đơn hàng đầu tiên nha.','ok'],
+ ['Máy xay Blendy không bao giờ hỏng đâu nha, cứ dùng thoải mái.','bad'],
+ ['Kira uống vào là không cần uống thuốc gì thêm nữa đâu.','bad']
 ];
 function runEval(set){
   set=set||EVALSET;
@@ -1465,7 +1501,7 @@ $('#tpReset').onclick=tpReset;
 /* --- Bảng cảnh báo nổi --- */
 const hud=document.createElement('div');
 hud.id='hud';hud.className='hud';hud.hidden=true;hud.setAttribute('role','status');hud.setAttribute('aria-live','assertive');
-hud.innerHTML='<div class="hud-h"><span class="livebadge">LIVE</span><span class="mono small" id="hudClock">00:00</span><span class="tag bad" id="hudBad">0 nghiêm trọng</span><span class="tag warn" id="hudWarn">0 cảnh báo</span></div><div id="hudBody" class="small muted">Chưa có cảnh báo nào. Bảng này hiện cảnh báo mới nhất ngay khi bạn nói.</div>';
+hud.innerHTML='<div class="hud-h"><span class="livebadge">LIVE</span><span class="mono small" id="hudClock">00:00</span><span class="tag" id="hudChecked">0 câu đã đối chiếu</span><span class="tag bad" id="hudBad">0 nghiêm trọng</span><span class="tag warn" id="hudWarn">0 cảnh báo</span></div><div id="hudBody" class="small muted">Chưa có cảnh báo nào. Bảng này hiện cảnh báo mới nhất ngay khi bạn nói, đối chiếu trực tiếp với hồ sơ sản phẩm chuẩn.</div>';
 document.body.appendChild(hud);
 let pipWin=null;
 function hudSync(){
@@ -1478,6 +1514,7 @@ function hudSync(){
 function hudClock(){
   if(!liveSess)return;
   $('#hudClock').textContent=fmtSec(liveSecs());
+  $('#hudChecked').textContent=liveSess.speeches+' câu đã đối chiếu';
   $('#hudBad').textContent=liveSess.bad+' nghiêm trọng';$('#hudWarn').textContent=liveSess.warn+' cảnh báo';
 }
 function hudUpdate(a,text){
@@ -1838,7 +1875,15 @@ function coachHTML(c,src){
     ${c.next_drill?`<div class="suggest"><b>Bài tập tiếp theo</b><div>${esc(c.next_drill)}</div></div>`:''}
     <div class="small muted">${src}</div></div>`;
 }
+function sysAccCard(){
+  const r=runEval(EVALSET_HO),f=v=>v===null?'–':String(v).replace('.',',')+'%';
+  const tile=(l,v,s)=>`<div class="tile"><div class="small muted">${l}</div><b class="mono">${v}</b><div class="small muted">${s}</div></div>`;
+  return `<div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+    ${tile('Cảnh báo đúng (precision)',f(r.prec),`${r.tp}/${r.tp+r.fp} lần gắn cờ là đúng lỗi thật`)}${tile('Bắt được bao nhiêu (recall)',f(r.rec),`${r.tp}/${r.tp+r.fn} câu có lỗi đã bắt được`)}${tile('Bỏ sót',r.fn,`trên ${r.n} câu kiểm định`)}${tile('Báo nhầm',r.fp,`trên ${r.n} câu kiểm định`)}
+    </div><div class="small muted" style="margin-top:8px">Vì sao con số này quan trọng cho kinh doanh: mỗi lần cảnh báo đúng là một lần tránh nói sai giá, công dụng hay lời cam kết tuyệt đối — loại lỗi có thể bị phạt 10–20 triệu đồng/lần (Nghị định 87/2026/NĐ-CP) hoặc làm mất niềm tin của người xem đang chờ chốt đơn. Xem chi tiết từng câu ở tab Rà soát kịch bản → mục “Kiểm định độ chính xác”.</div>`;
+}
 function renderReport(){
+  $('#sysAcc').innerHTML=sysAccCard();
   const m=metrics(),have=m.filter(x=>x.v!==null);
   $('#bars').innerHTML=m.map(x=>`<div class="bar"><div class="h"><span>${x.name}</span><b class="mono" ${x.v===null?'':`data-n="${x.v}" data-suf="/100"`}>${x.v===null?'–':x.v+'/100'}</b></div><div class="t"><i style="width:${x.v||0}%"></i></div><div class="small muted" style="margin-top:3px">${esc(x.hint)}</div></div>`).join('')
     +(have.length?`<div class="row" style="margin-top:4px"><span class="tag">Tổng hợp: ${Math.round(have.reduce((a,b)=>a+b.v,0)/have.length)}/100</span></div>`:'');
@@ -2197,7 +2242,12 @@ function viewMe(){
     <div class="row"><button class="btn primary" id="bkExp">Tải file sao lưu (JSON)</button><button class="btn" id="bkCopy">Sao chép nội dung</button><label class="btn" for="bkFile" style="cursor:pointer">Chọn file để phục hồi</label><input type="file" id="bkFile" accept=".json,application/json" hidden></div>
     <textarea id="bkTxt" rows="3" aria-label="Dán nội dung sao lưu để phục hồi" placeholder="Hoặc dán nội dung sao lưu vào đây"></textarea>
     <div class="row"><button class="btn danger" id="bkGo" hidden>Phục hồi (ghi đè dữ liệu hiện tại)</button></div>
-    <div class="small muted" id="bkNote" role="status"></div></div>${cloudBox()}`;
+    <div class="small muted" id="bkNote" role="status"></div></div>
+  <div class="box stack" style="margin-top:14px"><h3>Trách nhiệm &amp; giới hạn của hệ thống</h3>
+    <div class="small"><b>Thiên lệch:</b> LiveCore AI đối chiếu theo quy tắc do nhóm soạn, không học từ dữ liệu người dùng nên không thiên lệch theo hành vi của ai — nhưng quy tắc có thể chưa phủ hết mọi ngành hàng hay cách nói, xem mục “Bộ quy tắc và căn cứ pháp lý đang dùng” ở tab Rà soát kịch bản để biết phạm vi áp dụng.</div>
+    <div class="small"><b>Trách nhiệm giải trình:</b> mọi cảnh báo đều ghi lại thời điểm, câu nói và căn cứ trong Nhật ký và Lịch sử phiên — có thể xem lại hoặc xuất báo cáo bất cứ lúc nào để đối chiếu sau này.</div>
+    <div class="small"><b>Tác động vận hành:</b> đây là công cụ hỗ trợ streamer chuẩn bị và tự kiểm tra, không thay thế phán đoán của người dẫn live hay vai trò của quản lý/kiểm duyệt nội dung.</div>
+  </div>${cloudBox()}`;
 }
 function renderAccount(){
   const nav=[['plans','Bảng giá & VIP'],['billing','Thanh toán'],['me','Tài khoản của tôi']];
