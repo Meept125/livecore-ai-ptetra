@@ -70,7 +70,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .btn.primary:hover{filter:brightness(1.06)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:500}
-input[type=text],input[type=email],input[type=password],select,textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;color:var(--ink)}
+input[type=text],input[type=email],input[type=url],input[type=password],select,textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;color:var(--ink)}
 textarea{resize:vertical;min-height:70px;line-height:1.5}
 .plist{display:flex;flex-direction:column;gap:6px}
 .pitem{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 12px;cursor:pointer}
@@ -86,6 +86,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
 .find.bad{border-left-color:var(--bad)}.find.warn{border-left-color:var(--warn)}.find.ok{border-left-color:var(--ok)}
 .find b{font-size:13px}
 .find .fix{margin-top:4px;font-size:13px;color:var(--muted)}
+.find .ref{margin-top:6px;font-size:11px;color:var(--muted);border-top:1px dashed var(--line);padding-top:5px}
 .preview{white-space:pre-wrap;line-height:1.8;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;max-height:280px;overflow:auto}
 mark{border-radius:3px;padding:0 2px}
 mark.bad{background:var(--bad-soft);color:var(--bad)}
@@ -148,6 +149,8 @@ th{color:var(--muted);font-weight:500;font-size:12px}
 .plan:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
 .plan input{margin-top:4px;flex:none}
 .plan b{display:block;font-size:13px}.plan span{font-size:12px;color:var(--muted)}
+.toast{position:fixed;left:16px;bottom:16px;max-width:min(420px,calc(100vw - 32px));background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.45;box-shadow:var(--shadow);z-index:90}.toast[hidden]{display:none}
+#sbBox summary{list-style:revert}
 .hint{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted)}
 .avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;flex:none}
 .kv{display:grid;grid-template-columns:130px minmax(0,1fr);gap:6px 12px;font-size:13px}
@@ -216,6 +219,13 @@ th{color:var(--muted);font-weight:500;font-size:12px}
 .ktable tbody tr:last-child td{border-bottom:0}
 .ktable .btn,.ktable .tag{white-space:nowrap}
 .ktable tr[aria-selected="true"]{background:var(--accent-soft)}
+.ktable tr.clk{cursor:pointer}.ktable tr.clk:hover{background:var(--accent-soft)}
+.tl{display:flex;flex-direction:column;gap:10px}
+.tli{display:grid;grid-template-columns:52px 20px minmax(0,1fr);gap:10px;align-items:start;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.tli.bad{border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}.tli.warn{border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
+.tli time{color:var(--muted);font-size:12px;padding-top:2px}
+.dot.warnd{background:var(--warn-soft);color:var(--warn)}
+mark.bad{background:var(--bad-soft);color:var(--bad)}mark.warn{background:var(--warn-soft);color:var(--warn)}
 .kchart{position:relative}.kchart svg{width:100%;height:auto;display:block}
 .kchart .hit:focus{outline:2px solid var(--accent);outline-offset:-2px}
 .kchart .hit:hover{fill:var(--accent-soft);fill-opacity:.5}
@@ -377,6 +387,41 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
 @keyframes gbreath{50%{box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 75%,transparent),0 0 34px color-mix(in srgb,var(--accent) 40%,transparent)}}
 @keyframes gbtn{50%{box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 80%,transparent),0 6px 26px color-mix(in srgb,var(--accent) 55%,transparent)}}
 @keyframes livepulse{50%{box-shadow:0 0 0 1px var(--bad),0 0 40px color-mix(in srgb,var(--bad) 52%,transparent)}}
+
+.thumb{width:112px;display:flex;flex-direction:column;gap:4px;align-items:stretch;margin:0}
+.thumb.add{border:1.5px dashed var(--line);border-radius:12px;min-height:96px;justify-content:center;align-items:center;text-align:center;padding:8px;color:var(--accent);font-weight:600;font-size:13px}
+.thumbimg{border:1px solid var(--line);border-radius:10px;padding:0;background:#fff;cursor:zoom-in;overflow:hidden;height:84px}
+.thumbimg img{width:100%;height:100%;object-fit:cover;display:block}
+.lb{position:fixed;inset:0;background:rgba(10,15,30,.78);display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;z-index:300;padding:16px}
+.lb img{max-width:92vw;max-height:80vh;border-radius:10px;background:#fff}
+
+.printonly{display:none}
+@media print{
+  :root:root:root{--bg:#fff;--surface:#fff;--ink:#0B1F3A;--muted:#5B6B82;--line:#D9E3EE;--accent:#0E8FBF;--accent-soft:#E1F3FA;--ok:#12805C;--ok-soft:#DDF3EA;--warn:#9A5600;--warn-soft:#FFF0D6;--bad:#B42318;--bad-soft:#FDE4E1;--shadow:none}
+  body{background:#fff!important;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #deco,.tabs,header.top,.noprint,.btn,#liveAlerts,.confirm,.cycle,#memBox,.hud,#onb{display:none!important}
+  .printonly{display:block!important;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--accent)}
+  *{animation:none!important;transition:none!important;box-shadow:none!important}
+  .box,.tile,.find,.tli,tr{break-inside:avoid}
+  .box::before,.box::after{display:none!important}
+  a{color:inherit;text-decoration:none}
+}
+
+.tp{max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:4px;border:1px solid var(--line);border-radius:12px;padding:8px;background:var(--bg);position:relative}
+.tp .tps{text-align:left;border:0;background:none;padding:6px 10px;border-radius:8px;cursor:pointer;color:var(--muted);line-height:1.5}
+.tp .tps.done{opacity:.5;text-decoration:line-through}
+.tp .tps.cur{background:var(--accent-soft);color:var(--ink);font-weight:600;box-shadow:inset 3px 0 0 var(--accent)}
+.tp.big .tps{font-size:19px;line-height:1.55}
+.hud[hidden]{display:none}
+.hud{position:fixed;right:16px;bottom:16px;width:min(340px,calc(100vw - 32px));z-index:250;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;box-shadow:0 10px 30px rgba(10,20,40,.25)}
+.hud.alert{border-color:var(--bad);box-shadow:0 0 0 2px var(--bad-soft),0 10px 30px rgba(10,20,40,.25)}
+.hud #hudBody{max-height:150px;overflow:auto}
+.hud.pip{position:static;width:auto;box-shadow:none}
+.hud-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+.onbl{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:6px}
+.onbi{display:flex;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;cursor:pointer}
+.onbi.done{color:var(--muted);background:var(--bg)}
 </style>
 
 <div id="auth" class="auth" hidden>
@@ -403,6 +448,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
       <div class="fld"><label for="lg-pw">Mật khẩu</label><div class="pw"><input type="password" id="lg-pw" autocomplete="current-password"><button type="button" class="pwt" data-for="lg-pw" aria-label="Hiện hoặc ẩn mật khẩu">Hiện</button></div></div>
       <label class="row small muted" for="lg-remember" style="gap:6px"><input type="checkbox" id="lg-remember" checked> Ghi nhớ đăng nhập trên máy này</label>
       <div class="err" id="lg-err" role="alert"></div>
+      <div class="small muted" id="cloudHint" hidden>Đã kết nối đám mây: đăng nhập bằng tài khoản đã đăng ký, dữ liệu sẽ theo bạn sang mọi máy.</div>
       <button class="btn primary" type="submit" id="lg-submit">Đăng nhập</button>
       <div class="hint">Tài khoản thử nhanh: <span class="mono">demo@livecore.vn</span> / <span class="mono">Demo@12345</span> <button type="button" class="btn" id="fillDemo" style="padding:2px 10px;margin-left:6px">Điền sẵn</button></div>
     </form>
@@ -417,14 +463,28 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
         <label class="plan" for="pl-pro"><input type="radio" name="plan" id="pl-pro" value="pro" checked><div><b>Cá nhân Chuyên nghiệp · 699.000đ/tháng</b><span>20 Product Master, 500 phiên phân tích/tháng, đủ 10 dạng tình huống, AI Coach</span></div></label>
         <label class="plan" for="pl-biz"><input type="radio" name="plan" id="pl-biz" value="business"><div><b>Doanh nghiệp · 2.999.000đ/tháng</b><span>Không giới hạn Product Master, kèm 10 tài khoản phân quyền</span></div></label>
       </fieldset>
-      <label class="row small muted" for="rg-terms" style="gap:6px;flex-wrap:nowrap;align-items:flex-start"><input type="checkbox" id="rg-terms" style="margin-top:3px;flex:none"> Mình hiểu đây là bản demo: tài khoản chỉ lưu trong trình duyệt này, không dùng mật khẩu thật của các dịch vụ khác.</label>
-      <div class="err" id="rg-err" role="alert"></div>
+      <div class="row small muted" style="gap:6px;flex-wrap:nowrap;align-items:flex-start"><input type="checkbox" id="rg-terms" style="margin-top:3px;flex:none"><label id="rg-terms-l" for="rg-terms">Mình hiểu đây là bản demo: tài khoản chỉ lưu trong trình duyệt này, không dùng mật khẩu thật của các dịch vụ khác.</label></div>
+      <div class="err" id="rg-err" role="alert"></div><div class="okmsg" id="rg-ok" role="status"></div>
       <button class="btn primary" type="submit" id="rg-submit">Tạo tài khoản</button>
     </form>
+    <details id="sbBox" class="small" style="border-top:1px solid var(--line);padding-top:10px">
+      <summary class="muted" style="cursor:pointer">Kết nối máy chủ (Supabase) <span class="tag" id="sbState">Lưu trên máy này</span></summary>
+      <div class="stack" style="margin-top:10px">
+        <div id="sbFixed" class="muted" hidden>Bản này đã được nối sẵn với máy chủ của nhóm. Tài khoản đăng ký ở đây dùng được trên mọi máy.</div>
+        <div id="sbForm" class="stack">
+          <div class="muted">Không bắt buộc. Dán địa chỉ dự án và khóa công khai (anon hoặc publishable) từ Supabase để tài khoản và dữ liệu được lưu trên đám mây thay vì trong trình duyệt. Không bao giờ dán khóa service_role hay secret.</div>
+          <div class="fld"><label for="sb-url">Project URL</label><input type="url" id="sb-url" placeholder="https://xxxx.supabase.co" autocomplete="off" spellcheck="false"></div>
+          <div class="fld"><label for="sb-key">Khóa anon / publishable</label><input type="text" id="sb-key" autocomplete="off" spellcheck="false"></div>
+          <div class="row"><button type="button" class="btn" id="sb-save">Lưu và kiểm tra</button><button type="button" class="btn" id="sb-clear">Xóa kết nối</button></div>
+        </div>
+        <div class="small muted" id="sb-msg" role="status"></div>
+      </div>
+    </details>
   </div>
 </div>
 
 <div class="wrap" id="app" hidden>
+  <div class="printonly" id="printHead"></div>
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="var(--accent)" stroke-width="2"/><circle cx="20" cy="20" r="6" fill="var(--accent)"/><circle cx="8" cy="14" r="2.5" fill="var(--accent)"/><circle cx="31" cy="9" r="2.5" fill="var(--accent)"/><circle cx="33" cy="27" r="2.5" fill="var(--accent)"/><path d="M20 20L8 14M20 20L31 9M20 20L33 27" stroke="var(--accent)" stroke-width="1.5"/></svg>
@@ -433,6 +493,8 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
     <span class="tag warn">Bản demo · dữ liệu mẫu</span>
     <span class="tag" id="aiState">AI: đang kiểm tra…</span>
     <span class="tag" id="planTag"></span>
+    <button type="button" class="tag" id="syncTag" hidden style="border:0;cursor:pointer;font-family:inherit"></button>
+    <label class="row small muted noprint" id="viewAsWrap" hidden style="gap:6px;flex-wrap:nowrap">Xem với vai trò<select id="viewAs" style="max-width:190px"></select></label>
     <button class="btn" id="logoutBtn" style="padding:4px 12px">Đăng xuất</button>
   </header>
 
@@ -441,6 +503,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
     <button class="tab" role="tab" id="t-script" aria-selected="false" aria-controls="tab-script">Rà soát kịch bản</button>
     <button class="tab" role="tab" id="t-live" aria-selected="false" aria-controls="tab-live">Phòng live<span class="rdot" id="tabLiveDot" hidden></span></button>
     <button class="tab" role="tab" id="t-sim" aria-selected="false" aria-controls="tab-sim">Live tập sự</button>
+    <button class="tab" role="tab" id="t-history" aria-selected="false" aria-controls="tab-history">Lịch sử</button>
     <button class="tab" role="tab" id="t-report" aria-selected="false" aria-controls="tab-report">Báo cáo &amp; AI Coach<span class="n" id="badge" hidden>0</span></button>
     <button class="tab" role="tab" id="t-kol" aria-selected="false" aria-controls="tab-kol">KOC/KOL</button>
     <button class="tab" role="tab" id="t-account" aria-selected="false" aria-controls="tab-account">Tài khoản</button>
@@ -449,11 +512,20 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
   <!-- 1. PROFILE -->
   <section class="panel" id="tab-profile" role="tabpanel" aria-labelledby="t-profile">
     <p class="lead">Nguồn dữ liệu chuẩn duy nhất (Single Source of Truth). Mọi tính năng còn lại – rà soát, trợ lý bình luận, AI khách hàng, báo cáo – đều đọc từ đây. Thử sửa giá hoặc thêm từ cấm rồi sang tab khác để thấy kết quả đổi theo.</p>
+    <div class="box stack" id="onb" hidden style="margin-bottom:14px"></div>
+    <div class="stack" id="pBanner" hidden style="margin-bottom:14px"></div>
     <div class="grid-side">
       <div class="stack">
         <div class="plist" id="plist"></div>
         <button class="btn" id="addP">+ Thêm sản phẩm</button>
         <p class="small muted" id="addNote" role="status"></p>
+        <details class="box" id="csvBox"><summary style="cursor:pointer"><b>Nhập / xuất CSV</b></summary><div class="stack" style="margin-top:10px">
+          <p class="small muted" style="margin:0">Xuất toàn bộ hồ sơ để chỉnh bằng Excel, hoặc nhập nhiều sản phẩm cùng lúc. Sản phẩm trùng tên sẽ được cập nhật, tên mới sẽ được thêm.</p>
+          <div class="row"><button class="btn" id="csvExp">Tải file CSV</button><button class="btn" id="csvCopy">Sao chép CSV</button><label class="btn" for="csvFile" style="cursor:pointer">Chọn file để nhập</label><input type="file" id="csvFile" accept=".csv,text/csv" hidden></div>
+          <textarea id="csvTxt" rows="3" aria-label="Dán nội dung CSV" placeholder="Hoặc dán nội dung CSV vào đây"></textarea>
+          <div class="row"><button class="btn" id="csvPrev">Xem trước khi nhập</button></div>
+          <div class="stack" id="csvOut" role="status"></div>
+        </div></details>
       </div>
       <div class="box stack" id="pform"></div>
     </div>
@@ -471,11 +543,14 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
       </div>
       <div class="stack" id="scanOut"><div class="empty">Bấm “Rà soát ngay” để xem kết quả.</div></div>
     </div>
+    <details class="box" id="rulesBox" style="margin-top:18px"><summary style="cursor:pointer"><b>Bộ quy tắc và căn cứ pháp lý đang dùng</b> <span class="muted small">(bấm để xem)</span></summary><div id="rulesBody" class="stack" style="margin-top:12px"></div></details>
+    <details class="box" id="evalBox" style="margin-top:14px"><summary style="cursor:pointer"><b>Kiểm định độ chính xác</b> <span class="muted small">(bộ câu mẫu nội bộ)</span></summary><div class="stack" style="margin-top:12px"><p class="small muted">Chạy bộ quy tắc trên các câu đã gán nhãn sẵn (đạt, cảnh báo, nghiêm trọng) và so kết quả. Dùng hồ sơ mẫu nên không bị ảnh hưởng bởi dữ liệu bạn đã sửa.</p><div class="row"><button class="btn primary" id="evalRun">Chạy kiểm định</button></div><div class="stack" id="evalOut"></div></div></details>
   </section>
 
   <!-- 3. LIVE ROOM -->
   <section class="panel" id="tab-live" role="tabpanel" aria-labelledby="t-live" hidden>
     <p class="lead">Mô phỏng phiên live đang chạy: bình luận đổ về theo thời gian, trợ lý xếp ưu tiên và gợi ý câu trả lời lấy từ Hồ sơ sản phẩm; ô “Phát ngôn” cảnh báo ngay khi bạn nói sai giá hoặc vi phạm.</p>
+    <div class="stack" id="liveAlerts" hidden style="margin-bottom:14px"></div>
     <div class="grid2">
       <div class="box stack">
         <div class="row"><h3 style="margin-right:auto">Bình luận</h3><span class="livebadge" id="liveDot" hidden>LIVE</span><span class="tag" id="liveClock" hidden></span><button class="btn" id="liveToggle">Bắt đầu phiên live</button><button class="btn primary" id="liveEnd" hidden disabled>Kết thúc &amp; lưu kết quả</button></div>
@@ -483,6 +558,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
           <div class="row" style="align-items:flex-end"><label class="f" style="flex:1;min-width:170px">KOC/KOL đang live<select id="kolSel"></select></label>
           <input type="text" id="kolQuickName" maxlength="40" placeholder="Thêm nhanh: tên KOC/KOL mới" aria-label="Tên KOC/KOL mới" style="flex:1;min-width:150px"><button class="btn" id="kolQuickAdd">Thêm</button></div>
           <div class="err" id="liveNote" role="alert"></div>
+        </div>
+        <div class="row" id="srcRow"><div class="cycle" role="group" aria-label="Nguồn bình luận"><span>Nguồn:</span><button data-src="sim" aria-pressed="true">Mô phỏng</button><button data-src="real" aria-pressed="false">Bình luận thật</button></div></div>
+        <div class="stack" id="realBox" hidden style="border:1px dashed var(--line);border-radius:12px;padding:12px">
+          <p class="small muted" style="margin:0">Sao chép bình luận từ TikTok/Facebook Live dán vào đây, mỗi dòng một bình luận (có thể ghi “Tên: nội dung”). Hoặc dán/tải ảnh chụp màn hình phần bình luận để AI đọc giúp.</p>
+          <textarea id="realTxt" rows="4" aria-label="Bình luận thật" placeholder="Ngọc Anh: Serum Lumi giá sao shop&#10;Minh Tuấn: Áo Nami còn size XL không"></textarea>
+          <div class="row"><button class="btn primary" id="realAdd">Thêm vào danh sách</button><label class="btn" for="realImg" id="realImgL" style="cursor:pointer">Đọc từ ảnh chụp</label><input type="file" id="realImg" accept="image/png,image/jpeg,image/webp" hidden><span class="small muted" id="realNote" role="status"></span></div>
         </div>
         <div class="box stack" id="liveResult" hidden style="background:var(--bg)"></div>
         <div class="feed" id="feed"><div class="empty">Bấm “Bắt đầu phiên live” để bình luận bắt đầu đổ về.</div></div>
@@ -500,6 +581,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
         </div>
         <div id="speechOut"></div>
       </div>
+    </div>
+    <div class="box stack" id="tpBox" style="margin-top:16px">
+      <div class="row"><h3 style="margin-right:auto">Kịch bản dẫn và checklist</h3><label class="row small muted" for="tpBig" style="gap:6px"><input type="checkbox" id="tpBig"> Chữ lớn</label><button class="btn" id="tpReload">Nạp lại kịch bản</button><button class="btn" id="tpReset">Bắt đầu lại</button></div>
+      <p class="small muted" style="margin:0">Kịch bản lấy từ tab Rà soát. Khi bạn nói (bằng micro hoặc gõ ở ô Phát ngôn), câu đang đọc được đánh dấu và di chuyển theo, còn checklist tự tích khi bạn đã nói đủ ý.</p>
+      <div class="grid2"><div class="tp" id="tpList" aria-label="Kịch bản dẫn"></div><div class="stack"><h4>Checklist tự tích</h4><div id="tpCheck"></div><div class="small muted">Các mục theo ngành hàng hiện ra khi bạn nhắc tên sản phẩm.</div></div></div>
+      <div class="row" style="border-top:1px dashed var(--line);padding-top:10px"><label class="row small" for="hudOn" style="gap:6px"><input type="checkbox" id="hudOn" checked> Bảng cảnh báo nổi khi đang live</label><label class="row small" for="beepOn" style="gap:6px"><input type="checkbox" id="beepOn"> Âm báo khi có cảnh báo</label><button class="btn" id="pipBtn" hidden>Mở cửa sổ nổi riêng</button><span class="small muted" id="pipNote"></span></div>
     </div>
   </section>
 
@@ -520,11 +607,18 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
         <span class="eq" id="simEq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span id="simVoiceNote"></span>
       </div>
     </div>
+    <div class="box stack" id="simProg" style="margin-top:16px"></div>
+  </section>
+
+  <!-- 4b. HISTORY -->
+  <section class="panel" id="tab-history" role="tabpanel" aria-labelledby="t-history" hidden>
+    <div id="histBody"></div>
   </section>
 
   <!-- 5. REPORT -->
   <section class="panel" id="tab-report" role="tabpanel" aria-labelledby="t-report" hidden>
     <p class="lead">Báo cáo tổng hợp từ mọi thứ bạn vừa làm trong phiên này (rà soát, phòng live, live tập sự). AI Coach chỉ ra điểm cần cải thiện.</p>
+    <div class="row noprint" style="margin-bottom:12px"><button class="btn" id="rPrint">In / lưu PDF báo cáo</button></div>
     <div class="grid2">
       <div class="box stack"><h3>4 tiêu chí</h3><div class="bars" id="bars"></div></div>
       <div class="box stack"><h3>AI Coach</h3><div id="coach"></div><button class="btn primary" id="coachBtn">Nhờ AI Coach nhận xét</button></div>
@@ -555,35 +649,62 @@ const today=()=>isoDay(0);
 const nowT=()=>new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 let UID=null;
 const uk=k=>UID?k+'_'+UID:null;
-const store={get(k){const kk=uk(k);if(!kk)return null;try{return JSON.parse(localStorage.getItem(kk))}catch(e){return null}},set(k,v){const kk=uk(k);if(!kk)return;try{localStorage.setItem(kk,JSON.stringify(v))}catch(e){}}};
+var syncHook=null;
+const store={get(k){const kk=uk(k);if(!kk)return null;try{return JSON.parse(localStorage.getItem(kk))}catch(e){return null}},set(k,v){const kk=uk(k);if(!kk)return;const j=JSON.stringify(v);try{const old=localStorage.getItem(kk);localStorage.setItem(kk,j);if(syncHook&&old!==j)syncHook(k)}catch(e){return false}return true}};
 const raw={get(k,area){try{return JSON.parse((area==='session'?sessionStorage:localStorage).getItem(k))}catch(e){return null}},set(k,v,area){try{(area==='session'?sessionStorage:localStorage).setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k);sessionStorage.removeItem(k)}catch(e){}}};
 
 /* ===== dữ liệu mẫu (thương hiệu và số liệu hư cấu) ===== */
 const SAMPLE_PRODUCTS=()=>[
- {id:'p1',name:'Serum Vitamin C Lumi 30ml',keys:'lumi, serum',price:389000,promo:329000,promoUntil:isoDay(9),
+ {id:'p1',industry:'mypham',name:'Serum Vitamin C Lumi 30ml',keys:'lumi, serum',price:389000,promo:329000,promoUntil:isoDay(9),
   origin:'Sản xuất tại Việt Nam theo công thức Hàn Quốc',
   benefits:'Làm sáng da, hỗ trợ mờ thâm sau 4–8 tuần dùng đều đặn\nKết cấu lỏng nhẹ, thấm nhanh\nDùng buổi tối, kèm kem chống nắng ban ngày',
   banned:'khỏi mụn\ntrị mụn\ntrị nám\nhết thâm\nkhông kích ứng\nan toàn tuyệt đối',
   policy:'Đổi trả trong 7 ngày nếu lỗi nhà sản xuất hoặc dị ứng có chứng từ; giao sai hàng được hoàn tiền.',
   faq:'Da nhạy cảm dùng được không|Nên thử một vùng nhỏ sau tai 24 giờ trước khi dùng cả mặt. Da đang tổn thương thì chưa nên dùng.\nDùng khi mang thai được không|Bạn nên hỏi bác sĩ trước khi dùng mỹ phẩm chứa hoạt chất. Shop không tư vấn y tế.\nBao lâu thấy hiệu quả|Thường 4–8 tuần dùng đều, tùy làn da. Shop không cam kết kết quả cụ thể.\nCó ship COD không|Có, bạn được kiểm tra hàng khi nhận.'},
- {id:'p2',name:'Máy xay mini Blendy 350ml',keys:'blendy, máy xay',price:459000,promo:399000,promoUntil:isoDay(4),
+ {id:'p2',industry:'giadung',name:'Máy xay mini Blendy 350ml',keys:'blendy, máy xay',price:459000,promo:399000,promoUntil:isoDay(4),
   origin:'Lắp ráp tại Việt Nam',
   benefits:'Dung tích 350ml, xay sinh tố và đá viên nhỏ\nSạc USB-C, khoảng 12–15 lần xay mỗi lần sạc\nThân nhựa Tritan không chứa BPA',
   banned:'không bao giờ hỏng\nxay được mọi thứ\nbền vĩnh viễn\nrẻ nhất',
   policy:'Bảo hành 12 tháng; 1 đổi 1 trong 7 ngày nếu lỗi kỹ thuật.',
   faq:'Xay được đá không|Xay được đá viên nhỏ, nên thêm chút nước. Không xay đá cây lớn.\nRửa thế nào|Tháo cụm lưỡi rửa nước. Không ngâm phần đế có mạch điện.\nPin dùng được bao lâu|Khoảng 12–15 lần xay mỗi lần sạc theo thử nghiệm của nhà sản xuất.'},
- {id:'p3',name:'Áo khoác chống nắng UV Nami',keys:'nami, áo khoác',price:249000,promo:199000,promoUntil:isoDay(-1),
+ {id:'p3',industry:'thoitrang',name:'Áo khoác chống nắng UV Nami',keys:'nami, áo khoác',price:249000,promo:199000,promoUntil:isoDay(-1),
   origin:'May tại Việt Nam',
   benefits:'Vải thoáng, chỉ số UPF 50+ theo công bố của nhà sản xuất\nCó mũ trùm và lỗ xỏ ngón tay\nSize S đến XXL',
   banned:'chống nắng 100%\nchặn hoàn toàn tia UV\nkhông bao giờ đen da',
   policy:'Đổi size trong 7 ngày, còn nguyên tem mác; shop chịu phí ship lần đổi đầu tiên.',
-  faq:'Cao 1m65 nặng 65kg mặc size nào|Thường vừa size L hoặc XL. Bạn nhắn chiều cao, cân nặng để shop tư vấn kỹ hơn.\nGiặt máy được không|Giặt máy chế độ nhẹ, không dùng nước tẩy.'}
+  faq:'Cao 1m65 nặng 65kg mặc size nào|Thường vừa size L hoặc XL. Bạn nhắn chiều cao, cân nặng để shop tư vấn kỹ hơn.\nGiặt máy được không|Giặt máy chế độ nhẹ, không dùng nước tẩy.'},
+ {id:'p4',industry:'tpcn',name:'Viên uống Collagen Kira 60 viên',keys:'kira, collagen',price:590000,promo:490000,promoUntil:isoDay(12),
+  origin:'Sản xuất tại Việt Nam',
+  benefits:'Bổ sung collagen và vitamin C, hỗ trợ làn da khỏe từ bên trong\nDùng 2 viên mỗi ngày sau bữa ăn\nThực phẩm chức năng, không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh',
+  banned:'chữa bệnh\nthay thế thuốc\nhết nhăn\nbác sĩ khuyên dùng\ngiảm cân nhanh',
+  policy:'Đổi trả trong 7 ngày nếu hộp còn nguyên seal hoặc lỗi từ nhà sản xuất.',
+  faq:'Phụ nữ mang thai dùng được không|Bạn nên hỏi bác sĩ trước khi dùng. Sản phẩm không phải thuốc.\nDùng bao lâu thấy hiệu quả|Tùy cơ địa từng người, shop không cam kết kết quả cụ thể.\nDùng chung với thuốc đang điều trị được không|Bạn hỏi bác sĩ hoặc dược sĩ đang điều trị cho bạn nhé, shop không tư vấn y tế.'}
 ];
 const SAMPLE_SCRIPT=`Chào cả nhà, mình mở màn với Serum Vitamin C Lumi nhé. Serum này rẻ nhất thị trường luôn, chỉ 299k thôi, dùng 3 ngày là khỏi mụn, cam kết 100% không kích ứng.
 Tiếp theo là Áo khoác chống nắng Nami, giá ưu đãi 199k, chống nắng 100% luôn nha cả nhà. Chỉ còn 10 chiếc thôi, chốt nhanh kẻo hết.
 Cuối cùng là Máy xay Blendy, bảo hành 12 tháng, chỉ 399k thôi ạ, xay được mọi thứ.`;
 
-let products=store.get('lc_products')||SAMPLE_PRODUCTS();
+const REF={
+ qc:{s:'Luật Quảng cáo 2012, Đ.8 k.11; Thông tư 12/2026/TT-BVHTTDL',l:'Luật Quảng cáo 2012 (sửa đổi 2018), Điều 8 khoản 11 và Thông tư 12/2026/TT-BVHTTDL (hiệu lực 05/7/2026): quảng cáo dùng “nhất”, “duy nhất”, “tốt nhất”, “số một” hoặc từ tương tự phải có tài liệu chứng minh hợp pháp (khảo sát thị trường của tổ chức hợp pháp hoặc giấy chứng nhận giải thưởng). Nghị định 87/2026/NĐ-CP, Điều 50 khoản 2: phạt 10–20 triệu đồng nếu không có.'},
+ tmdt:{s:'Luật Thương mại điện tử 122/2025/QH15, Đ.24',l:'Luật Thương mại điện tử số 122/2025/QH15, Điều 24 (hiệu lực 01/7/2026): người livestream phải xác thực danh tính và không cung cấp thông tin gian dối hoặc gây nhầm lẫn về công dụng, chất lượng, xuất xứ, giá cả.'},
+ tpcn:{s:'Nghị định 15/2018/NĐ-CP, Đ.27',l:'Nghị định 15/2018/NĐ-CP, Điều 27: quảng cáo thực phẩm (gồm thực phẩm chức năng) phải có Giấy xác nhận nội dung quảng cáo, đúng công dụng đã công bố, không quảng cáo như thuốc chữa bệnh, không dùng tên, hình ảnh của cơ sở y tế, bác sĩ, dược sĩ.'},
+ mp:{s:'Thông tư 06/2011/TT-BYT; Nghị định 181/2013/NĐ-CP',l:'Thông tư 06/2011/TT-BYT (quản lý mỹ phẩm) và Nghị định 181/2013/NĐ-CP: mỹ phẩm không được quảng cáo có công dụng như thuốc chữa bệnh (ví dụ “đặc trị”, “điều trị”, “chữa khỏi”, “trị mụn”, “trị nám”); công dụng phải phù hợp nội dung đã công bố với cơ quan quản lý.'},
+ td:{s:'Luật Bảo vệ quyền lợi người tiêu dùng 19/2023/QH15',l:'Luật Bảo vệ quyền lợi người tiêu dùng số 19/2023/QH15 (hiệu lực 01/7/2024): thông tin về giá, chất lượng, điều kiện đổi trả và bảo hành phải đầy đủ, chính xác.'},
+ nhan:{s:'Nghị định 43/2017/NĐ-CP (nhãn hàng hóa)',l:'Nghị định 43/2017/NĐ-CP về nhãn hàng hóa: thông tin chất liệu, thành phần, xuất xứ nói khi bán phải khớp với nhãn và công bố của sản phẩm.'}
+};
+const INDS={mypham:'Mỹ phẩm',tpcn:'Thực phẩm chức năng',thoitrang:'Thời trang',giadung:'Gia dụng',khac:'Khác'};
+function guessIndustry(p){
+  const t=((p.name||'')+' '+(p.keys||'')+' '+(p.benefits||'')).toLowerCase();
+  if(/thực phẩm chức năng|tpcn|viên uống|collagen|sữa bột|men vi sinh/.test(t))return 'tpcn';
+  if(/serum|kem |sữa rửa|\bson\b|mặt nạ|dưỡng|toner|tẩy trang|mỹ phẩm/.test(t))return 'mypham';
+  if(/\báo\b|quần|váy|giày|dép|túi|\bmũ\b|đầm/.test(t))return 'thoitrang';
+  if(/máy|nồi|bếp|quạt|đèn|bình|chảo|\blò\b/.test(t))return 'giadung';
+  return 'khac';
+}
+const industryOf=p=>p?(INDS[p.industry]?p.industry:guessIndustry(p)):null;
+const migrateP=arr=>{arr.forEach(p=>{if(!INDS[p.industry])p.industry=guessIndustry(p)});return arr};
+var entReady=false;
+let products=migrateP(store.get('lc_products')||SAMPLE_PRODUCTS());
 let curP=products[0].id;
 const events=[];   /* nhật ký phiên */
 const stats={priceErr:0,bad:0,warn:0,ckDone:0,ckTotal:0,simAns:0,simGood:0,cmtSeen:0,cmtAns:0,scans:0};
@@ -591,16 +712,18 @@ const log=(kind,sev,text)=>{events.push({t:nowT(),kind,sev,text});updateBadge()}
 const updateBadge=()=>{const n=events.filter(e=>e.sev==='bad').length;const b=$('#badge');b.hidden=!n;b.textContent=n};
 
 /* ===== tabs ===== */
-const TABS=['profile','script','live','sim','report','kol','account'];
+const TABS=['profile','script','live','sim','history','report','kol','account'];
 function showTab(id){
   TABS.forEach(t=>{
     const on=t===id;
     $('#t-'+t).setAttribute('aria-selected',on);
     $('#tab-'+t).hidden=!on;
   });
-  if(id==='report')renderReport();
-  if(id==='sim')fillSimProducts();
-  if(id==='live'&&typeof fillKolSel==='function'&&ME)fillKolSel();
+  if(id==='report'){renderReport();if(typeof onb==='function'&&entReady)onb('report')}
+  if(id==='profile'&&entReady)renderOnb();
+  if(id==='sim'){fillSimProducts();if(entReady)renderSimProgress()}
+  if(id==='history'&&typeof renderHistory==='function'&&ME)renderHistory();
+  if(id==='live'&&typeof fillKolSel==='function'&&ME){fillKolSel();if(typeof tpSync==='function'&&entReady)tpSync()}
   if(id==='kol'&&typeof renderKol==='function'&&ME)renderKol();
   if(id==='account'&&typeof renderAccount==='function'&&ME)renderAccount();
 }
@@ -618,7 +741,7 @@ TABS.forEach((t,i)=>{
 /* ===== Hồ sơ sản phẩm chủ ===== */
 const getP=id=>products.find(p=>p.id===id);
 const promoOK=p=>!!(p.promo&&p.promoUntil&&p.promoUntil>=today());
-function saveProducts(){store.set('lc_products',products)}
+function saveProducts(){return store.set('lc_products',products)}
 function renderProfile(){
   $('#plist').innerHTML=products.map(p=>{
     const exp=p.promo&&!promoOK(p);
@@ -627,11 +750,13 @@ function renderProfile(){
   document.querySelectorAll('.pitem').forEach(b=>b.onclick=()=>{curP=b.dataset.id;renderProfile()});
   const p=getP(curP);
   const exp=p.promo&&!promoOK(p);
+  const snap={price:p.price,promo:p.promo||0,until:p.promoUntil||''};
   $('#pform').innerHTML=`
     <div class="row"><h3 style="margin-right:auto">Hồ sơ: ${esc(p.name)}</h3>
       ${p.promo?(exp?'<span class="tag bad">Khuyến mãi đã hết hạn</span>':'<span class="tag ok">Khuyến mãi còn hiệu lực</span>'):''}
       <span class="tag" id="saved" hidden>Đã lưu</span></div>
     <label class="f">Tên sản phẩm<input type="text" id="f-name" value="${esc(p.name)}"></label>
+    <label class="f">Ngành hàng (quyết định bộ quy tắc và căn cứ pháp lý áp dụng)<select id="f-ind">${Object.entries(INDS).map(([k,v])=>`<option value="${k}" ${industryOf(p)===k?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="f">Từ khóa nhận diện khi streamer nhắc (cách nhau bằng dấu phẩy)<input type="text" id="f-keys" value="${esc(p.keys)}"></label>
     <div class="row" style="align-items:flex-end">
       <label class="f" style="flex:1 1 130px">Giá niêm yết (đ)<input type="text" id="f-price" inputmode="numeric" value="${p.price}"></label>
@@ -639,24 +764,30 @@ function renderProfile(){
       <label class="f" style="flex:1 1 150px">KM đến hết ngày<input type="text" id="f-until" placeholder="YYYY-MM-DD" value="${p.promoUntil||''}"></label>
     </div>
     <label class="f">Xuất xứ<input type="text" id="f-origin" value="${esc(p.origin)}"></label>
+    <label class="f">${certOf(p)[0]}${certOf(p)[2]?' (nên có)':''}<input type="text" id="f-cert" value="${esc(p.certNo||'')}" placeholder="${esc(certOf(p)[1])}"></label>
+    <div class="stack" style="gap:6px"><b class="small">Ảnh giấy tờ đính kèm (phiếu công bố, kiểm nghiệm, nhãn)</b><div id="docBox"></div></div>
     <label class="f">Công dụng được phép nói (mỗi dòng một ý)<textarea id="f-benefits">${esc(p.benefits)}</textarea></label>
     <label class="f">Cụm từ bị cấm riêng cho sản phẩm này (mỗi dòng một cụm)<textarea id="f-banned">${esc(p.banned)}</textarea></label>
     <label class="f">Chính sách đổi trả / bảo hành<textarea id="f-policy">${esc(p.policy)}</textarea></label>
     <label class="f">Hỏi đáp thường gặp (mỗi dòng: câu hỏi|câu trả lời chuẩn)<textarea id="f-faq" rows="6">${esc(p.faq)}</textarea></label>
+    <details><summary style="cursor:pointer"><b>Lịch sử giá</b> <span class="muted small">(${Math.max(0,(p.hist||[]).length-1)} lần thay đổi)</span></summary><div style="margin-top:8px">${histPriceHTML(p)}</div></details>
     <div class="row"><button class="btn" id="resetP">Khôi phục dữ liệu mẫu</button>${products.length>1?'<button class="btn" id="delP">Xóa sản phẩm này</button>':''}</div>`;
   let tm;
   const bind=(id,key,fn=v=>v)=>{
     $('#'+id).addEventListener('input',e=>{
-      p[key]=fn(e.target.value);saveProducts();
+      p[key]=fn(e.target.value);saveProducts();onb('profile');
       const s=$('#saved');s.hidden=false;clearTimeout(tm);tm=setTimeout(()=>s.hidden=true,1200);
     });
   };
   const num=v=>Number(String(v).replace(/[^\d]/g,''))||0;
-  bind('f-name','name');bind('f-keys','keys');bind('f-price','price',num);bind('f-promo','promo',num);
+  bind('f-name','name');bind('f-ind','industry');bind('f-keys','keys');bind('f-price','price',num);bind('f-promo','promo',num);
   bind('f-until','promoUntil');bind('f-origin','origin');bind('f-benefits','benefits');
   bind('f-banned','banned');bind('f-policy','policy');bind('f-faq','faq');
+  bind('f-cert','certNo');$('#f-cert').addEventListener('change',()=>{refreshAlerts()});
   $('#f-name').addEventListener('change',renderProfile);
-  ['f-price','f-promo','f-until'].forEach(i=>$('#'+i).addEventListener('change',renderProfile));
+  $('#f-ind').addEventListener('change',renderProfile);
+  ['f-price','f-promo','f-until'].forEach(i=>$('#'+i).addEventListener('change',()=>{pushHist(p,snap);saveProducts();renderProfile()}));
+  wireDocs(p);refreshAlerts();if(entReady)lockProfile();
   $('#resetP').onclick=()=>{products=SAMPLE_PRODUCTS();curP=products[0].id;saveProducts();renderProfile()};
   const d=$('#delP');if(d)d.onclick=()=>{products=products.filter(x=>x.id!==curP);curP=products[0].id;saveProducts();renderProfile()};
 }
@@ -664,23 +795,199 @@ $('#addP').onclick=()=>{
   if(ME&&products.length>=PLANS[ME.plan].products){$('#addNote').textContent=`Gói ${PLANS[ME.plan].name} tối đa ${PLANS[ME.plan].products} sản phẩm. Vào tab Tài khoản để đổi gói.`;return}
   $('#addNote').textContent='';
   const id='p'+Date.now();
-  products.push({id,name:'Sản phẩm mới',keys:'',price:100000,promo:0,promoUntil:'',origin:'',benefits:'',banned:'',policy:'',faq:''});
+  products.push({id,industry:'khac',name:'Sản phẩm mới',keys:'',price:100000,promo:0,promoUntil:'',origin:'',benefits:'',banned:'',policy:'',faq:''});
   curP=id;saveProducts();renderProfile();
 };
-renderProfile();
+/* ===== Product Master mở rộng: giấy tờ, lịch sử giá, nhắc KM, CSV ===== */
+const CERT={mypham:['Số phiếu công bố sản phẩm mỹ phẩm','Ví dụ: 123456/26/CBMP-HN',true],tpcn:['Số tự công bố / giấy xác nhận nội dung quảng cáo','Ghi số giấy tờ của sản phẩm',true],thoitrang:['Nhãn, chất liệu hoặc chứng nhận (nếu có)','',false],giadung:['Chứng nhận hợp quy hoặc phiếu bảo hành (nếu có)','',false],khac:['Số giấy tờ liên quan (nếu có)','',false]};
+const certOf=p=>CERT[industryOf(p)]||CERT.khac;
+const missingDocs=()=>products.filter(p=>certOf(p)[2]&&!(p.certNo||'').trim()&&!(p.docs&&p.docs.length));
+function promoAlerts(){
+  const out=[],t0=new Date(today()+'T00:00:00');
+  products.forEach(p=>{
+    if(!p.promo||!p.promoUntil)return;
+    const d=Math.round((new Date(p.promoUntil+'T00:00:00')-t0)/864e5);
+    if(isNaN(d))return;
+    if(d<0)out.push({p,d,kind:'exp'});else if(d<=5)out.push({p,d,kind:'soon'});
+  });
+  return out.sort((a,b)=>a.d-b.d);
+}
+function alertsHTML(withDocs){
+  const pa=promoAlerts(),md=withDocs?missingDocs():[];
+  const rows=pa.map(a=>`<div class="find ${a.kind==='exp'?'bad':'warn'}"><b>${esc(a.p.name)}</b>: ${a.kind==='exp'?`khuyến mãi ${vnd(a.p.promo)} đã hết hạn ngày ${dmy(a.p.promoUntil)}. Đừng nói giá này trên sóng, hãy gia hạn hoặc xóa giá KM.`:a.d===0?`khuyến mãi ${vnd(a.p.promo)} hết hạn hôm nay.`:`khuyến mãi ${vnd(a.p.promo)} còn ${a.d} ngày (đến ${dmy(a.p.promoUntil)}).`}</div>`);
+  if(md.length)rows.push(`<div class="find warn"><b>Thiếu số công bố / giấy tờ</b>: ${md.map(p=>esc(p.name)).join('; ')}. Mỹ phẩm và thực phẩm chức năng nên có số công bố hoặc giấy xác nhận quảng cáo trước khi bán và livestream.</div>`);
+  return rows.join('');
+}
+function refreshAlerts(){
+  const a=$('#pBanner');if(a){const h=alertsHTML(true);a.innerHTML=h;a.hidden=!h}
+  const b=$('#liveAlerts');if(b){const h=alertsHTML(false);b.innerHTML=h;b.hidden=!h}
+}
+function pushHist(p,snap){
+  p.hist=p.hist||[];
+  const cur={price:p.price,promo:p.promo||0,until:p.promoUntil||''};
+  if(!p.hist.length&&snap)p.hist.push({t:null,...snap});
+  const l=p.hist[p.hist.length-1];
+  if(l&&l.price===cur.price&&l.promo===cur.promo&&l.until===cur.until)return false;
+  p.hist.push({t:Date.now(),...cur});
+  if(p.hist.length>20)p.hist.splice(0,p.hist.length-20);
+  return true;
+}
+function histPriceHTML(p){
+  const h=(p.hist||[]).slice().reverse();
+  if(h.length<2)return '<div class="small muted">Chưa có thay đổi giá nào. Khi bạn sửa giá niêm yết, giá KM hoặc hạn KM, hệ thống ghi lại ở đây để đối chiếu khi khách hỏi “hôm qua giá khác”.</div>';
+  return `<div class="tscroll"><table><thead><tr><th>Thời điểm</th><th>Giá niêm yết</th><th>Giá KM</th><th>KM đến hết</th></tr></thead><tbody>${h.map(x=>`<tr><td>${x.t?fmtWhen(x.t):'Ban đầu'}</td><td class="mono">${vnd(x.price)}</td><td class="mono">${x.promo?vnd(x.promo):'–'}</td><td>${x.until?dmy(x.until):'–'}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function compressImg(file,max,q){
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file),im=new Image();
+    im.onload=()=>{
+      const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(im.width*k));c.height=Math.max(1,Math.round(im.height*k));
+      const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);res(c.toDataURL('image/jpeg',q));
+    };
+    im.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('img'))};
+    im.src=url;
+  });
+}
+function docsHTML(p){
+  const d=p.docs||[];
+  return `<div class="row" style="gap:10px;align-items:flex-start">${d.map((x,i)=>`<figure class="thumb"><button type="button" class="thumbimg" data-view="${i}" aria-label="Xem ảnh ${esc(x.name)}"><img src="${x.data}" alt="${esc(x.name)}"></button><figcaption class="small muted">${esc(x.name)}</figcaption><button type="button" class="btn" data-rmdoc="${i}" style="padding:2px 8px;font-size:12px">Xóa</button></figure>`).join('')}
+    ${d.length<3?`<label class="thumb add" for="f-doc" style="cursor:pointer"><span>+ Thêm ảnh giấy tờ</span><span class="small muted">JPG, PNG, WebP · tối đa 3 ảnh</span></label><input type="file" id="f-doc" accept="image/png,image/jpeg,image/webp" hidden>`:''}</div><div class="small muted" id="docNote" role="status">Ảnh được thu nhỏ và nén ngay trên máy bạn, không gửi đi đâu.</div>`;
+}
+function showLightbox(src,alt){
+  const o=document.createElement('div');o.className='lb';o.setAttribute('role','dialog');o.setAttribute('aria-label',alt||'Ảnh giấy tờ');
+  o.innerHTML=`<img alt="${esc(alt||'')}" src="${src}"><button class="btn primary" type="button">Đóng</button>`;
+  const close=()=>{o.remove();document.removeEventListener('keydown',k)};
+  const k=e=>{if(e.key==='Escape')close()};
+  o.onclick=e=>{if(e.target===o||e.target.tagName==='BUTTON')close()};
+  document.addEventListener('keydown',k);document.body.appendChild(o);o.querySelector('button').focus();
+}
+function wireDocs(p){
+  const box=$('#docBox');
+  box.innerHTML=docsHTML(p);
+  box.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>showLightbox(p.docs[+b.dataset.view].data,p.docs[+b.dataset.view].name));
+  box.querySelectorAll('[data-rmdoc]').forEach(b=>b.onclick=()=>{p.docs.splice(+b.dataset.rmdoc,1);saveProducts();wireDocs(p);refreshAlerts()});
+  const inp=$('#f-doc');
+  if(inp)inp.onchange=async e=>{
+    const f=e.target.files[0];e.target.value='';if(!f)return;
+    const note=$('#docNote');
+    if(!/^image\/(png|jpe?g|webp)$/.test(f.type)){note.textContent='Chỉ nhận ảnh JPG, PNG hoặc WebP. Với file PDF, hãy chụp hoặc xuất ra ảnh trước.';return}
+    try{
+      let data=await compressImg(f,900,.72);
+      if(data.length>220000)data=await compressImg(f,640,.55);
+      p.docs=p.docs||[];p.docs.push({id:rid(),name:f.name.replace(/\.[^.]+$/,'').slice(0,40)||'Giấy tờ',data});
+      if(!saveProducts()){p.docs.pop();note.textContent='Bộ nhớ trình duyệt đã đầy nên chưa lưu được ảnh này. Hãy xóa bớt ảnh cũ hoặc dữ liệu mẫu.';return}
+      wireDocs(p);refreshAlerts();
+    }catch(err){note.textContent='Không đọc được ảnh này, thử ảnh khác.'}
+  };
+}
+/* --- CSV --- */
+const CSV_COLS=[['name','Tên sản phẩm'],['industry','Ngành hàng'],['keys','Từ khóa'],['price','Giá niêm yết'],['promo','Giá khuyến mãi'],['promoUntil','KM đến hết ngày'],['origin','Xuất xứ'],['benefits','Công dụng được phép nói'],['banned','Cụm từ bị cấm'],['policy','Chính sách đổi trả'],['faq','Hỏi đáp'],['certNo','Số công bố']];
+const CSV_ALIAS={name:['ten san pham','ten','name','san pham'],industry:['nganh hang','nganh','industry'],keys:['tu khoa','keys','keywords'],price:['gia niem yet','gia','price'],promo:['gia khuyen mai','khuyen mai','promo'],promoUntil:['km den het ngay','han km','han khuyen mai','promo until','promountil'],origin:['xuat xu','origin'],benefits:['cong dung duoc phep noi','cong dung','benefits'],banned:['cum tu bi cam','tu cam','banned'],policy:['chinh sach doi tra','chinh sach','policy'],faq:['hoi dap','faq'],certNo:['so cong bo','cert','certno','so giay to']};
+const noAccent=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().replace(/\s+/g,' ').trim();
+function csvBuild(){
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  return CSV_COLS.map(c=>q(c[1])).join(',')+'\r\n'+products.map(p=>CSV_COLS.map(([k])=>q(k==='industry'?INDS[industryOf(p)]:k==='promo'&&!p.promo?'':p[k])).join(',')).join('\r\n');
+}
+function csvParse(text){
+  text=String(text||'').replace(/^﻿/,'');
+  const first=text.split(/\r?\n/)[0]||'',d=(first.match(/;/g)||[]).length>(first.match(/,/g)||[]).length?';':',';
+  const rows=[];let row=[],cur='',inq=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inq){if(c==='"'){if(text[i+1]==='"'){cur+='"';i++}else inq=false}else cur+=c}
+    else if(c==='"')inq=true;
+    else if(c===d){row.push(cur);cur=''}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cur);cur='';if(row.some(x=>x.trim()))rows.push(row);row=[]}
+    else cur+=c;
+  }
+  row.push(cur);if(row.some(x=>x.trim()))rows.push(row);
+  return rows;
+}
+function csvPlan(text){
+  const rows=csvParse(text);
+  if(rows.length<2)return{err:'File trống hoặc chỉ có dòng tiêu đề.'};
+  const idx={};rows[0].forEach((h,i)=>{const n=noAccent(h);for(const k in CSV_ALIAS)if(CSV_ALIAS[k].includes(n)&&idx[k]===undefined)idx[k]=i});
+  if(idx.name===undefined)return{err:'Không thấy cột “Tên sản phẩm”. Hãy dùng đúng tên cột như file xuất ra.'};
+  const indMap={};Object.entries(INDS).forEach(([k,v])=>{indMap[noAccent(v)]=k;indMap[k]=k});indMap.tpcn='tpcn';
+  const num=v=>{const s=String(v||'').trim().toLowerCase();if(!s)return 0;const n=Number(s.replace(/[^\d.,]/g,'').replace(/[.,](?=\d{3}(\D|$))/g,'').replace(',','.'))||0;return /k$/.test(s)?n*1000:n};
+  const date=v=>{v=String(v||'').trim();let m=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);if(m)return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;m=v.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);return m?`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`:''};
+  const add=[],upd=[],skip=[];let room=ME?(PLANS[ME.plan].products-products.length):Infinity;
+  rows.slice(1).forEach((r,ri)=>{
+    const g=k=>idx[k]===undefined?undefined:(r[idx[k]]||'').trim();
+    const name=g('name');if(!name){skip.push(`Dòng ${ri+2}: thiếu tên sản phẩm`);return}
+    const price=g('price')!==undefined?num(g('price')):undefined;
+    if(g('price')!==undefined&&!price){skip.push(`Dòng ${ri+2} (${name}): giá niêm yết không hợp lệ`);return}
+    const data={};
+    ['keys','origin','benefits','banned','policy','faq','certNo'].forEach(k=>{if(g(k)!==undefined)data[k]=g(k)});
+    if(price!==undefined)data.price=price;
+    if(g('promo')!==undefined)data.promo=num(g('promo'));
+    if(g('promoUntil')!==undefined)data.promoUntil=date(g('promoUntil'));
+    if(g('industry')!==undefined&&g('industry'))data.industry=indMap[noAccent(g('industry'))]||undefined;
+    const ex=products.find(p=>noAccent(p.name)===noAccent(name));
+    if(ex)upd.push({ex,data});
+    else if(room>0){room--;add.push({name,data})}
+    else skip.push(`${name}: vượt giới hạn ${PLANS[ME.plan].products} sản phẩm của gói ${PLANS[ME.plan].name}`);
+  });
+  return{add,upd,skip};
+}
+function csvApply(plan){
+  plan.upd.forEach(({ex,data})=>{const snap={t:null,price:ex.price,promo:ex.promo||0,until:ex.promoUntil||''};Object.assign(ex,data);pushHist(ex,snap)});
+  plan.add.forEach(({name,data})=>{
+    const p={id:'p'+Date.now()+Math.floor(Math.random()*1e4),industry:'khac',name,keys:'',price:0,promo:0,promoUntil:'',origin:'',benefits:'',banned:'',policy:'',faq:'',...data};
+    if(!data.industry)p.industry=guessIndustry(p);
+    products.push(p);
+  });
+  saveProducts();renderProfile();
+}
+function csvPreview(text){
+  const out=$('#csvOut'),pl=csvPlan(text);
+  if(pl.err){out.innerHTML=`<div class="find bad"><b>Không nhập được</b><div class="fix">${esc(pl.err)}</div></div>`;return}
+  out.innerHTML=`<div class="find ${pl.skip.length?'warn':'ok'}"><b>Sẽ thêm ${pl.add.length} sản phẩm mới, cập nhật ${pl.upd.length} sản phẩm trùng tên${pl.skip.length?`, bỏ qua ${pl.skip.length} dòng`:''}.</b>${pl.skip.length?`<div class="fix">${pl.skip.slice(0,6).map(esc).join('<br>')}${pl.skip.length>6?'<br>…':''}</div>`:''}</div>
+    ${pl.add.length+pl.upd.length?'<div class="row"><button class="btn primary" id="csvGo">Xác nhận nhập</button></div>':''}`;
+  const go=$('#csvGo');if(go)go.onclick=()=>{csvApply(pl);$('#csvOut').innerHTML=`<div class="find ok"><b>Đã nhập xong: thêm ${pl.add.length}, cập nhật ${pl.upd.length}.</b></div>`;$('#csvTxt').value=''};
+}
+function csvDownload(){
+  const blob=new Blob(['﻿'+csvBuild()],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='livecore-san-pham-'+today()+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+function wireCsv(){
+  $('#csvExp').onclick=csvDownload;
+  $('#csvCopy').onclick=async()=>{
+    try{await navigator.clipboard.writeText(csvBuild());$('#csvOut').innerHTML='<div class="find ok"><b>Đã sao chép CSV.</b><div class="fix">Dán vào Excel hoặc Google Sheets để chỉnh, rồi dán ngược vào ô bên dưới để nhập lại.</div></div>'}
+    catch(e){$('#csvTxt').value=csvBuild();$('#csvOut').innerHTML='<div class="find warn"><b>Trình duyệt chặn sao chép tự động.</b><div class="fix">Nội dung CSV đã được đặt vào ô bên dưới, hãy chọn hết và sao chép thủ công.</div></div>'}
+  };
+  $('#csvFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;csvPreview(await f.text())};
+  $('#csvPrev').onclick=()=>csvPreview($('#csvTxt').value);
+}
+renderProfile();wireCsv();
 
 /* ===== Bộ máy kiểm soát phát ngôn (quy tắc mẫu + đối chiếu Hồ sơ) ===== */
+/* Quy tắc mẫu do nhóm soạn dựa trên các văn bản trong REF; cần đối chiếu văn bản hiện hành hoặc tư vấn pháp lý trước khi dùng thật. ind = ngành áp dụng (bỏ trống = mọi ngành) */
 const RULES=[
- {re:/rẻ nhất|tốt nhất|số 1|số một|hàng đầu|độc nhất|không đâu (?:rẻ|tốt) bằng/giu,sev:'warn',title:'So sánh tuyệt đối',
-  fix:'Bỏ so sánh tuyệt đối hoặc dẫn chứng kiểm chứng được. Ví dụ: “giá ưu đãi trong phiên live hôm nay”.'},
- {re:/(?:khỏi|trị|hết|chữa|điều trị)\s+(?:mụn|nám|thâm|bệnh)|chữa khỏi|dứt điểm|thay thế thuốc/giu,sev:'bad',title:'Nói công dụng như thuốc',
+ {id:'nhat',re:/rẻ nhất|tốt nhất|số 1|số một|hàng đầu|độc nhất|duy nhất|nhất thị trường|nhất việt nam|nhất hiện nay|hiệu quả nhất|an toàn nhất|không đâu (?:rẻ|tốt) bằng|rẻ hơn (?:mọi|tất cả)/giu,sev:'warn',title:'So sánh tuyệt đối',ref:'qc',
+  fix:'Chỉ nói “nhất/số một/duy nhất” khi có tài liệu chứng minh hợp pháp và nêu rõ trong quảng cáo. Nếu chưa có, dùng: “giá ưu đãi trong phiên live hôm nay”.'},
+ {id:'tpcn-thuoc',ind:['tpcn'],re:/(?:chữa|điều trị|đặc trị|ngăn ngừa)\s+(?:bệnh|tiểu đường|huyết áp|mỡ máu|ung thư|gout|tim mạch|dạ dày|xương khớp)|hết bệnh|thay (?:thế )?thuốc|không cần (?:uống )?thuốc/giu,sev:'bad',title:'Thực phẩm chức năng nói như thuốc chữa bệnh',ref:'tpcn',
+  fix:'Thực phẩm chức năng chỉ được nói công dụng đã công bố. Nhắc rõ: “Sản phẩm này không phải là thuốc, không có tác dụng thay thế thuốc chữa bệnh”.'},
+ {id:'tpcn-bacsi',ind:['tpcn'],re:/(?:bác sĩ|dược sĩ|chuyên gia y tế|giáo sư|bệnh viện)\s*(?:đã\s*)?(?:khuyên|khuyến cáo|khuyến nghị|tin dùng|giới thiệu|kiểm nghiệm|chứng nhận|đảm bảo)/giu,sev:'bad',title:'Dùng danh nghĩa bác sĩ hoặc cơ sở y tế',ref:'tpcn',
+  fix:'Không nói bác sĩ, dược sĩ hay bệnh viện “khuyên dùng/chứng nhận” khi quảng cáo thực phẩm chức năng.'},
+ {id:'mp-vuot',ind:['mypham'],re:/đặc trị|tái tạo (?:tế bào|da)|thay da|xóa (?:nhăn|sẹo|thâm|nám)|mọc tóc|tăng chiều cao|lành (?:sẹo|vết thương)|diệt (?:vi khuẩn|nấm)|kháng viêm/giu,sev:'bad',title:'Công dụng vượt phạm vi mỹ phẩm',ref:'mp',
+  fix:'Mỹ phẩm chỉ nói công dụng làm đẹp đã công bố, ví dụ “hỗ trợ làm sáng da, tùy cơ địa”. Không nói tác dụng chữa bệnh hoặc tái tạo mô.'},
+ {id:'thuoc',re:/(?:khỏi|trị|hết|chữa|điều trị)\s+(?:mụn|nám|thâm|bệnh)|(?:mụn|nám|thâm|sẹo|nhăn)\s+(?:biến mất|tan biến|sạch bóng)|chữa khỏi|dứt điểm|thay thế thuốc/giu,sev:'bad',title:'Nói công dụng như thuốc',ref:{mypham:'mp',tpcn:'tpcn',_:'tmdt'},
   fix:'Chỉ nói công dụng có trong hồ sơ, ví dụ: “hỗ trợ làm sáng da sau 4–8 tuần dùng đều, tùy cơ địa”.'},
- {re:/cam kết\s+(?:100%|hiệu quả|khỏi)|đảm bảo\s+(?:hiệu quả|khỏi|thành công)|chắc chắn\s+(?:hiệu quả|khỏi)|không tác dụng phụ|an toàn tuyệt đối|không kích ứng/giu,sev:'bad',title:'Cam kết tuyệt đối',
+ {id:'camket',re:/cam kết\s+(?:100%|hiệu quả|khỏi)|đảm bảo\s+(?:hiệu quả|khỏi|thành công)|chắc chắn\s+(?:hiệu quả|khỏi)|không tác dụng phụ|an toàn tuyệt đối|không kích ứng/giu,sev:'bad',title:'Cam kết tuyệt đối',ref:'tmdt',
   fix:'Tránh cam kết tuyệt đối. Hướng dẫn thử một vùng nhỏ và nhắc “tùy cơ địa từng người”.'},
- {re:/(?:dùng|xài)\s*\d+\s*(?:ngày|tuần)\s*(?:là|thì)?\s*(?:khỏi|hết|trắng|sáng|giảm|mất)|(?:sau|chỉ sau)\s*\d+\s*(?:ngày|giờ|tiếng)[^.!?\n]{0,25}(?:khỏi|hết|trắng|sáng|giảm)/giu,sev:'warn',title:'Hứa thời gian có kết quả',
+ {id:'hua',re:/trẻ (?:ra|lại)\s+\S+\s+tuổi|biến mất (?:luôn|hoàn toàn|sạch)|sạch bóng|hết sạch|đẹp ngay lập tức|hiệu quả ngay (?:lập tức|tức thì)/giu,sev:'warn',title:'Hứa kết quả phi thực tế',ref:'tmdt',
+  fix:'Không hứa kết quả tức thì hay tuyệt đối. Nói theo hồ sơ: “hỗ trợ cải thiện dần, tùy cơ địa từng người”.'},
+ {id:'thoigian',re:/(?:dùng|xài|uống|bôi|thoa)(?:\s+[^\d\s.,!?]+){0,3}\s*\d+\s*(?:ngày|tuần)\s*(?:là|thì)?\s*(?:khỏi|hết|trắng|sáng|giảm|mất)|(?:sau|chỉ sau)\s*\d+\s*(?:ngày|giờ|tiếng)[^.!?\n]{0,25}(?:khỏi|hết|trắng|sáng|giảm)/giu,sev:'warn',title:'Hứa thời gian có kết quả',ref:'tmdt',
   fix:'Dùng khoảng thời gian ghi trong hồ sơ và nói rõ kết quả khác nhau theo từng người.'},
- {re:/chỉ còn\s*\d+\s*(?:suất|chiếc|cái|sản phẩm|món|hộp)|hết ngay|cơ hội cuối/giu,sev:'warn',title:'Tạo khan hiếm',
-  fix:'Chỉ nói số lượng còn lại khi khớp tồn kho thật. Ưu tiên nói hạn khuyến mãi có thật.'}
+ {id:'khan',re:/chỉ còn\s*\d+\s*(?:suất|chiếc|cái|sản phẩm|món|hộp)|hết ngay|cơ hội cuối/giu,sev:'warn',title:'Tạo khan hiếm',ref:'tmdt',
+  fix:'Chỉ nói số lượng còn lại khi khớp tồn kho thật. Ưu tiên nói hạn khuyến mãi có thật.'},
+ {id:'tt-chatlieu',ind:['thoitrang'],re:/100%\s*(?:cotton|lụa|len|da thật|tơ tằm|cashmere)|chống (?:nắng|tia uv)\s*100%|chặn (?:hoàn toàn|100%)\s*(?:tia )?uv/giu,sev:'warn',title:'Cam kết chất liệu hoặc chỉ số tuyệt đối',ref:'nhan',
+  fix:'Nói đúng chất liệu và chỉ số ghi trên nhãn, ví dụ “UPF 50+ theo công bố của nhà sản xuất”.'},
+ {id:'gd-ben',ind:['giadung'],re:/không bao giờ hỏng|bền vĩnh viễn|bảo hành trọn đời|xay được mọi thứ|dùng được mọi|tiết kiệm điện 100%|không tốn điện/giu,sev:'warn',title:'Hứa độ bền hoặc công năng tuyệt đối',ref:'tmdt',
+  fix:'Nói đúng thông số và thời hạn bảo hành trong hồ sơ, ví dụ “bảo hành 12 tháng”.'}
 ];
 const CHECKS=[
  {label:'Nêu xuất xứ sản phẩm',re:/xuất xứ|sản xuất tại|may tại|lắp ráp|nhập khẩu/iu},
@@ -688,6 +995,13 @@ const CHECKS=[
  {label:'Nêu hạn khuyến mãi',re:/đến hết|đến ngày|đến \d{1,2}[\/.-]\d{1,2}|hết ngày|trong phiên|chỉ hôm nay|hôm nay/iu},
  {label:'Có hướng dẫn / lưu ý khi dùng',re:/hướng dẫn|cách dùng|lưu ý|thử .{0,20}vùng|kiểm tra hàng|tùy cơ địa/iu}
 ];
+const INDUSTRY_CHECKS={
+ mypham:[{label:'Nhắc thử vùng da nhỏ hoặc “tùy cơ địa”',re:/thử .{0,20}vùng|tùy cơ địa|tùy (?:từng )?(?:người|da|làn da)/iu}],
+ tpcn:[{label:'Nhắc “không phải là thuốc”',re:/không phải (?:là )?thuốc|không thay thế thuốc/iu}],
+ thoitrang:[{label:'Nêu size hoặc chất liệu',re:/size|chất liệu|vải/iu}],
+ giadung:[{label:'Nêu thời hạn bảo hành hoặc lưu ý an toàn',re:/bảo hành|an toàn|hướng dẫn/iu}]
+};
+let spokenP=null;
 const keysOf=p=>[...(p.keys||'').split(','),p.name].map(s=>s.trim().toLowerCase()).filter(k=>k.length>2);
 const PRICE_RE=/(\d{1,3}(?:[.,]\d{3})+|\d+(?:[.,]\d+)?)\s*(triệu|nghìn|ngàn|tr|k|đồng|đ|vnd)(?![\p{L}])/giu;
 function sentences(text){
@@ -707,33 +1021,47 @@ function toVND(num,unit){
 }
 function analyze(text,opts={}){
   const findings=[];const low=text.toLowerCase();
-  const add=f=>{if(!findings.some(x=>x.start===f.start&&x.end===f.end&&x.title===f.title))findings.push(f)};
-  RULES.forEach(r=>{r.re.lastIndex=0;let m;while((m=r.re.exec(text))){add({sev:r.sev,title:r.title,fix:r.fix,start:m.index,end:m.index+m[0].length,phrase:m[0]})}});
+  const add=f=>{if(!findings.some(x=>x.start===f.start&&x.end===f.end&&(x.title===f.title||x.sev===f.sev)))findings.push(f)};
+  /* xác định sản phẩm đang được nói tới ở từng câu (để chọn quy tắc theo ngành và đối chiếu giá) */
+  let lastP=opts.product||spokenP;
+  const sctx=sentences(text).map(([a,b])=>{
+    const sl=text.slice(a,b).toLowerCase();
+    const hit=products.find(p=>keysOf(p).some(k=>sl.includes(k)));
+    if(hit)lastP=hit;
+    return{a,b,s:text.slice(a,b),hit,p:hit||lastP};
+  });
+  const ctxAt=pos=>sctx.find(c=>pos>=c.a&&pos<c.b)||{};
+  const refFor=(r,ind)=>{const k=typeof r.ref==='string'?r.ref:(r.ref&&(r.ref[ind]||r.ref._));return k?REF[k]:null};
+  RULES.forEach(r=>{r.re.lastIndex=0;let m;while((m=r.re.exec(text))){
+    const pc=ctxAt(m.index).p,ind=pc?industryOf(pc):null;
+    if(r.ind&&!(ind&&r.ind.includes(ind)))continue;
+    add({sev:r.sev,title:r.title,fix:r.fix,ref:refFor(r,ind),start:m.index,end:m.index+m[0].length,phrase:m[0],rule:r.id});
+  }});
   products.forEach(p=>{
     (p.banned||'').split('\n').map(s=>s.trim().toLowerCase()).filter(Boolean).forEach(ph=>{
       let i=-1;while((i=low.indexOf(ph,i+1))>=0){
-        if(findings.some(x=>x.start===i&&x.end===i+ph.length))continue;
-        add({sev:'bad',title:`Cụm bị cấm trong hồ sơ “${p.name}”`,fix:'Xem mục “Công dụng được phép nói” của sản phẩm để chọn cách diễn đạt an toàn.',start:i,end:i+ph.length,phrase:text.slice(i,i+ph.length)});
+        const cp=ctxAt(i).p;if(cp&&cp!==p)continue;
+        const ex=findings.findIndex(x=>x.start===i&&x.end===i+ph.length);
+        let keepRef=null;
+        if(ex>=0){if(findings[ex].sev==='bad')continue;keepRef=findings[ex].ref;findings.splice(ex,1)}
+        add({sev:'bad',title:`Cụm bị cấm trong hồ sơ “${p.name}”`,fix:'Xem mục “Công dụng được phép nói” của sản phẩm để chọn cách diễn đạt an toàn.',start:i,end:i+ph.length,phrase:text.slice(i,i+ph.length),ref:keepRef||REF.tmdt});
       }
     });
   });
   /* đối chiếu giá */
-  let priceErr=0,last=opts.product||null;
-  sentences(text).forEach(([a,b])=>{
-    const s=text.slice(a,b),sl=s.toLowerCase();
-    const hit=products.find(p=>keysOf(p).some(k=>sl.includes(k)));
-    if(hit)last=hit;
+  let priceErr=0;
+  sctx.forEach(({a,s,hit,p:ctxP})=>{
     PRICE_RE.lastIndex=0;let m;
     while((m=PRICE_RE.exec(s))){
       const v=toVND(m[1],m[2]);if(!v||v<1000)continue;
-      const st=a+m.index,en=st+m[0].length,p=hit||last;
+      const st=a+m.index,en=st+m[0].length,p=ctxP;
       if(p){
         if(v===p.price||(v===p.promo&&promoOK(p)))continue;
         priceErr++;
-        if(v===p.promo)add({price:1,sev:'bad',title:'Khuyến mãi đã hết hạn',start:st,end:en,phrase:m[0],fix:`“${p.name}” niêm yết ${vnd(p.price)}. Giá KM ${vnd(p.promo)} đã hết hạn ngày ${dmy(p.promoUntil)}.`});
-        else add({price:1,sev:'bad',title:'Sai giá so với hồ sơ',start:st,end:en,phrase:m[0],fix:`Hồ sơ “${p.name}”: ${vnd(p.price)}${promoOK(p)?`, KM ${vnd(p.promo)} đến hết ${dmy(p.promoUntil)}`:''}.`});
+        if(v===p.promo)add({price:1,sev:'bad',title:'Khuyến mãi đã hết hạn',ref:REF.tmdt,start:st,end:en,phrase:m[0],fix:`“${p.name}” niêm yết ${vnd(p.price)}. Giá KM ${vnd(p.promo)} đã hết hạn ngày ${dmy(p.promoUntil)}.`});
+        else add({price:1,sev:'bad',title:'Sai giá so với hồ sơ',ref:REF.tmdt,start:st,end:en,phrase:m[0],fix:`Hồ sơ “${p.name}”: ${vnd(p.price)}${promoOK(p)?`, KM ${vnd(p.promo)} đến hết ${dmy(p.promoUntil)}`:''}.`});
       }else if(!products.some(q=>v===q.price||(v===q.promo&&promoOK(q)))){
-        priceErr++;add({price:1,sev:'warn',title:'Giá không khớp sản phẩm nào',start:st,end:en,phrase:m[0],fix:'Không gắn được mức giá này với sản phẩm nào trong hồ sơ. Kiểm tra lại.'});
+        priceErr++;add({price:1,sev:'warn',title:'Giá không khớp sản phẩm nào',ref:REF.tmdt,start:st,end:en,phrase:m[0],fix:'Không gắn được mức giá này với sản phẩm nào trong hồ sơ. Kiểm tra lại.'});
       }
     }
   });
@@ -759,8 +1087,11 @@ function analyze(text,opts={}){
   if(opts.checklist){
     checklist=CHECKS.map(c=>({label:c.label,ok:c.re.test(text)}));
     checklist.unshift({label:'Nhắc đúng tên sản phẩm trong hồ sơ',ok:products.some(p=>keysOf(p).some(k=>low.includes(k)))});
+    const inds=[...new Set(products.filter(p=>keysOf(p).some(k=>low.includes(k))).map(industryOf))];
+    inds.forEach(i=>(INDUSTRY_CHECKS[i]||[]).forEach(c=>checklist.push({label:`${c.label} (${INDS[i]})`,ok:c.re.test(text)})));
     missing=checklist.filter(c=>!c.ok).length;
   }
+  if(opts.track&&lastP)spokenP=lastP;
   const score=clamp(100-bad*16-warn*6-missing*5,0,100);
   const cf=findings.filter(f=>!f.price);
   return{findings,bad,warn,priceErr,checklist,score,compBad:cf.filter(f=>f.sev==='bad').length,compWarn:cf.filter(f=>f.sev==='warn').length};
@@ -780,7 +1111,7 @@ function ring(score){
   const c=2*Math.PI*30,col=score>=80?'var(--ok)':score>=55?'var(--warn)':'var(--bad)';
   return `<svg class="ring" viewBox="0 0 72 72" role="img" aria-label="Điểm ${score} trên 100"><circle cx="36" cy="36" r="30" fill="none" stroke="var(--line)" stroke-width="7"/><circle cx="36" cy="36" r="30" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(c*score/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 36 36)"/><text x="36" y="42" text-anchor="middle" data-n="${score}">${score}</text></svg>`;
 }
-const findHTML=f=>`<div class="find ${f.sev}"><b>${esc(f.title)}</b> <span class="mono muted">“${esc(f.phrase)}”</span><div class="fix">${esc(f.fix)}</div></div>`;
+const findHTML=f=>`<div class="find ${f.sev}"><b>${esc(f.title)}</b> <span class="mono muted">“${esc(f.phrase)}”</span><div class="fix">${esc(f.fix)}</div>${f.ref?`<div class="ref">Căn cứ: ${esc(f.ref.s)}</div>`:''}</div>`;
 
 /* ===== Tab: Rà soát kịch bản ===== */
 let lastScan=null;
@@ -799,12 +1130,174 @@ function runScan(silent){
     <div class="box"><h3>Kịch bản đã đánh dấu</h3><div class="preview">${highlight(text,a.findings)}</div></div>
     <div class="stack">${a.findings.length?a.findings.map(findHTML).join(''):'<div class="find ok"><b>Không phát hiện vi phạm nào.</b></div>'}</div>
     <div class="box"><h3>Checklist bắt buộc</h3>${a.checklist.map(c=>`<div class="chk"><span class="dot ${c.ok?'ok':'no'}" aria-hidden="true">${c.ok?'✓':'!'}</span><span>${esc(c.label)}${c.ok?'':' <span class="muted">— chưa thấy trong kịch bản</span>'}</span></div>`).join('')}</div>`;
-  if(silent!==true)bumpRun();
+  if(silent!==true){bumpRun();onb('scan')}
   if(silent!==true)log('scan',a.bad?'bad':a.warn?'warn':'ok',`Rà soát kịch bản: ${a.bad} lỗi nghiêm trọng, ${a.warn} cảnh báo, điểm ${a.score}/100`);
 }
 $('#runScan').onclick=()=>runScan();
 $('#loadSample').onclick=()=>{$('#scriptIn').value=SAMPLE_SCRIPT;runScan()};
 $('#clearScript').onclick=()=>{$('#scriptIn').value='';$('#scanOut').innerHTML='<div class="empty">Bấm “Rà soát ngay” để xem kết quả.</div>'};
+
+function renderRulesPanel(){
+  const sevT={bad:['Nghiêm trọng','bad'],warn:['Cảnh báo','warn']};
+  const rows=RULES.map(r=>{
+    const refs=typeof r.ref==='string'?[r.ref]:[...new Set(Object.values(r.ref))];
+    return `<tr><td><b>${esc(r.title)}</b></td><td>${r.ind?r.ind.map(i=>INDS[i]).join(', '):'Mọi ngành'}</td><td><span class="tag ${sevT[r.sev][1]}">${sevT[r.sev][0]}</span></td><td class="small">${refs.map(k=>esc(REF[k].s)).join('<br>')}</td></tr>`;
+  }).join('');
+  $('#rulesBody').innerHTML=`<div class="tscroll"><table><thead><tr><th>Quy tắc</th><th>Ngành áp dụng</th><th>Mức</th><th>Căn cứ</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="stack"><h4>Nội dung các văn bản được dẫn</h4>${Object.values(REF).map(r=>`<div class="small"><b>${esc(r.s)}</b><div class="muted">${esc(r.l)}</div></div>`).join('')}</div>
+    <div class="find warn"><b>Lưu ý</b><div class="fix">Đây là bộ quy tắc mẫu do nhóm soạn, tổng hợp từ nguồn công khai (cập nhật 09/2026), chưa phải tư vấn pháp lý. Văn bản có thể được sửa đổi, hãy đối chiếu bản hiện hành hoặc hỏi luật sư trước khi áp dụng thật. Ngoài ra hệ thống còn kiểm tra giá, khuyến mãi hết hạn, cụm bị cấm riêng của từng sản phẩm và câu trả lời chuẩn trong hồ sơ.</div></div>`;
+}
+renderRulesPanel();
+/* ===== Kiểm định độ chính xác trên bộ câu mẫu nội bộ ===== */
+/* [câu nói, nhãn đúng (ok | warn | bad), spoken=1 nếu là lời nói cần đổi chữ số]. Bộ mẫu do nhóm tự soạn và gán nhãn, dùng bộ hồ sơ mẫu (Lumi, Blendy, Nami, Kira). */
+const EVALSET=[
+ ['Chào cả nhà, hôm nay mình giới thiệu Serum Vitamin C Lumi nhé.','ok'],
+ ['Serum Lumi đang có giá 329k đến hết ngày khuyến mãi, giá niêm yết là 389k.','ok'],
+ ['Serum Lumi giúp làm sáng da, hỗ trợ mờ thâm sau 4 đến 8 tuần dùng đều đặn, tùy cơ địa từng người.','ok'],
+ ['Bạn da nhạy cảm nên thử một vùng nhỏ sau tai 24 giờ trước khi dùng cả mặt nha.','ok'],
+ ['Lumi sản xuất tại Việt Nam theo công thức Hàn Quốc, đổi trả trong 7 ngày nếu lỗi nhà sản xuất.','ok'],
+ ['Kết cấu Lumi lỏng nhẹ, thấm nhanh, buổi tối dùng rồi ban ngày nhớ kem chống nắng.','ok'],
+ ['Mình nhắc lại giá Serum Lumi hôm nay là 329.000đ nhé.','ok'],
+ ['Bạn nào mang thai thì hỏi bác sĩ trước khi dùng nhé, shop không tư vấn y tế.','ok'],
+ ['Cảm ơn các bạn đã vào xem, ai chưa theo dõi thì bấm theo dõi giúp mình.','ok'],
+ ['Chốt đơn thì bấm vào giỏ hàng góc trái màn hình nha.','ok'],
+ ['Hôm nay live có nhiều quà tặng cho các bạn.','ok'],
+ ['Bạn nào cần tư vấn size cứ bình luận nhé.','ok'],
+ ['Máy xay Blendy dung tích 350ml, xay sinh tố và đá viên nhỏ.','ok'],
+ ['Blendy sạc USB-C, khoảng 12 đến 15 lần xay mỗi lần sạc.','ok'],
+ ['Blendy giá 399k đến hết khuyến mãi, bảo hành 12 tháng.','ok'],
+ ['Thân máy Blendy làm từ nhựa Tritan không chứa BPA.','ok'],
+ ['Máy xay Blendy lắp ráp tại Việt Nam, lỗi kỹ thuật thì 1 đổi 1 trong 7 ngày.','ok'],
+ ['Đá cây lớn thì máy Blendy không xay được, bạn thêm chút nước khi xay đá viên nhỏ nhé.','ok'],
+ ['Máy xay Blendy giá 459.000đ.','ok'],
+ ['Áo khoác Nami vải thoáng, chỉ số UPF 50+ theo công bố của nhà sản xuất.','ok'],
+ ['Áo Nami có mũ trùm và lỗ xỏ ngón tay, size từ S đến XXL.','ok'],
+ ['Áo khoác Nami giá 249k nhé các bạn.','ok'],
+ ['Đổi size trong 7 ngày, còn nguyên tem mác, shop chịu phí ship lần đầu.','ok'],
+ ['Áo Nami giặt máy chế độ nhẹ, không dùng nước tẩy.','ok'],
+ ['Viên uống Collagen Kira bổ sung collagen và vitamin C, hỗ trợ làn da khỏe từ bên trong.','ok'],
+ ['Kira uống 2 viên mỗi ngày sau bữa ăn, đây là thực phẩm chức năng không phải là thuốc.','ok'],
+ ['Kira giá 490k đến hết khuyến mãi, niêm yết 590k.','ok'],
+ ['Mẹ bầu muốn dùng Kira thì hỏi bác sĩ trước nhé.','ok'],
+ ['Tùy cơ địa từng người mà thời gian thấy hiệu quả khác nhau, shop không cam kết kết quả cụ thể.','ok'],
+ ['Bạn đang uống thuốc điều trị thì hỏi bác sĩ hoặc dược sĩ trước khi dùng Kira.','ok'],
+ ['Serum Lumi giá ba trăm hai mươi chín nghìn đồng.','ok',1],
+ ['Máy xay Blendy giá bốn trăm năm mươi chín nghìn đồng.','ok',1],
+ ['Kira giá bốn trăm chín mươi nghìn.','ok',1],
+ ['Ai chưa có Lumi thì nhớ xem kỹ thành phần trên bao bì nhé.','ok'],
+ ['Serum Lumi rẻ nhất thị trường luôn.','warn'],
+ ['Lumi hiệu quả nhất trong các loại serum.','warn'],
+ ['Chọn Lumi vì nó số một hiện nay.','warn'],
+ ['Áo Nami rẻ nhất thị trường.','warn'],
+ ['Kira tốt nhất cho làn da.','warn'],
+ ['Đây là số 1 về chất lượng.','warn'],
+ ['Dùng Lumi sau 7 ngày là trắng sáng thấy rõ.','warn'],
+ ['Uống Kira 1 tuần là trắng da.','warn'],
+ ['Chỉ còn 5 suất cuối thôi, hết là mất giá nha.','warn'],
+ ['Cơ hội cuối cùng, hết ngay thôi các bạn ơi.','warn'],
+ ['Áo Nami chỉ còn 3 chiếc size L thôi.','warn'],
+ ['Áo Nami làm từ 100% cotton mềm mịn.','warn'],
+ ['Áo Nami chống tia UV 100%.','warn'],
+ ['Blendy bảo hành trọn đời.','warn'],
+ ['Blendy tiết kiệm điện 100% luôn.','warn'],
+ ['Lumi trẻ lại mười tuổi.','warn'],
+ ['Dùng Lumi 3 ngày là khỏi mụn.','bad'],
+ ['Lumi cam kết 100% hiệu quả.','bad'],
+ ['Serum Lumi không kích ứng đâu, an toàn tuyệt đối.','bad'],
+ ['Lumi trị nám cực kỳ hiệu quả.','bad'],
+ ['Serum Lumi đặc trị thâm nám.','bad'],
+ ['Serum Lumi tái tạo tế bào da, xóa nhăn xóa sẹo.','bad'],
+ ['Lumi hết thâm sau một tuần.','bad'],
+ ['Đảm bảo hiệu quả, không hiệu quả hoàn tiền.','bad'],
+ ['Sản phẩm này chữa dứt điểm nám cho chị em.','bad'],
+ ['Serum Lumi không tác dụng phụ nha.','bad'],
+ ['Lumi kháng viêm rất tốt.','bad'],
+ ['Nhiều bạn dùng Lumi đã hết mụn hoàn toàn.','bad'],
+ ['Ai mang thai dùng Lumi thoải mái nhé.','bad'],
+ ['Da nhạy cảm dùng Lumi được không? Được nha, không sao hết.','bad'],
+ ['Bạn cứ dùng Lumi đi, mụn biến mất luôn.','bad'],
+ ['Serum Lumi giá chỉ 299k thôi các bạn.','bad'],
+ ['Serum Lumi giá 350k đó các bạn.','bad'],
+ ['Máy xay Blendy không bao giờ hỏng.','bad'],
+ ['Blendy xay được mọi thứ luôn.','bad'],
+ ['Blendy bền vĩnh viễn nha.','bad'],
+ ['Máy xay Blendy giá 299k rẻ vô địch.','bad'],
+ ['Blendy giá 450k thôi.','bad'],
+ ['Máy Blendy rẻ nhất thị trường.','bad'],
+ ['Áo khoác Nami giá 199k hôm nay.','bad'],
+ ['Áo Nami chống nắng 100%.','bad'],
+ ['Nami chặn hoàn toàn tia UV luôn.','bad'],
+ ['Mặc Nami là không bao giờ đen da.','bad'],
+ ['Giá Nami hôm nay chỉ 220k.','bad'],
+ ['Collagen Kira chữa bệnh xương khớp rất tốt.','bad'],
+ ['Kira thay thế thuốc, bạn không cần uống thuốc nữa.','bad'],
+ ['Bác sĩ khuyên dùng Kira cho mọi người.','bad'],
+ ['Kira giúp giảm cân nhanh.','bad'],
+ ['Uống Kira hết nhăn sau 2 tuần.','bad'],
+ ['Kira giá 390k cực hời.','bad'],
+ ['Kira điều trị tiểu đường hiệu quả.','bad'],
+ ['Kira uống được cho phụ nữ mang thai thoải mái.','bad'],
+ ['Đảm bảo thành công 100% cho mọi người.','bad'],
+ ['Cam kết khỏi ngay sau một lần dùng.','bad'],
+ ['Serum Lumi giá ba trăm năm mươi nghìn đồng.','bad',1],
+ ['Kira giá ba trăm chín mươi nghìn.','bad',1],
+ ['Áo khoác Nami giá một trăm chín mươi chín nghìn.','bad',1]
+];
+const EVALSET_HO=[
+ ['Chị em yên tâm, Lumi bôi vào là hết sạch thâm nám luôn nha.','bad'],
+ ['Mình dùng Lumi hai tuần thấy da sáng lên, mỗi người mỗi khác nha.','ok'],
+ ['Blendy giá bốn trăm năm mươi nghìn thôi chị em.','bad',1],
+ ['Áo khoác Nami giá hai trăm bốn mươi chín nghìn đồng.','ok',1],
+ ['Serum Lumi này là hàng đầu về làm sáng da.','warn'],
+ ['Kira là thuốc bổ, uống vào khỏi cần đi khám.','bad'],
+ ['Kira hỗ trợ làn da, đây là thực phẩm chức năng, không phải thuốc nha.','ok'],
+ ['Áo Nami mặc là chống nắng tuyệt đối, ra biển thoải mái.','bad'],
+ ['Blendy pin dùng khoảng 12 đến 15 lần xay theo thử nghiệm của hãng.','ok'],
+ ['Nhanh tay lên, còn 2 chiếc Nami cuối cùng thôi.','warn'],
+ ['Lumi giá 329k đó, ai đặt trong hôm nay còn được giá này.','ok'],
+ ['Đảm bảo dùng Lumi là hết mụn, không thì hoàn tiền.','bad'],
+ ['Bạn đang bị viêm da thì nên hỏi bác sĩ trước khi thoa Lumi nhé.','ok'],
+ ['Máy xay này bền lắm, dùng mấy chục năm không hỏng đâu.','warn'],
+ ['Serum này tốt nhất trong tầm giá luôn các bạn.','warn'],
+ ['Kira giá 590k, uống đều mỗi ngày nhé cả nhà.','ok'],
+ ['Kira giá 500k thôi mọi người.','bad'],
+ ['Cả nhà bấm giỏ hàng số 2 để chốt Blendy nha.','ok'],
+ ['Nami này 100% lụa tơ tằm đó các bạn.','warn'],
+ ['Lumi làm da căng bóng ngay sau một lần dùng, cam kết luôn.','bad'],
+ ['Cảm ơn bạn Ngọc Anh đã ủng hộ shop.','ok'],
+ ['Uống Kira xong là hết đau xương khớp, khỏi cần thuốc.','bad'],
+ ['Chỉ còn 10 phút nữa là hết khuyến mãi, ai cần thì chốt nha.','warn'],
+ ['Bà bầu dùng Kira được hông ạ? Được, an toàn hết nha.','bad']
+];
+function runEval(set){
+  set=set||EVALSET;
+  const sp=products,ss=spokenP;let rows;
+  try{
+    products=SAMPLE_PRODUCTS();
+    rows=set.map(([t,y,spk])=>{spokenP=null;const a=analyze(spk?viNumbers(t):t);return{t,y,g:a.bad?'bad':a.warn?'warn':'ok'}});
+  }finally{products=sp;spokenP=ss}
+  const L=['ok','warn','bad'],cm={};L.forEach(y=>{cm[y]={};L.forEach(g=>cm[y][g]=0)});
+  rows.forEach(r=>cm[r.y][r.g]++);
+  let tp=0,fp=0,fn=0,tn=0,ex=0;
+  rows.forEach(r=>{const pos=r.y!=='ok',fl=r.g!=='ok';if(pos&&fl)tp++;else if(!pos&&fl)fp++;else if(pos&&!fl)fn++;else tn++;if(r.y===r.g)ex++});
+  const n=rows.length,pct=v=>Math.round(v*1000)/10;
+  return{n,tp,fp,fn,tn,acc:pct((tp+tn)/n),prec:tp+fp?pct(tp/(tp+fp)):null,rec:tp+fn?pct(tp/(tp+fn)):null,exact:pct(ex/n),cm,miss:rows.filter(r=>r.y!==r.g)};
+}
+function evalBlock(title,sub,set){
+  const r=runEval(set),LB={ok:'Đạt',warn:'Cảnh báo',bad:'Nghiêm trọng'},f=v=>v===null?'–':String(v).replace('.',',')+'%';
+  const tile=(l,v,s)=>`<div class="tile"><div class="small muted">${l}</div><b class="mono">${v}</b><div class="small muted">${s}</div></div>`;
+  return `<div class="box stack" style="background:var(--bg)"><div><h4 style="margin:0">${title}</h4><div class="small muted">${sub}</div></div>
+    <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+    ${tile('Phát hiện đúng/sai',f(r.acc),`${r.tp+r.tn}/${r.n} câu (có lỗi hay không)`)}${tile('Độ chuẩn xác (precision)',f(r.prec),`${r.tp}/${r.tp+r.fp} câu bị gắn cờ là đúng lỗi`)}${tile('Độ phủ (recall)',f(r.rec),`${r.tp}/${r.tp+r.fn} câu có lỗi được phát hiện`)}${tile('Đúng cả mức độ',f(r.exact),`${r.n-r.miss.length}/${r.n} câu khớp nhãn`)}</div>
+    <div class="tscroll"><table><thead><tr><th>Nhãn đúng ↓ / Hệ thống báo →</th>${['ok','warn','bad'].map(g=>`<th>${LB[g]}</th>`).join('')}</tr></thead><tbody>${['ok','warn','bad'].map(y=>`<tr><td><b>${LB[y]}</b></td>${['ok','warn','bad'].map(g=>`<td class="mono">${r.cm[y][g]}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+    <details><summary style="cursor:pointer"><b>${r.miss.length?`${r.miss.length} câu hệ thống chưa khớp nhãn`:'Không có câu nào lệch nhãn'}</b></summary><div class="stack" style="margin-top:8px">${r.miss.map(m=>{const kind=m.y!=='ok'&&m.g==='ok'?'Bỏ sót lỗi':m.y==='ok'?'Báo nhầm':'Sai mức độ';return `<div class="find ${m.y==='bad'||m.g==='bad'?'bad':'warn'}"><b>${kind}</b> <span class="muted small">nhãn: ${LB[m.y]} · hệ thống: ${LB[m.g]}</span><div class="fix">“${esc(m.t)}”</div></div>`}).join('')}</div></details></div>`;
+}
+function renderEval(){
+  $('#evalOut').innerHTML=evalBlock('Bộ kiểm tra độc lập',`${EVALSET_HO.length} câu viết theo cách nói tự nhiên, chưa dùng để chỉnh quy tắc. Đây là con số sát thực tế hơn.`,EVALSET_HO)
+    +evalBlock('Bộ đã dùng để chỉnh quy tắc',`${EVALSET.length} câu nhóm dùng khi soạn quy tắc, nên số liệu cao là điều dễ hiểu.`,EVALSET)
+    +`<div class="find warn"><b>Cách đọc số liệu</b><div class="fix">Các câu mẫu do nhóm tự soạn và tự gán nhãn, dùng hồ sơ mẫu, chỉ để so sánh giữa các phiên bản quy tắc và cho thấy giới hạn của cách làm theo luật: bắt tốt các cụm đã biết, bỏ sót những cách nói vòng. Không phải cam kết độ chính xác trên lời nói thật. Bản thật cần dữ liệu từ phiên live thật, có người chuyên môn gán nhãn, và lớp AI hiểu ngữ cảnh.</div></div>`;
+}
+$('#evalRun').onclick=renderEval;
 
 /* ===== AI (Claude qua capability "sample"; không có thì chạy theo luật) ===== */
 let sample=null;
@@ -846,21 +1339,22 @@ function answerFor(text){
 }
 
 /* ===== Tab: Phòng live ===== */
-const CMTS=['Serum Lumi giá sao shop','Lumi dùng cho da nhạy cảm được không','Blendy xay đá được không shop','Nami size XL cao 1m65 nặng 65kg mặc được không','Máy xay Blendy pin dùng được bao lâu','Áo Nami còn KM 199k không ạ','Mình dùng serum bị dị ứng thì đổi trả sao','Serum này trị mụn được không chị','Hàng Blendy xuất xứ ở đâu vậy','Xinh quá chị ơi','Serum Lumi ship COD được không','Máy xay bảo hành bao lâu vậy shop','Bạn bầu dùng Lumi được không','Áo Nami giặt máy được không','Blendy giá bao nhiêu vậy ạ'];
+const CMTS=['Serum Lumi giá sao shop','Lumi dùng cho da nhạy cảm được không','Blendy xay đá được không shop','Nami size XL cao 1m65 nặng 65kg mặc được không','Máy xay Blendy pin dùng được bao lâu','Áo Nami còn KM 199k không ạ','Mình dùng serum bị dị ứng thì đổi trả sao','Serum này trị mụn được không chị','Hàng Blendy xuất xứ ở đâu vậy','Xinh quá chị ơi','Serum Lumi ship COD được không','Máy xay bảo hành bao lâu vậy shop','Bạn bầu dùng Lumi được không','Áo Nami giặt máy được không','Blendy giá bao nhiêu vậy ạ','Collagen Kira giá sao shop','Kira uống có chữa được bệnh gì không chị','Mẹ bầu uống Kira được không'];
 const NAMES=['Ngọc Anh','Minh Tuấn','Thu Hà','Quốc Bảo','Lan Chi','Đức Huy','Mai Phương','Hoàng Nam'];
 const PRI={high:['Ưu tiên','bad'],normal:['Thường','warn'],low:['Xã giao','']};
 let liveTimer=null,feedN=0,selC=null,liveSess=null,clockTimer=null;const cm=[];
-function addComment(){
-  const text=CMTS[Math.floor(Math.random()*CMTS.length)],u=NAMES[Math.floor(Math.random()*NAMES.length)];
-  const r=answerFor(text);cm.unshift({id:++feedN,u,text,r,done:false,fresh:true});
+let cmtSrc='sim';
+function addComment(text,u){
+  if(!text){text=CMTS[Math.floor(Math.random()*CMTS.length)];u=NAMES[Math.floor(Math.random()*NAMES.length)]}
+  const r=answerFor(text);cm.unshift({id:++feedN,u:u||'Khách',text,r,done:false,fresh:true});
   if(r.pri!=='low'){stats.cmtSeen++;if(liveSess)liveSess.cmtSeen++}
-  if(cm.length>30)cm.pop();
+  if(cm.length>60)cm.pop();
   renderFeed();
 }
 function renderFeed(){
   const order={high:0,normal:1,low:2};
   const list=[...cm].sort((a,b)=>a.done-b.done||order[a.r.pri]-order[b.r.pri]||b.id-a.id);
-  $('#feed').innerHTML=list.length?list.map(c=>`<button class="cmt${c.fresh?' new':''}" data-id="${c.id}" aria-current="${c.id===selC}" ${c.done?'style="opacity:.5"':''}><div><div class="u">${esc(c.u)}</div>${esc(c.text)}</div><span class="tag ${PRI[c.r.pri][1]} pri">${c.done?'Đã trả lời':PRI[c.r.pri][0]}</span></button>`).join(''):'<div class="empty">Bấm “Bắt đầu phiên live” để bình luận bắt đầu đổ về.</div>';
+  $('#feed').innerHTML=list.length?list.map(c=>`<button class="cmt${c.fresh?' new':''}" data-id="${c.id}" aria-current="${c.id===selC}" ${c.done?'style="opacity:.5"':''}><div><div class="u">${esc(c.u)}</div>${esc(c.text)}</div><span class="tag ${PRI[c.r.pri][1]} pri">${c.done?'Đã trả lời':PRI[c.r.pri][0]}</span></button>`).join(''):`<div class="empty">${cmtSrc==='real'?'Dán bình luận vào khung phía trên rồi bấm “Thêm vào danh sách”.':'Bấm “Bắt đầu phiên live” để bình luận bắt đầu đổ về.'}</div>`;
   cm.forEach(c=>{c.fresh=false});
   document.querySelectorAll('.cmt').forEach(b=>b.onclick=()=>{selC=+b.dataset.id;renderFeed();renderSuggest()});
 }
@@ -873,18 +1367,162 @@ function renderSuggest(){
     <div class="row" style="margin-top:8px"><button class="btn primary" id="doneC" ${c.done?'disabled':''}>Đã trả lời</button></div>`;
   $('#doneC').onclick=()=>{
     c.done=true;if(c.r.pri!=='low'){stats.cmtAns++;if(liveSess)liveSess.cmtAns++}
+    if(liveSess&&liveSess.tl.length<120)liveSess.tl.push({o:Math.round(liveSecs()),k:'cmt',text:c.text.slice(0,200),intent:c.r.intent,gap:!!c.r.gap,sev:c.r.gap?'warn':'ok',f:[]});
     log('comment',c.r.gap?'warn':'ok',`Trả lời bình luận “${c.text}” (${c.r.intent})${c.r.gap?' – thiếu dữ liệu trong hồ sơ':''}`);
     renderFeed();renderSuggest();
   };
 }
+/* --- Nhập bình luận thật (dán chữ / đọc từ ảnh chụp) --- */
+function startFeed(){
+  if(cmtSrc==='sim'){addComment();addComment();liveTimer=setInterval(()=>addComment(),2600)}
+  else liveTimer=setInterval(()=>{},60000);
+}
+function parseCmts(raw){
+  const out=[];
+  String(raw||'').split(/\r?\n/).forEach(line=>{
+    line=line.replace(/\s+/g,' ').trim();if(!line)return;
+    let u='Khách',t=line;const m=line.match(/^@?([^:：]{1,26}?)\s*[:：]\s*(.+)$/);
+    if(m&&m[1].trim().split(' ').length<=4&&!/[?!]/.test(m[1])){u=m[1].replace(/^@/,'').trim();t=m[2]}
+    t=t.slice(0,300);if(t.length>=2)out.push({u:u.slice(0,26),text:t});
+  });
+  return out.slice(0,40);
+}
+function setSrc(v){
+  cmtSrc=v;
+  document.querySelectorAll('#srcRow [data-src]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.src===v)));
+  $('#realBox').hidden=v!=='real';
+  cm.length=0;selC=null;renderFeed();renderSuggest();
+  if(liveTimer){clearInterval(liveTimer);liveTimer=null;startFeed()}
+}
+document.querySelectorAll('#srcRow [data-src]').forEach(b=>b.onclick=()=>setSrc(b.dataset.src));
+$('#realAdd').onclick=()=>{
+  const list=parseCmts($('#realTxt').value);
+  if(!list.length){$('#realNote').textContent='Chưa có bình luận nào để thêm.';return}
+  list.forEach(c=>addComment(c.text,c.u));
+  $('#realTxt').value='';$('#realNote').textContent=`Đã thêm ${list.length} bình luận. Bấm vào từng bình luận để xem gợi ý trả lời.`;
+};
+async function readCmtImage(file){
+  const note=$('#realNote');
+  if(!file)return;
+  if(!sample){note.textContent='Đọc ảnh cần AI Claude, hiện chưa bật ở bản này. Bạn dán chữ bình luận vào khung phía trên nhé.';return}
+  let lim=null;try{lim=await sample.limits()}catch(e){}
+  if(!lim||!lim.images){note.textContent='Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI. Bạn dán chữ bình luận vào khung phía trên nhé.';return}
+  note.textContent='AI đang đọc ảnh…';$('#realImgL').setAttribute('aria-busy','true');
+  try{
+    const arr=await sample.json('Ảnh là ảnh chụp phần bình luận của một phiên livestream bán hàng. Trích từng bình luận của người xem thành mảng JSON dạng [{"name":"tên người bình luận","text":"nội dung"}]. Bỏ qua thông báo hệ thống (đã vào phòng, đã theo dõi, đã mua, tặng quà), tên sản phẩm ghim và nút bấm. Nếu không thấy bình luận nào trả về []. Chỉ trả về JSON.',{images:file,modelTier:'quick'});
+    const list=(Array.isArray(arr)?arr:[]).map(x=>({u:String((x&&x.name)||'Khách').slice(0,26),text:String((x&&x.text)||'').slice(0,300)})).filter(x=>x.text.length>=2).slice(0,40);
+    if(!list.length){note.textContent='AI không thấy bình luận nào trong ảnh. Thử ảnh rõ hơn hoặc dán chữ.';return}
+    $('#realTxt').value=list.map(x=>x.u+': '+x.text).join('\n');
+    note.textContent=`AI đọc được ${list.length} bình luận. Kiểm tra lại nội dung rồi bấm “Thêm vào danh sách”.`;
+  }catch(e){note.textContent=e&&e.code==='images_unavailable'?'Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI.':aiErr(e)}
+  finally{$('#realImgL').removeAttribute('aria-busy')}
+}
+$('#realImg').onchange=e=>{const f=e.target.files[0];e.target.value='';readCmtImage(f)};
+$('#realTxt').addEventListener('paste',e=>{
+  const it=[...(e.clipboardData?e.clipboardData.items:[])].find(i=>i.kind==='file'&&/^image\//.test(i.type));
+  if(it){e.preventDefault();readCmtImage(it.getAsFile())}
+});
+['dragover','drop'].forEach(ev=>$('#realBox').addEventListener(ev,e=>{
+  e.preventDefault();if(ev==='dragover')return;
+  const f=[...(e.dataTransfer?e.dataTransfer.files:[])].find(x=>/^image\//.test(x.type));
+  if(f)readCmtImage(f);else{const t=e.dataTransfer&&e.dataTransfer.getData('text');if(t)$('#realTxt').value+=(($('#realTxt').value?'\n':'')+t)}
+}));
+/* ===== Kịch bản dẫn (teleprompter), checklist tự tích, bảng cảnh báo nổi, âm báo ===== */
+const tp={sents:[],cur:0,done:new Set(),spoken:'',src:null};
+function tpSplit(text){return sentences(text).map(([a,b])=>text.slice(a,b).trim()).filter(x=>x.length>3)}
+function tpSync(force){
+  const src=$('#scriptIn').value;
+  if(!force&&tp.src===src)return;
+  tp.src=src;tp.sents=tpSplit(src);tp.cur=0;tp.done=new Set();tp.spoken='';tpRender();
+}
+function tpReset(){tp.cur=0;tp.done=new Set();tp.spoken='';tpRender()}
+function tpRender(){
+  const L=$('#tpList');if(!L)return;
+  L.classList.toggle('big',$('#tpBig').checked);
+  L.innerHTML=tp.sents.length?tp.sents.map((s,i)=>`<button type="button" class="tps ${tp.done.has(i)?'done':i===tp.cur?'cur':''}" data-i="${i}" ${i===tp.cur?'aria-current="true"':''}>${esc(s)}</button>`).join(''):'<div class="empty">Chưa có kịch bản. Dán kịch bản ở tab Rà soát kịch bản rồi quay lại đây.</div>';
+  L.querySelectorAll('.tps').forEach(b=>b.onclick=()=>{tp.cur=+b.dataset.i;tpRender()});
+  const c=L.querySelector('.cur');if(c)L.scrollTop=Math.max(0,c.offsetTop-L.clientHeight/3);
+  const ck=analyze(tp.spoken,{checklist:true,product:spokenP}).checklist;
+  $('#tpCheck').innerHTML=ck.map(x=>`<div class="chk"><span class="dot ${x.ok?'ok':'no'}" aria-hidden="true">${x.ok?'✓':'○'}</span><span>${esc(x.label)}${x.ok?'':' <span class="muted small">chưa nói</span>'}</span></div>`).join('');
+}
+function tpFeed(text){
+  tp.spoken+=' '+text;
+  const t=new Set(toks(text));
+  if(t.size>=2&&tp.sents.length){
+    let best=-1,bs=0;
+    for(let i=Math.max(0,tp.cur-2);i<Math.min(tp.sents.length,tp.cur+8);i++){
+      const st=toks(tp.sents[i]);if(st.length<2)continue;
+      const hit=st.filter(w=>t.has(w)).length,sc=Math.max(hit/Math.min(st.length,t.size+2),0)*(hit>=2?1:0)-Math.abs(i-tp.cur)*0.01;
+      if(sc>bs){bs=sc;best=i}
+    }
+    if(best>=0&&bs>=0.45){for(let i=tp.cur;i<=best;i++)tp.done.add(i);tp.cur=Math.min(tp.sents.length-1,best+1);if(best===tp.sents.length-1)tp.done.add(best)}
+  }
+  tpRender();
+}
+$('#tpBig').onchange=tpRender;
+$('#tpReload').onclick=()=>tpSync(true);
+$('#tpReset').onclick=tpReset;
+/* --- Bảng cảnh báo nổi --- */
+const hud=document.createElement('div');
+hud.id='hud';hud.className='hud';hud.hidden=true;hud.setAttribute('role','status');hud.setAttribute('aria-live','assertive');
+hud.innerHTML='<div class="hud-h"><span class="livebadge">LIVE</span><span class="mono small" id="hudClock">00:00</span><span class="tag bad" id="hudBad">0 nghiêm trọng</span><span class="tag warn" id="hudWarn">0 cảnh báo</span></div><div id="hudBody" class="small muted">Chưa có cảnh báo nào. Bảng này hiện cảnh báo mới nhất ngay khi bạn nói.</div>';
+document.body.appendChild(hud);
+let pipWin=null;
+function hudSync(){
+  const show=$('#hudOn').checked&&!!liveSess&&!!liveTimer;
+  hud.hidden=!show;
+  if(!show&&pipWin){try{pipWin.close()}catch(e){}}
+  const pb=$('#pipBtn');if(pb)pb.hidden=!('documentPictureInPicture' in window);
+  hudClock();
+}
+function hudClock(){
+  if(!liveSess)return;
+  $('#hudClock').textContent=fmtSec(liveSecs());
+  $('#hudBad').textContent=liveSess.bad+' nghiêm trọng';$('#hudWarn').textContent=liveSess.warn+' cảnh báo';
+}
+function hudUpdate(a,text){
+  if(!liveSess)return;
+  hudClock();
+  const f=a.findings.find(x=>x.sev==='bad')||a.findings[0];
+  hud.classList.toggle('alert',!!f&&f.sev==='bad');
+  $('#hudBody').className=f?'':'small muted';
+  $('#hudBody').innerHTML=f?`<div class="find ${f.sev}" style="margin:0"><b>${esc(f.title)}</b> <span class="mono muted">“${esc(f.phrase)}”</span><div class="fix">Nên nói: ${esc(f.fix)}</div></div>`:`<span class="tag ok">Ổn</span> <span class="small muted">“${esc(text.slice(0,80))}${text.length>80?'…':''}”</span>`;
+}
+$('#hudOn').onchange=hudSync;
+$('#pipBtn').onclick=async()=>{
+  if(pipWin){try{pipWin.close()}catch(e){}return}
+  try{
+    const w=await window.documentPictureInPicture.requestWindow({width:360,height:250});
+    document.querySelectorAll('style').forEach(st=>{const c=w.document.createElement('style');c.textContent=st.textContent;w.document.head.appendChild(c)});
+    document.querySelectorAll('link[rel=stylesheet]').forEach(l=>{const c=w.document.createElement('link');c.rel='stylesheet';c.href=l.href;w.document.head.appendChild(c)});
+    const th=document.documentElement.getAttribute('data-theme');if(th)w.document.documentElement.setAttribute('data-theme',th);
+    w.document.body.style.margin='0';w.document.body.style.padding='8px';
+    hud.classList.add('pip');w.document.body.append(hud);pipWin=w;$('#pipBtn').textContent='Đóng cửa sổ nổi riêng';
+    w.addEventListener('pagehide',()=>{hud.classList.remove('pip');document.body.append(hud);pipWin=null;$('#pipBtn').textContent='Mở cửa sổ nổi riêng';hudSync()});
+  }catch(e){$('#pipNote').textContent='Trình duyệt không cho mở cửa sổ nổi riêng ở đây, bảng cảnh báo vẫn hiện ngay trên trang.'}
+};
+/* --- Âm báo --- */
+let actx=null;
+function beep(sev){
+  if(!$('#beepOn').checked)return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    const seq=sev==='bad'?[[660,0],[880,.16]]:[[740,0]];
+    seq.forEach(([f,d])=>{const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='sine';o.connect(g);g.connect(actx.destination);const t=actx.currentTime+d;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.18,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.14);o.start(t);o.stop(t+.16)});
+  }catch(e){}
+}
+$('#beepOn').onchange=()=>{if($('#beepOn').checked)beep('warn')};
+function alertFx(a){const s=a.bad?'bad':a.warn?'warn':'';if(s)beep(s)}
 /* Kiểm soát phát ngôn */
 function checkSpeech(text,kind,product){
-  const a=analyze(text,{product});
+  const a=analyze(text,{product,track:kind==='speech'});
   stats.bad+=a.compBad;stats.warn+=a.compWarn;stats.priceErr+=a.priceErr;
   if(kind==='speech'&&liveSess){
+    if(liveSess.tl.length<120)liveSess.tl.push({o:Math.round(liveSecs()),k:'speech',text:text.slice(0,240),sev:a.bad?'bad':a.warn?'warn':'ok',f:fcomp(a.findings)});
     liveSess.speeches++;liveSess.bad+=a.compBad;liveSess.warn+=a.compWarn;liveSess.priceErr+=a.priceErr;
     a.findings.forEach(f=>{if(f.sev==='bad'||f.sev==='warn')liveSess.viol[f.title]=(liveSess.viol[f.title]||0)+1});
   }
+  if(kind==='speech'){tpFeed(text);hudUpdate(a,text);alertFx(a);onb('speech')}
   log(kind,a.bad?'bad':a.warn?'warn':'ok',`${kind==='speech'?'Phát ngôn':'Trả lời khách'}: “${text.length>70?text.slice(0,70)+'…':text}” → ${a.bad} nghiêm trọng, ${a.warn} cảnh báo`);
   return a;
 }
@@ -952,8 +1590,11 @@ if(!SR){
 }else{
   $('#micBtn').onclick=()=>{
     if(micOn){micOn=false;try{rec.stop()}catch(e){}$('#micBtn').textContent='Bật micro nhận diện giọng nói';micStat('Micro đang tắt');return}
-    micOn=true;$('#micBtn').textContent='Tắt micro';micStat('Đang nghe (vi-VN)','ok');
-    try{startMic()}catch(e){micOn=false;micStat('Không bật được micro','bad');$('#micBtn').textContent='Bật micro nhận diện giọng nói'}
+    const go=()=>{
+      micOn=true;$('#micBtn').textContent='Tắt micro';micStat('Đang nghe (vi-VN)','ok');
+      try{startMic()}catch(e){micOn=false;micStat('Không bật được micro','bad');$('#micBtn').textContent='Bật micro nhận diện giọng nói'}
+    };
+    micOk()?go():askMic(go);
   };
 }
 
@@ -1013,6 +1654,7 @@ async function nextCustomer(){
     text=q.replace('{n}',p.name);
     span.textContent=text;
   }
+  sim.q=text;
   sim.turns.length?0:sim.turns.push({role:'user',content:customerRules(persona,p)+'\n\nHãy viết tin nhắn đầu tiên của khách.'});
   sim.turns.push({role:'assistant',content:text});
   sim.busy=false;$('#simSend').disabled=false;$('#simMic').disabled=!SR;$('#simIn').disabled=false;
@@ -1033,7 +1675,9 @@ $('#simStart').onclick=()=>{
   $('#simVoiceNote').textContent=SR?FILE_NOTE:'Trình duyệt này chưa hỗ trợ nhận diện giọng nói, hãy dùng Chrome hoặc Edge bản máy tính.';
   sim.persona=PERSONAS.find(x=>x.id===$('#persona').value);
   sim.prod=getP($('#simProd').value)||products[0];
+  if(sim.rec)saveSimSession();
   sim.turns=[];sim.n=0;sim.on=true;sim.ai=!!sample;
+  sim.rec={start:Date.now(),persona:sim.persona.label,prod:sim.prod.name,tl:[]};
   if(SR&&$('#simAuto').checked){simWant=true;setMicUI();startSimMic()}
   $('#chat').innerHTML='';
   bubble('small muted',`Phiên tập: ${esc(sim.persona.label)} · ${esc(sim.prod.name)}${sim.ai?'':' · (chế độ mô phỏng theo luật, khách hỏi theo kịch bản có sẵn)'}`);
@@ -1050,6 +1694,7 @@ async function sendSim(){
   const a=checkSpeech(t,'sim',sim.prod);
   stats.simAns++;
   if(!a.bad&&!a.warn&&t.length>=20)stats.simGood++;
+  if(sim.rec&&sim.rec.tl.length<120)sim.rec.tl.push({o:Math.round((Date.now()-sim.rec.start)/1000),k:'qa',q:String(sim.q||'').slice(0,240),text:t.slice(0,300),sev:a.bad?'bad':a.warn?'warn':'ok',good:!a.bad&&!a.warn&&t.length>=20,f:fcomp(a.findings)});
   a.findings.slice(0,3).forEach(f=>bubble('alert',`⚠ ${esc(f.title)}: “${esc(f.phrase)}”. ${esc(f.fix)}`));
   sim.turns.push({role:'user',content:'Streamer trả lời: '+t+'\n\n(Hãy nhắn tiếp một tin của khách, vẫn trong vai.)'});
   sim.n++;
@@ -1123,6 +1768,7 @@ function flushAnswer(){
 }
 function startSimMic(){
   if(!SR||simRec)return;
+  if(!micOk()){askMic(startSimMic,()=>{simWant=false;$('#simAuto').checked=false;setMicUI()});return}
   const r=new SR();simRec=r;r.lang='vi-VN';r.continuous=true;r.interimResults=true;
   r.onstart=()=>{simListening=true;setMicUI();$('#simVoiceNote').textContent=FILE_NOTE};
   r.onresult=e=>{
@@ -1154,6 +1800,7 @@ $('#simIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault(
 $('#simEnd').onclick=()=>{
   sim.on=false;stopVoice();$('#simEnd').disabled=true;$('#simSend').disabled=true;$('#simMic').disabled=true;$('#simIn').disabled=true;
   log('sim','ok',`Kết thúc live tập sự, đã trả lời ${sim.n} câu`);
+  const sr=saveSimSession();if(sr)onb('sim');
   showTab('report');
 };
 
@@ -1223,14 +1870,14 @@ runScan(true);
    Bản chính thức cần máy chủ xác thực. */
 const YEAR_DISC=0.10; /* giảm khi trả theo năm: file PDF của nhóm ghi khoảng 10% (2.689.200đ/năm cho gói 249.000đ) */
 const PLANS={
-  free:{name:'Dùng thử',sub:'Trải nghiệm các tính năng cơ bản',price:0,products:1,runs:5,personas:1,coach:false,badge:'Miễn phí',icon:'plane',
-    features:['1 Product Master','Compliance check thủ công','5 phiên phân tích/tháng']},
+  free:{name:'Dùng thử',sub:'Trải nghiệm các tính năng cơ bản',price:0,products:1,runs:5,personas:1,coach:false,hist:3,badge:'Miễn phí',icon:'plane',
+    features:['1 Product Master','Compliance check thủ công','5 phiên phân tích/tháng','Xem lại 3 phiên gần nhất']},
   basic:{name:'Cá nhân Cơ bản',sub:'Phù hợp cho streamer cá nhân',price:249000,products:5,runs:100,personas:3,coach:false,badge:'Phổ biến',icon:'user',
     features:['5 Product Master','Live AI Compliance','Speech-to-Text','Session History','AI Simulator (3 dạng tình huống luyện tập)','100 phiên phân tích/tháng']},
   pro:{name:'Cá nhân Chuyên nghiệp',sub:'Dành cho KOL / Streamer',price:699000,products:20,runs:500,personas:10,coach:true,icon:'users',
     features:['20 Product Master','Live AI Compliance','Speech-to-Text','Session History','Post-Live Report','AI Coach','AI Simulator (đủ 10 dạng tình huống luyện tập)','500 phiên phân tích/tháng']},
   business:{name:'Doanh nghiệp',sub:'Dành cho team / thương hiệu lớn',price:2999000,products:Infinity,runs:Infinity,personas:10,coach:true,icon:'crown',
-    features:['Không giới hạn Product Master','Kèm 10 tài khoản phân quyền','Tài khoản thêm: 299.000đ/tài khoản/tháng','Live AI Compliance','Quản lý nhiều KOC/KOL, chọn người live cho từng phiên','Báo cáo thống kê theo từng KOC/KOL','Team Workspace','AI Simulator + AI Coach','Priority Support']}
+    features:['Không giới hạn Product Master','Kèm 10 tài khoản phân quyền','Tài khoản thêm: 299.000đ/tài khoản/tháng','Live AI Compliance','Quản lý nhiều KOC/KOL, chọn người live cho từng phiên','Báo cáo thống kê, doanh thu/giờ theo từng KOC/KOL','Phân quyền: chủ, quản lý, KOC/KOL, người xem','Xuất báo cáo PDF','Team Workspace','AI Simulator + AI Coach','Priority Support']}
 };
 const PLAN_ORDER=['free','basic','pro','business'];
 const fmtN=n=>Math.round(n).toLocaleString('vi-VN');
@@ -1279,7 +1926,7 @@ function fillPersonas(){
   $('#persona').value=(ok>=0&&ok<cap)?cur:PERSONAS[0].id;
 }
 function showAuth(which){
-  $('#app').hidden=true;$('#auth').hidden=false;authTab(which||'login');
+  $('#app').hidden=true;$('#auth').hidden=false;authTab(which||'login');authMode();
 }
 function showApp(){$('#auth').hidden=true;$('#app').hidden=false}
 function authTab(w){
@@ -1310,22 +1957,23 @@ function resetSession(){
   $('#simIn').value='';$('#speech').value='';$('#speechOut').innerHTML='';$('#addNote').textContent='';
 }
 function loadUserData(){
-  products=store.get('lc_products')||SAMPLE_PRODUCTS();
+  products=migrateP(store.get('lc_products')||SAMPLE_PRODUCTS());
   curP=products[0].id;
   $('#scriptIn').value=store.get('lc_script')||SAMPLE_SCRIPT;
-  resetSession();renderProfile();runScan(true);fillSimProducts();fillPersonas();fillKolSel();
+  resetSession();renderProfile();runScan(true);fillSimProducts();fillPersonas();viewAs='owner';fillViewAs();fillKolSel();renderOnb();
 }
 function updateHeader(){
-  const t=$('#planTag');t.textContent=`${ME.name} · ${PLANS[ME.plan].name}`;t.title=ME.email;
+  const t=$('#planTag');t.textContent=`${ME.name} · ${PLANS[ME.plan].name}`;t.title=ME.email;fillViewAs();
 }
 function startSession(u,remember){
   UID=u.id;ME=u;
   raw.del('lc_session');
-  raw.set('lc_session',{uid:u.id},remember?'local':'session');
-  loadUserData();updateHeader();showApp();showTab('profile');
+  if(!u.cloud)raw.set('lc_session',{uid:u.id},remember?'local':'session');
+  loadUserData();updateHeader();showApp();showTab('profile');applyRole();
 }
 function logout(){
-  raw.del('lc_session');UID=null;ME=null;
+  if(ME&&ME.cloud)cloudLogout();
+  raw.del('lc_session');UID=null;ME=null;setSync('ok');
   products=SAMPLE_PRODUCTS();curP=products[0].id;
   resetSession();
   ['#lg-email','#lg-pw','#lg-err'].forEach(x=>{const e=$(x);'value' in e?e.value='':e.textContent=''});
@@ -1343,6 +1991,18 @@ $('#loginForm').addEventListener('submit',async e=>{
   const btn=$('#lg-submit');btn.disabled=true;
   try{
     const u=users().find(x=>x.email===email);
+    if(!u&&sbCfg()){
+      try{
+        const ss=await sbSignIn(email,pw);
+        fails=0;err('');$('#lg-pw').value='';
+        await cloudStart(ss,$('#lg-remember').checked);
+      }catch(x){
+        sbSess=null;raw.del('lc_sbsess');if(ME&&ME.cloud){UID=null;ME=null}
+        if(x&&x.code==='http'&&x.status===400){fails++;if(fails>=5){lockUntil=Date.now()+30000;fails=0;return err('Nhập sai 5 lần. Đăng nhập tạm khóa 30 giây.')}}
+        err(sbMsg(x));
+      }
+      return;
+    }
     const h=await hashPw(pw,u?u.salt:newSalt());
     if(!u||!safeEq(h,u.hash)){
       fails++;
@@ -1355,7 +2015,7 @@ $('#loginForm').addEventListener('submit',async e=>{
 });
 $('#regForm').addEventListener('submit',async e=>{
   e.preventDefault();
-  const err=m=>{$('#rg-err').textContent=m};
+  const err=m=>{$('#rg-err').textContent=m;$('#rg-ok').textContent=''};
   const name=$('#rg-name').value.trim(),email=$('#rg-email').value.trim().toLowerCase(),pw=$('#rg-pw').value,pw2=$('#rg-pw2').value;
   const plan=(document.querySelector('input[name=plan]:checked')||{}).value||'pro';
   if(name.length<2)return err('Nhập họ và tên (ít nhất 2 ký tự).');
@@ -1363,10 +2023,19 @@ $('#regForm').addEventListener('submit',async e=>{
   if(!validPw(pw))return err(PW_MSG);
   if(pw!==pw2)return err('Hai mật khẩu chưa giống nhau.');
   if(!$('#rg-terms').checked)return err('Hãy tick xác nhận đã hiểu đây là bản demo.');
-  if(users().some(u=>u.email===email))return err('Email này đã có tài khoản. Hãy chuyển sang Đăng nhập.');
+  if(!sbCfg()&&users().some(u=>u.email===email))return err('Email này đã có tài khoản. Hãy chuyển sang Đăng nhập.');
   err('');
   const btn=$('#rg-submit');btn.disabled=true;btn.textContent='Đang tạo…';
   try{
+    if(sbCfg()){
+      try{
+        const ss=await sbSignUp(email,pw,name,plan);
+        ['#rg-name','#rg-email','#rg-pw','#rg-pw2'].forEach(x=>$(x).value='');$('#rg-terms').checked=false;
+        if(ss)await cloudStart(ss,true);
+        else{$('#lg-email').value=email;$('#rg-ok').textContent='Đã tạo tài khoản. Máy chủ yêu cầu xác nhận email: mở thư gửi tới '+email+' (kể cả thư rác), bấm liên kết xác nhận rồi quay lại Đăng nhập.'}
+      }catch(x){sbSess=null;raw.del('lc_sbsess');if(ME&&ME.cloud){UID=null;ME=null}err(sbMsg(x))}
+      return;
+    }
     const salt=newSalt();
     const u={id:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,email,plan,salt,hash:await hashPw(pw,salt),created:Date.now()};
     saveUsers([...users(),u]);
@@ -1512,7 +2181,7 @@ function viewMe(){
     <div class="box stack"><h3>Phiên đăng nhập</h3>
       <div class="row"><button class="btn" id="ac-logout">Đăng xuất</button><button class="btn danger" id="ac-del">Xóa tài khoản</button></div>
       <div id="ac-delbox" class="stack" hidden>
-        <p class="small muted">Xóa vĩnh viễn tài khoản và toàn bộ dữ liệu của tài khoản này trên trình duyệt. Nhập email <b>${esc(ME.email)}</b> để xác nhận.</p>
+        <p class="small muted">Xóa vĩnh viễn tài khoản và toàn bộ dữ liệu của tài khoản này ${ME.cloud?'trên đám mây và trên trình duyệt':'trên trình duyệt'}. Nhập email <b>${esc(ME.email)}</b> để xác nhận.</p>
         <input type="email" id="ac-delemail" aria-label="Nhập email để xác nhận xóa">
         <div class="err" id="ac-delerr" role="alert"></div>
         <div class="row"><button class="btn danger" id="ac-delgo">Xóa vĩnh viễn</button><button class="btn" id="ac-delno">Hủy</button></div></div></div></div>
@@ -1521,7 +2190,14 @@ function viewMe(){
     <div class="fld"><label for="ac-new">Mật khẩu mới</label><input type="password" id="ac-new" autocomplete="new-password"></div>
     <div class="fld"><label for="ac-new2">Nhập lại mật khẩu mới</label><input type="password" id="ac-new2" autocomplete="new-password"></div>
     <div class="err" id="ac-pwerr" role="alert"></div><div class="okmsg" id="ac-pwok" role="status"></div>
-    <div class="row"><button class="btn primary" type="submit">Lưu mật khẩu mới</button></div></form></div>`;
+    <div class="row"><button class="btn primary" type="submit">Lưu mật khẩu mới</button></div></form></div>
+  <div class="box stack" style="margin-top:14px"><h3>Dữ liệu, sao lưu và quyền riêng tư</h3>
+    <div class="small">${ME.cloud?'Tài khoản đám mây: hồ sơ sản phẩm, kịch bản, lịch sử phiên và danh sách KOC/KOL được đồng bộ lên máy chủ Supabase và cả trong trình duyệt này. Bạn vẫn nên tải file sao lưu định kỳ.':'Bản demo chưa có máy chủ: hồ sơ sản phẩm, kịch bản, lịch sử phiên và danh sách KOC/KOL được lưu ngay trong trình duyệt này và không gửi đi đâu. Vì vậy xóa dữ liệu trình duyệt, đổi máy hoặc đổi trình duyệt sẽ mất dữ liệu, hãy sao lưu định kỳ.'}</div>
+    <div class="small muted">Micro: ứng dụng không ghi âm hay lưu file âm thanh, chỉ lưu phần chữ nhận được. Tính năng AI Claude (khi bật) chỉ nhận đoạn chữ hoặc ảnh bạn chủ động gửi, theo tài khoản Claude của bạn.</div>
+    <div class="row"><button class="btn primary" id="bkExp">Tải file sao lưu (JSON)</button><button class="btn" id="bkCopy">Sao chép nội dung</button><label class="btn" for="bkFile" style="cursor:pointer">Chọn file để phục hồi</label><input type="file" id="bkFile" accept=".json,application/json" hidden></div>
+    <textarea id="bkTxt" rows="3" aria-label="Dán nội dung sao lưu để phục hồi" placeholder="Hoặc dán nội dung sao lưu vào đây"></textarea>
+    <div class="row"><button class="btn danger" id="bkGo" hidden>Phục hồi (ghi đè dữ liệu hiện tại)</button></div>
+    <div class="small muted" id="bkNote" role="status"></div></div>${cloudBox()}`;
 }
 function renderAccount(){
   const nav=[['plans','Bảng giá & VIP'],['billing','Thanh toán'],['me','Tài khoản của tôi']];
@@ -1536,9 +2212,14 @@ function renderAccount(){
     acctPick=k;renderAccount();$('#pkGo')&&$('#pkGo').focus();
   });
   if($('#pkNo'))$('#pkNo').onclick=()=>{acctPick=null;renderAccount()};
-  if($('#pkGo'))$('#pkGo').onclick=()=>{
-    const k=acctPick,prevPlan=ME.plan,all=users(),me=all.find(x=>x.id===ME.id);
-    me.plan=k;ME.plan=k;saveUsers(all);acctPick=null;acctMsg=`Đã chuyển sang gói ${PLANS[k].name}.`;
+  if($('#pkGo'))$('#pkGo').onclick=async()=>{
+    const k=acctPick,prevPlan=ME.plan;
+    if(ME.cloud){
+      try{await sbAuthed(`/rest/v1/profiles?id=eq.${ME.id}`,{method:'PATCH',prefer:'return=minimal',body:{plan:k}})}
+      catch(x){acctPick=null;acctMsg='Chưa đổi được gói: '+sbMsg(x);renderAccount();return}
+      ME.plan=k;if(sbSess&&sbSess.me){sbSess.me.plan=k;saveSbSess()}
+    }else{const all=users(),me=all.find(x=>x.id===ME.id);me.plan=k;ME.plan=k;saveUsers(all)}
+    acctPick=null;acctMsg=`Đã chuyển sang gói ${PLANS[k].name}.`;
     const up=PLAN_ORDER.indexOf(k)>PLAN_ORDER.indexOf(prevPlan);
     updateHeader();fillPersonas();fillKolSel();renderAccount();if(up)burst($('.pcard.current'));
   };
@@ -1546,6 +2227,7 @@ function renderAccount(){
   if($('#contactBtn'))$('#contactBtn').onclick=()=>{acctMsg='Cảm ơn bạn! (Demo) Nhóm P-TETRA sẽ liên hệ tư vấn qua email '+ME.email+'.';renderAccount();window.scrollTo({top:0})};
   if($('#toPlans'))$('#toPlans').onclick=()=>{acctView='plans';renderAccount()};
   if($('#resetUse'))$('#resetUse').onclick=()=>{store.set('lc_usage',{ym:usage().ym,n:0});renderAccount()};
+  if($('#bkExp')){wireData();wireCloud()}
   if($('#pwForm')){
     $('#pwForm').addEventListener('submit',async e=>{
       e.preventDefault();
@@ -1555,19 +2237,27 @@ function renderAccount(){
       if(!validPw(nw))return err(PW_MSG);
       if(nw!==nw2)return err('Hai mật khẩu mới chưa giống nhau.');
       if(nw===cur)return err('Mật khẩu mới cần khác mật khẩu hiện tại.');
-      if(!safeEq(await hashPw(cur,ME.salt),ME.hash))return err('Mật khẩu hiện tại chưa đúng.');
-      const all=users(),me=all.find(x=>x.id===ME.id);
-      me.salt=newSalt();me.hash=await hashPw(nw,me.salt);ME.salt=me.salt;ME.hash=me.hash;saveUsers(all);
+      if(ME.cloud){
+        try{await sbSignIn(ME.email,cur)}catch(x){return err(x&&x.code==='http'&&x.status===400?'Mật khẩu hiện tại chưa đúng.':sbMsg(x))}
+        try{await sbAuthed('/auth/v1/user',{method:'PUT',body:{password:nw}})}catch(x){return err(sbMsg(x))}
+      }else{
+        if(!safeEq(await hashPw(cur,ME.salt),ME.hash))return err('Mật khẩu hiện tại chưa đúng.');
+        const all=users(),me=all.find(x=>x.id===ME.id);
+        me.salt=newSalt();me.hash=await hashPw(nw,me.salt);ME.salt=me.salt;ME.hash=me.hash;saveUsers(all);
+      }
       $('#pwForm').reset();$('#ac-pwerr').textContent='';$('#ac-pwok').textContent='Đã đổi mật khẩu.';
     });
     $('#ac-logout').onclick=logout;
     $('#ac-del').onclick=()=>{$('#ac-delbox').hidden=false;$('#ac-delemail').focus()};
     $('#ac-delno').onclick=()=>{$('#ac-delbox').hidden=true};
-    $('#ac-delgo').onclick=()=>{
+    $('#ac-delgo').onclick=async()=>{
       if($('#ac-delemail').value.trim().toLowerCase()!==ME.email)return $('#ac-delerr').textContent='Email chưa khớp, chưa xóa gì cả.';
       const id=ME.id;
-      saveUsers(users().filter(x=>x.id!==id));
-      ['lc_products_','lc_script_','lc_usage_','lc_kols_','lc_sessions_'].forEach(k=>{try{localStorage.removeItem(k+id)}catch(e){}});
+      if(ME.cloud){
+        try{await sbAuthed('/rest/v1/rpc/delete_my_account',{method:'POST',body:{}})}catch(x){return $('#ac-delerr').textContent='Chưa xóa được trên máy chủ: '+sbMsg(x)}
+        ME.cloud=false;clearTimeout(syncT);sbSess=null;raw.del('lc_sbsess');
+      }else saveUsers(users().filter(x=>x.id!==id));
+      ['lc_products_','lc_script_','lc_usage_','lc_kols_','lc_sessions_','lc_members_','lc_onb_','lc_micok_','lc_stash_','lc_syncmeta_'].forEach(k=>{try{localStorage.removeItem(k+id)}catch(e){}});
       logout();
     };
   }
@@ -1579,7 +2269,11 @@ const rid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slic
 const kols=()=>store.get('lc_kols')||[];
 const saveKols=v=>store.set('lc_kols',v);
 const sessions=()=>store.get('lc_sessions')||[];
-const saveSessions=v=>store.set('lc_sessions',v);
+function saveSessions(v){
+  v=v.slice(-60);
+  const k=uk('lc_sessions');if(!k)return;
+  try{localStorage.setItem(k,JSON.stringify(v));if(syncHook)syncHook('lc_sessions')}catch(e){if(v.length>3)saveSessions(v.slice(Math.ceil(v.length/4)))}
+}
 const isBiz=()=>!!ME&&ME.plan==='business';
 function fmtDur(sec){
   sec=Math.max(0,Math.round(sec));
@@ -1597,19 +2291,22 @@ const scoreTag=v=>v===null||v===undefined?['Chưa đủ dữ liệu','']:v>=85?[
 const scoreHTML=v=>{const [t,c]=scoreTag(v);return v===null||v===undefined?`<span class="tag">${t}</span>`:`<span class="tag ${c}"><b class="mono" data-n="${v}">${v}</b>${t}</span>`};
 
 /* --- Phòng live: chọn KOC/KOL, kết thúc & lưu kết quả --- */
-function tickClock(){if(liveSess)$('#liveClock').textContent=liveSess.kolName+' · '+fmtDur((liveSess.ms+(liveSess.t0?Date.now()-liveSess.t0:0))/1000)}
+const liveSecs=()=>liveSess?(liveSess.ms+(liveSess.t0?Date.now()-liveSess.t0:0))/1000:0;
+function tickClock(){if(liveSess){$('#liveClock').textContent=(liveSess.kolName||'Phiên live')+' · '+fmtDur(liveSecs());hudClock()}}
 function liveUI(){
   const biz=isBiz();
-  $('#kolRow').hidden=!biz;$('#liveEnd').hidden=!biz;$('#liveClock').hidden=!(biz&&liveSess);
-  ['#kolSel','#kolQuickName','#kolQuickAdd'].forEach(x=>$(x).disabled=!!liveSess);
+  $('#kolRow').hidden=!biz;$('#liveEnd').hidden=false;$('#liveClock').hidden=!liveSess;
+  ['#kolSel','#kolQuickName','#kolQuickAdd'].forEach(x=>$(x).disabled=!!liveSess||(x==='#kolSel'&&role()==='koc'));
+  ['#kolQuickName','#kolQuickAdd'].forEach(x=>$(x).hidden=!can.edit());
   $('#liveEnd').disabled=!liveSess;
 }
 function fillKolSel(){
   if(!ME)return;
-  if(!isBiz()){liveSess=null;liveUI();return}
-  const cur=$('#kolSel').value,list=kols().filter(k=>!k.archived);
+  if(!isBiz()){liveUI();return}
+  const cur=$('#kolSel').value,list=visKols().filter(k=>!k.archived);
   $('#kolSel').innerHTML='<option value="">— Chọn KOC/KOL —</option>'+list.map(k=>`<option value="${k.id}">${esc(k.name)} (${k.type})</option>`).join('');
   if(list.some(k=>k.id===cur))$('#kolSel').value=cur;
+  if(role()==='koc'&&list.length===1)$('#kolSel').value=list[0].id;
   liveUI();
 }
 function cleanName(s){return s.replace(/\s+/g,' ').trim()}
@@ -1631,44 +2328,54 @@ $('#kolSel').onchange=()=>{$('#liveNote').textContent=''};
 function showLiveResult(r){
   const v=[...Object.entries(r.viol||{})].sort((a,b)=>b[1]-a[1]).slice(0,3);
   const box=$('#liveResult');box.hidden=false;
-  box.innerHTML=`<div class="row"><h3 style="margin-right:auto">Kết quả phiên live của ${esc(r.kolName)}</h3>${scoreHTML(r.score)}</div>
+  box.innerHTML=`<div class="row"><h3 style="margin-right:auto">Kết quả phiên live${r.kolName?' của '+esc(r.kolName):''}</h3>${scoreHTML(r.score)}</div>
     <dl class="kv" style="margin:0"><dt>Thời lượng</dt><dd>${fmtDur(r.dur)}</dd><dt>Phát ngôn đã kiểm tra</dt><dd>${r.speeches}</dd><dt>Vi phạm nghiêm trọng</dt><dd>${r.bad}</dd><dt>Cảnh báo</dt><dd>${r.warn}</dd><dt>Sai giá / KM hết hạn</dt><dd>${r.priceErr}</dd><dt>Bình luận đã trả lời</dt><dd>${r.cmtAns}/${r.cmtSeen}</dd></dl>
     ${v.length?`<div class="small muted">Lỗi hay gặp: ${v.map(([t,n])=>esc(t)+' ×'+n).join('; ')}</div>`:''}
     ${r.score===null?'<div class="small muted">Phiên chưa có phát ngôn hoặc bình luận nào được xử lý nên chưa tính được điểm.</div>':''}
-    <div class="row"><button class="btn primary" id="liveToKol">Xem báo cáo KOC/KOL</button></div>`;
-  $('#liveToKol').onclick=()=>{kolSelId=r.kolId;showTab('kol')};
+    <form class="row" id="lrForm" style="align-items:flex-end"><label class="f" style="flex:1;min-width:140px">Doanh thu phiên (đ, không bắt buộc)<input type="text" id="lr-rev" inputmode="numeric"></label><label class="f" style="flex:1;min-width:100px">Số đơn<input type="text" id="lr-ord" inputmode="numeric"></label><button class="btn" type="submit">Lưu</button><span class="tag ok" id="lr-ok" hidden>Đã lưu</span></form>
+    <div class="row"><button class="btn primary" id="liveToHist">Xem lại từng câu trong Lịch sử</button>${isBiz()&&r.kolId?'<button class="btn" id="liveToKol">Xem báo cáo KOC/KOL</button>':''}</div>`;
+  $('#lrForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const n=x=>Number(String(x).replace(/[^\d]/g,''))||0;
+    updateSession(r.id,{revenue:n($('#lr-rev').value),orders:n($('#lr-ord').value)});
+    $('#lr-ok').hidden=false;
+  });
+  $('#liveToHist').onclick=()=>{histSel=r.id;histFilter={type:'all',only:false};showTab('history')};
+  if($('#liveToKol'))$('#liveToKol').onclick=()=>{kolSelId=r.kolId;showTab('kol')};
   if(r.score>=85)burst(box);
 }
 $('#liveToggle').onclick=()=>{
   if(liveTimer){
     clearInterval(liveTimer);liveTimer=null;
     if(liveSess&&liveSess.t0){liveSess.ms+=Date.now()-liveSess.t0;liveSess.t0=null}
-    setLive(false);$('#liveToggle').textContent='Tiếp tục phiên live';return;
+    setLive(false);$('#liveToggle').textContent='Tiếp tục phiên live';hudSync();return;
   }
-  if(isBiz()&&!liveSess){
-    const k=kols().find(x=>x.id===$('#kolSel').value);
-    if(!k){$('#liveNote').textContent='Chọn KOC/KOL đang live trước khi bắt đầu, để kết quả phiên được tính đúng cho người đó.';$('#kolSel').focus();return}
+  if(!liveSess){
+    let k=null;
+    if(isBiz()){
+      k=kols().find(x=>x.id===$('#kolSel').value);
+      if(!k){$('#liveNote').textContent='Chọn KOC/KOL đang live trước khi bắt đầu, để kết quả phiên được tính đúng cho người đó.';$('#kolSel').focus();return}
+    }
     $('#liveNote').textContent='';
-    liveSess={id:rid(),kolId:k.id,kolName:k.name,start:Date.now(),ms:0,t0:null,speeches:0,bad:0,warn:0,priceErr:0,cmtSeen:0,cmtAns:0,viol:{}};
-    clockTimer=setInterval(tickClock,1000);
+    liveSess={id:rid(),kolId:k?k.id:null,kolName:k?k.name:'',start:Date.now(),ms:0,t0:null,speeches:0,bad:0,warn:0,priceErr:0,cmtSeen:0,cmtAns:0,viol:{},tl:[]};
+    clockTimer=setInterval(tickClock,1000);tpReset();onb('live');
   }
-  if(liveSess)liveSess.t0=Date.now();
+  liveSess.t0=Date.now();
   $('#liveResult').hidden=true;setLive(true);
   $('#liveToggle').textContent='Dừng phiên live';
-  addComment();addComment();
-  liveTimer=setInterval(addComment,2600);
-  liveUI();tickClock();
+  startFeed();
+  liveUI();tickClock();hudSync();
 };
 $('#liveEnd').onclick=()=>{
   if(!liveSess)return;
   if(liveTimer){clearInterval(liveTimer);liveTimer=null}
   if(liveSess.t0){liveSess.ms+=Date.now()-liveSess.t0;liveSess.t0=null}
   const s=liveSess;
-  const r={id:s.id,kolId:s.kolId,kolName:s.kolName,start:s.start,end:Date.now(),dur:Math.max(1,Math.round(s.ms/1000)),speeches:s.speeches,bad:s.bad,warn:s.warn,priceErr:s.priceErr,cmtSeen:s.cmtSeen,cmtAns:s.cmtAns,viol:s.viol};
+  const r={id:s.id,type:'live',kolId:s.kolId,kolName:s.kolName,start:s.start,end:Date.now(),dur:Math.max(1,Math.round(s.ms/1000)),speeches:s.speeches,bad:s.bad,warn:s.warn,priceErr:s.priceErr,cmtSeen:s.cmtSeen,cmtAns:s.cmtAns,viol:s.viol,tl:s.tl};
   r.score=sessScore(r);
   saveSessions([...sessions(),r]);
-  log('live','ok',`Kết thúc phiên live của ${r.kolName}: ${r.speeches} phát ngôn, ${r.bad} vi phạm nghiêm trọng`);
-  liveSess=null;clearInterval(clockTimer);clockTimer=null;setLive(false);
+  log('live','ok',`Kết thúc phiên live${r.kolName?' của '+r.kolName:''}: ${r.speeches} phát ngôn, ${r.bad} vi phạm nghiêm trọng`);
+  liveSess=null;clearInterval(clockTimer);clockTimer=null;setLive(false);hudSync();
   $('#liveToggle').textContent='Bắt đầu phiên live';
   cm.length=0;selC=null;renderFeed();renderSuggest();
   showLiveResult(r);liveUI();
@@ -1733,6 +2440,20 @@ function kolLocked(){
     <button class="btn primary" id="kolUp">Xem gói Doanh nghiệp</button></div>`;
   $('#kolUp').onclick=()=>{acctView='plans';showTab('account')};
 }
+const SYN_LINES={'So sánh tuyệt đối':['Serum này rẻ nhất thị trường luôn các bạn ơi','Không đâu bằng sản phẩm bên mình đâu nha'],'Nói công dụng như thuốc':['Dùng xong là khỏi mụn hoàn toàn sau ba ngày','Sản phẩm này chữa dứt điểm nám cho chị em'],'Khuyến mãi đã hết hạn':['Giá 299k nha, chốt đơn ngay giá hôm qua','Vẫn còn ưu đãi flash sale đó các bạn'],'Tạo khan hiếm':['Chỉ còn 3 phút cuối, hết là mất luôn nha','Sắp hết hàng rồi, không mua là tiếc'],'Cam kết tuyệt đối':['Cam kết 100% hiệu quả, không hiệu quả hoàn tiền','Đảm bảo ai dùng cũng đẹp lên thấy rõ']};
+const SYN_OK=['Chào mừng các bạn vào phòng live của mình','Sản phẩm này thành phần chính là niacinamide và panthenol','Bạn nào da nhạy cảm nên thử một vùng nhỏ trước nha','Mình nhắc lại giá niêm yết đang hiển thị trên giỏ hàng'];
+function synthTl(r,rnd,ri){
+  const tl=[],flagged=Object.entries(r.viol||{}),n=Math.min(10,4+flagged.length);
+  for(let i=0;i<n;i++){
+    const o=Math.round((i+.5)/n*r.dur);
+    if(i%2===1&&flagged.length){
+      const [t]=flagged[(i>>1)%flagged.length],ls=SYN_LINES[t]||SYN_OK,text=ls[ri(0,ls.length-1)],rule=RULES.find(x=>x.title===t);
+      const sev=rule?rule.sev:'warn';
+      tl.push({o,k:'speech',text,sev,f:[{sev,title:t,phrase:text.split(' ').slice(2,5).join(' '),fix:rule&&rule.fix?String(rule.fix).slice(0,200):'Dùng cách nói trung tính, có căn cứ.',ref:'',p:0}]});
+    }else tl.push({o,k:'speech',text:SYN_OK[ri(0,SYN_OK.length-1)],sev:'ok',f:[]});
+  }
+  return tl;
+}
 function seedKol(){
   let seed=20260921;const rnd=()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
   const ri=(a,b)=>a+Math.floor(rnd()*(b-a+1));
@@ -1746,11 +2467,14 @@ function seedKol(){
       const seen=ri(18,40),ans=Math.round(seen*Math.min(1,q*.85+.15+(rnd()-.5)*.1));
       const viol={};for(let j=0;j<bad+warn;j++){const t=titles[ri(0,titles.length-1)];viol[t]=(viol[t]||0)+1}
       const start=Date.now()-Math.round((28-i*(26/Math.max(1,d.n-1)))*864e5)+ri(-3,3)*36e5;
-      const r={id:rid(),kolId:k.id,kolName:k.name,start,end:start+ri(30,95)*6e4,dur:ri(30,95)*60,speeches:ri(14,42),bad,warn,priceErr:pe,cmtSeen:seen,cmtAns:ans,viol,sample:true};
-      r.score=sessScore(r);S.push(r);
+      const dur=ri(30,95)*60,r={id:rid(),type:'live',kolId:k.id,kolName:k.name,start,end:start+dur*1e3,dur,speeches:ri(14,42),bad,warn,priceErr:pe,cmtSeen:seen,cmtAns:ans,viol,sample:true};
+      r.revenue=Math.round((ri(9,22)+q*ri(8,18))*dur/3600*1e6/1e5)*1e5;r.orders=Math.max(3,Math.round(r.revenue/ri(320,520)/1e3));
+      r.tl=synthTl(r,rnd,ri);r.score=sessScore(r);S.push(r);
     }
   });
   saveKols([...kols(),...K]);saveSessions([...sessions(),...S]);
+  if(!members().length)saveMembers([{id:rid(),name:'Hoài An',email:'hoaian@example.com',role:'manager',kolId:'',created:Date.now(),sample:true},{id:rid(),name:'Mai Linh (tài khoản KOL)',email:'mailinh@example.com',role:'koc',kolId:K[0].id,created:Date.now(),sample:true},{id:rid(),name:'Bích (kế toán)',email:'bich@example.com',role:'viewer',kolId:'',created:Date.now(),sample:true}]);
+  fillViewAs();
   kolSelId=K[0].id;kolMsg='Đã nạp dữ liệu mẫu: 3 KOC/KOL với các phiên live trong 4 tuần qua. Bạn có thể xóa bằng nút “Xóa dữ liệu mẫu”.';
 }
 function csvExport(list){
@@ -1764,33 +2488,34 @@ function csvExport(list){
 function renderKol(){
   if(!ME)return;
   if(!isBiz())return kolLocked();
-  const K=kols(),allS=sessions().sort((a,b)=>a.start-b.start),S=allS.filter(inPeriod);
-  const rows=K.map(k=>({k,a:aggr(S.filter(s=>s.kolId===k.id)),total:allS.filter(s=>s.kolId===k.id).length}))
+  const K=visKols(),allS=visSessions().filter(x=>x.type!=='sim'&&x.kolId).sort((a,b)=>a.start-b.start),S=allS.filter(inPeriod);
+  const rows=K.map(k=>({k,a:aggr(S.filter(s=>s.kolId===k.id)),S:S.filter(s=>s.kolId===k.id),total:allS.filter(s=>s.kolId===k.id).length}))
     .sort((x,y)=>(y.a.avg??-1)-(x.a.avg??-1)||x.k.name.localeCompare(y.k.name,'vi'));
   const tot=aggr(S);
   if(!K.some(k=>k.id===kolSelId))kolSelId=(rows.find(r=>r.a.n)||rows[0]||{k:{}}).k.id||null;
   const ed=K.find(k=>k.id===kolEditId);
-  const showForm=kolFormOpen||!!ed||!K.length;
+  const canE=can.edit(),showForm=canE&&(kolFormOpen||!!ed||!K.length);
   const tile=(l,v,s)=>`<div class="tile"><div class="small muted">${l}</div><b class="mono" ${typeof v==='number'?`data-n="${v}"`:''}>${v}</b>${s?`<div class="small muted">${s}</div>`:''}</div>`;
   const per=[['7','7 ngày'],['30','30 ngày'],['all','Tất cả']];
   let h=`<div class="phead"><div><h2>Quản lý KOC/KOL</h2><p class="muted">Thêm người live, chọn họ ở tab Phòng live cho mỗi phiên, rồi xem thống kê tại đây.</p></div>
     <div class="row"><div class="cycle" role="group" aria-label="Khoảng thời gian"><span>Kỳ:</span>${per.map(([v,t])=>`<button data-per="${v}" aria-pressed="${kolPeriod===v}">${t}</button>`).join('')}</div></div></div>
     ${kolMsg?`<div class="confirm" role="status" style="background:var(--ok-soft);color:var(--ok)">${esc(kolMsg)}</div>`:''}`;
-  h+=`<div class="row" style="margin-bottom:14px">${showForm?'':'<button class="btn primary" id="kAdd">+ Thêm KOC/KOL</button>'}<button class="btn" id="kSeed">Nạp dữ liệu mẫu</button>${K.some(k=>k.sample)?'<button class="btn" id="kUnseed">Xóa dữ liệu mẫu</button>':''}<button class="btn" id="kCsv" ${S.length?'':'disabled'}>Xuất CSV (${S.length} phiên)</button></div>`;
+  h+=`<div class="row noprint" style="margin-bottom:14px">${!canE||showForm?'':'<button class="btn primary" id="kAdd">+ Thêm KOC/KOL</button>'}${canE?'<button class="btn" id="kSeed">Nạp dữ liệu mẫu</button>':''}${canE&&K.some(k=>k.sample)?'<button class="btn" id="kUnseed">Xóa dữ liệu mẫu</button>':''}<button class="btn" id="kCsv" ${S.length?'':'disabled'}>Xuất CSV (${S.length} phiên)</button><button class="btn" id="kPrint">In / lưu PDF</button></div>`;
   if(showForm)h+=`<form class="box stack" id="kForm" novalidate style="margin-bottom:14px"><h3>${ed?'Sửa KOC/KOL':'Thêm KOC/KOL'}</h3>
     <div class="row" style="align-items:flex-end"><label class="f" style="flex:2;min-width:180px">Tên hiển thị<input type="text" id="kName" maxlength="40" value="${esc(ed?ed.name:'')}"></label>
     <label class="f" style="min-width:110px">Loại<select id="kType"><option ${ed&&ed.type==='KOC'?'selected':''}>KOC</option><option ${ed&&ed.type==='KOL'?'selected':''}>KOL</option></select></label>
     <label class="f" style="flex:2;min-width:180px">Ghi chú (không bắt buộc)<input type="text" id="kNote" maxlength="80" value="${esc(ed?ed.note:'')}"></label></div>
     <div class="err" id="kErr" role="alert"></div>
     <div class="row"><button class="btn primary" type="submit">${ed?'Lưu thay đổi':'Thêm'}</button>${K.length||ed?'<button class="btn" type="button" id="kCancel">Hủy</button>':''}</div></form>`;
-  if(!K.length){$('#kolBody').innerHTML=h+'<div class="empty">Chưa có KOC/KOL nào. Thêm người đầu tiên hoặc nạp dữ liệu mẫu để xem báo cáo.</div>';return wireKol()}
-  h+=`<div class="ktiles">${tile('KOC/KOL đang hoạt động',K.filter(k=>!k.archived).length,`${K.length} trong danh sách`)}${tile('Phiên live',tot.n,tot.n?fmtDur(tot.dur)+' tổng thời lượng':'Chưa có phiên trong kỳ')}${tile('Điểm tuân thủ trung bình',tot.avg===null?'–':tot.avg,tot.avg===null?'':scoreTag(tot.avg)[0])}${tile('Vi phạm nghiêm trọng',tot.bad,`${tot.warn} cảnh báo · ${tot.priceErr} sai giá`)}</div>`;
+  if(!K.length){$('#kolBody').innerHTML=h+(role()==='koc'?'<div class="empty">Tài khoản này chưa được gắn với KOC/KOL nào. Nhờ chủ workspace gắn ở mục Thành viên.</div>':'<div class="empty">Chưa có KOC/KOL nào. Thêm người đầu tiên hoặc nạp dữ liệu mẫu để xem báo cáo.</div>')+(can.edit()?membersHTML():'');wireKol();return wireMembers()}
+  h+=`<div class="ktiles">${tile('KOC/KOL đang hoạt động',K.filter(k=>!k.archived).length,`${K.length} trong danh sách`)}${tile('Phiên live',tot.n,tot.n?fmtDur(tot.dur)+' tổng thời lượng':'Chưa có phiên trong kỳ')}${tile('Điểm tuân thủ trung bình',tot.avg===null?'–':tot.avg,tot.avg===null?'':scoreTag(tot.avg)[0])}${tile('Vi phạm nghiêm trọng',tot.bad,`${tot.warn} cảnh báo · ${tot.priceErr} sai giá`)}</div>`+revTiles(S);
   h+=`<div class="box" style="margin-top:14px;padding:0"><div style="overflow-x:auto"><table class="ktable"><caption class="sr">Thống kê theo KOC/KOL</caption>
-    <thead><tr><th>KOC/KOL</th><th>Phiên</th><th>Thời lượng</th><th>Điểm TB</th><th>Xu hướng</th><th>Vi phạm</th><th>Cảnh báo</th><th>Trả lời BL</th><th></th></tr></thead><tbody>
+    <thead><tr><th>KOC/KOL</th><th>Phiên</th><th>Thời lượng</th><th>Điểm TB</th><th>Xu hướng</th><th>Vi phạm</th><th>Cảnh báo</th><th>Trả lời BL</th><th>DT/giờ</th><th class="noprint"></th></tr></thead><tbody>
     ${rows.map(({k,a,total})=>`<tr ${k.id===kolSelId?'aria-selected="true"':''}><td><b>${esc(k.name)}</b> <span class="tag">${k.type}</span>${k.archived?' <span class="tag warn">Đã lưu trữ</span>':''}${k.sample?' <span class="tag">Mẫu</span>':''}${k.note?`<div class="small muted">${esc(k.note)}</div>`:''}</td>
-      <td class="mono">${a.n}</td><td class="mono">${a.n?fmtDur(a.dur):'–'}</td><td>${scoreHTML(a.avg)}</td><td>${spark(a.series)}</td><td class="mono">${a.n?a.bad:'–'}</td><td class="mono">${a.n?a.warn:'–'}</td><td class="mono">${a.resp===null?'–':a.resp+'%'}</td>
-      <td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="btn" data-detail="${k.id}">Chi tiết</button><button class="btn" data-edit="${k.id}">Sửa</button>${total?`<button class="btn" data-arch="${k.id}">${k.archived?'Kích hoạt':'Lưu trữ'}</button>`:`<button class="btn danger" data-del="${k.id}">Xóa</button>`}</div></td></tr>`).join('')}
+      <td class="mono">${a.n}</td><td class="mono">${a.n?fmtDur(a.dur):'–'}</td><td>${scoreHTML(a.avg)}</td><td>${spark(a.series)}</td><td class="mono">${a.n?a.bad:'–'}</td><td class="mono">${a.n?a.warn:'–'}</td><td class="mono">${a.resp===null?'–':a.resp+'%'}</td><td class="mono">${moneyS(revAgg(S.filter(s=>s.kolId===k.id)).rph)}</td>
+      <td class="noprint"><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="btn" data-detail="${k.id}">Chi tiết</button>${canE?`<button class="btn" data-edit="${k.id}">Sửa</button>${total?`<button class="btn" data-arch="${k.id}">${k.archived?'Kích hoạt':'Lưu trữ'}</button>`:`<button class="btn danger" data-del="${k.id}">Xóa</button>`}`:''}</div></td></tr>`).join('')}
     </tbody></table></div></div>`;
+  h+=`<div class="grid2" style="margin-top:14px">${cmpHTML(rows)}${insightHTML(S)}</div>`;
   const sel=K.find(k=>k.id===kolSelId);
   if(sel){
     const ls=S.filter(s=>s.kolId===sel.id),a=aggr(ls),vc={};
@@ -1800,11 +2525,13 @@ function renderKol(){
       ${ls.length?`<div class="grid2"><div class="stack"><h4>Điểm từng phiên (tối đa 12 phiên gần nhất)</h4>${colChart(ls)}</div>
       <div class="stack"><h4>Lỗi lặp lại nhiều nhất</h4>${top.length?top.map(([t,n])=>`<div class="bar"><div class="h"><span>${esc(t)}</span><b class="mono">${n}</b></div><div class="t"><i style="width:${Math.round(n/mx*100)}%"></i></div></div>`).join(''):'<div class="find ok"><b>Không ghi nhận lỗi nào trong kỳ này.</b></div>'}
         <div class="small muted">Tỷ lệ trả lời bình luận cần ưu tiên: ${a.resp===null?'chưa có dữ liệu':a.resp+'%'}</div></div></div>
-      <div style="overflow-x:auto"><table class="ktable"><thead><tr><th>Thời điểm</th><th>Thời lượng</th><th>Phát ngôn</th><th>Vi phạm</th><th>Cảnh báo</th><th>Sai giá</th><th>Trả lời BL</th><th>Điểm</th></tr></thead><tbody>
-      ${[...ls].reverse().map(s=>`<tr><td>${fmtWhen(s.start)}</td><td class="mono">${fmtDur(s.dur)}</td><td class="mono">${s.speeches}</td><td class="mono">${s.bad}</td><td class="mono">${s.warn}</td><td class="mono">${s.priceErr}</td><td class="mono">${s.cmtAns}/${s.cmtSeen}</td><td>${scoreHTML(s.score)}</td></tr>`).join('')}</tbody></table></div>`
+      <div style="overflow-x:auto"><table class="ktable"><thead><tr><th>Thời điểm</th><th>Thời lượng</th><th>Phát ngôn</th><th>Vi phạm</th><th>Cảnh báo</th><th>Sai giá</th><th>Trả lời BL</th><th>Doanh thu</th><th>DT/giờ</th><th>Điểm</th></tr></thead><tbody>
+      ${[...ls].reverse().map(s=>`<tr><td>${fmtWhen(s.start)}</td><td class="mono">${fmtDur(s.dur)}</td><td class="mono">${s.speeches}</td><td class="mono">${s.bad}</td><td class="mono">${s.warn}</td><td class="mono">${s.priceErr}</td><td class="mono">${s.cmtAns}/${s.cmtSeen}</td><td class="mono">${s.revenue?moneyS(s.revenue):'–'}</td><td class="mono">${s.revenue&&s.dur?moneyS(s.revenue/(s.dur/3600)):'–'}</td><td>${scoreHTML(s.score)}</td></tr>`).join('')}</tbody></table></div>`
       :'<div class="empty">Chưa có phiên live nào của người này trong kỳ đã chọn. Vào tab Phòng live, chọn tên rồi bắt đầu phiên.</div>'}</div>`;
   }
+  if(can.edit())h+=membersHTML();
   $('#kolBody').innerHTML=h;
+  wireMembers();
   wireKol(sel?S.filter(s=>s.kolId===sel.id):[],S);
   if(sel)wireTip(S.filter(s=>s.kolId===sel.id));
 }
@@ -1820,10 +2547,12 @@ function wireKol(selList,allList){
   if($('#kSeed'))$('#kSeed').onclick=()=>{seedKol();fillKolSel();renderKol()};
   if($('#kUnseed'))$('#kUnseed').onclick=()=>{
     const ids=new Set(kols().filter(k=>k.sample).map(k=>k.id));
-    saveKols(kols().filter(k=>!k.sample));saveSessions(sessions().filter(s=>!s.sample&&!ids.has(s.kolId)));
+    saveKols(kols().filter(k=>!k.sample));saveSessions(sessions().filter(s=>!s.sample&&!ids.has(s.kolId)));saveMembers(members().filter(m=>!m.sample));fillViewAs();
     kolSelId=null;fillKolSel();kolMsg='Đã xóa dữ liệu mẫu.';renderKol();
   };
   if($('#kCsv'))$('#kCsv').onclick=()=>csvExport(allList||[]);
+  if($('#kPrint'))$('#kPrint').onclick=()=>window.print();
+  B.querySelectorAll('[data-metric]').forEach(b=>b.onclick=()=>{kolMetric=b.dataset.metric;go()});
   if($('#kCsvOne'))$('#kCsvOne').onclick=()=>csvExport(selList);
   if($('#kForm'))$('#kForm').addEventListener('submit',e=>{
     e.preventDefault();
@@ -1841,6 +2570,560 @@ function wireKol(selList,allList){
   });
 }
 
+/* ===== Doanh nghiệp: thành viên & vai trò (giả lập cục bộ), doanh thu, so sánh, in PDF ===== */
+const ROLES={owner:'Chủ workspace',manager:'Quản lý',koc:'KOC/KOL',viewer:'Người xem báo cáo'};
+const ROLE_DESC={manager:'Xem mọi báo cáo, sửa hồ sơ sản phẩm, thêm/sửa KOC/KOL. Không đổi gói hay quản lý thành viên.',koc:'Chỉ live và xem kết quả của chính mình. Không sửa hồ sơ sản phẩm.',viewer:'Chỉ xem báo cáo, lịch sử và thống kê. Không live, không sửa.'};
+const ROLE_HIDE={owner:[],manager:['account'],koc:['account'],viewer:['account','script','live','sim']};
+const members=()=>store.get('lc_members')||[];
+const saveMembers=v=>store.set('lc_members',v);
+let viewAs='owner',memMsg='';
+function curM(){
+  if(!isBiz()||viewAs==='owner')return{role:'owner'};
+  return members().find(m=>m.id===viewAs)||{role:'owner'};
+}
+const role=()=>curM().role;
+const can={live:()=>role()!=='viewer',edit:()=>role()==='owner'||role()==='manager',members:()=>role()==='owner',allKol:()=>role()!=='koc'};
+const visKols=()=>{const K=kols();return role()==='koc'?K.filter(k=>k.id===curM().kolId):K};
+const visSessions=()=>{const S=sessions();return role()==='koc'?S.filter(s=>s.type==='sim'||s.kolId===curM().kolId):S};
+function fillViewAs(){
+  const w=$('#viewAsWrap'),s=$('#viewAs');
+  if(!w)return;
+  w.hidden=!isBiz();
+  if(!isBiz()){viewAs='owner';return}
+  if(viewAs!=='owner'&&!members().some(m=>m.id===viewAs))viewAs='owner';
+  s.innerHTML='<option value="owner">Chủ workspace (bạn)</option>'+members().map(m=>`<option value="${m.id}">${esc(m.name)} · ${ROLES[m.role]}</option>`).join('');
+  s.value=viewAs;
+}
+function applyRole(){
+  const r=role(),hide=ROLE_HIDE[r]||[];
+  TABS.forEach(t=>{const b=$('#t-'+t);if(b)b.hidden=hide.includes(t)});
+  const cur=TABS.find(t=>$('#t-'+t).getAttribute('aria-selected')==='true');
+  if(cur&&hide.includes(cur))showTab(TABS.find(t=>!hide.includes(t)));
+  if(ME){
+    const t=$('#planTag');t.textContent=`${ME.name} · ${PLANS[ME.plan].name}`+(r!=='owner'?` · đang xem như ${ROLES[r]}`:'');
+  }
+  document.body.dataset.role=r;
+  lockProfile();fillKolSel();
+  if(!$('#tab-kol').hidden)renderKol();
+  if(!$('#tab-history').hidden)renderHistory();
+}
+function lockProfile(){
+  const ro=!can.edit();
+  document.querySelectorAll('#pform input,#pform textarea,#pform select').forEach(x=>{x.disabled=ro});
+  ['#addP','#csvBox','#resetP','#delP','#f-doc'].forEach(q=>{const e=$(q);if(e)e.hidden=ro});
+  document.querySelectorAll('#docBox .thumb.add,#docBox [data-rmdoc]').forEach(e=>e.hidden=ro);
+  let n=$('#roNote');
+  if(ro&&$('#pform')){
+    if(!n){n=document.createElement('div');n.id='roNote';n.className='find warn';n.setAttribute('role','status');$('#pform').prepend(n)}
+    n.innerHTML='<b>Chỉ xem</b><div class="fix">Vai trò '+ROLES[role()]+' không được sửa Hồ sơ sản phẩm chủ.</div>';
+  }else if(n)n.remove();
+}
+/* --- Thành viên --- */
+function membersHTML(){
+  const M=members(),K=kols().filter(k=>!k.archived),owner=can.members();
+  const kn=id=>{const k=kols().find(x=>x.id===id);return k?k.name:'—'};
+  return `<div class="box stack" id="memBox" style="margin-top:14px"><div class="row"><h3 style="margin-right:auto">Thành viên và phân quyền</h3><span class="tag warn">Giả lập trên trình duyệt này</span></div>
+    <p class="small muted" style="margin:0">Dùng ô “Xem với vai trò” trên đầu trang để xem giao diện của từng người. Lời mời không được gửi đi và quyền chỉ áp dụng trong trình duyệt này; bản thật cần máy chủ đăng nhập từng tài khoản.</p>
+    ${memMsg?`<div class="confirm" role="status" style="background:var(--ok-soft);color:var(--ok)">${esc(memMsg)}</div>`:''}
+    <div class="tscroll"><table class="ktable"><thead><tr><th>Thành viên</th><th>Vai trò</th><th>Gắn với KOC/KOL</th><th>Trạng thái</th>${owner?'<th></th>':''}</tr></thead><tbody>
+      <tr><td><b>${esc(ME.name)}</b><div class="small muted">${esc(ME.email)}</div></td><td><span class="tag ok">${ROLES.owner}</span></td><td>—</td><td>Đang hoạt động</td>${owner?'<td></td>':''}</tr>
+      ${M.map(m=>`<tr><td><b>${esc(m.name)}</b>${m.sample?' <span class="tag">Mẫu</span>':''}<div class="small muted">${esc(m.email)}</div></td>
+        <td>${owner?`<select data-mrole="${m.id}" aria-label="Vai trò của ${esc(m.name)}">${['manager','koc','viewer'].map(r=>`<option value="${r}" ${m.role===r?'selected':''}>${ROLES[r]}</option>`).join('')}</select>`:ROLES[m.role]}</td>
+        <td>${m.role==='koc'?(owner?`<select data-mkol="${m.id}" aria-label="KOC/KOL của ${esc(m.name)}"><option value="">— Chọn —</option>${K.map(k=>`<option value="${k.id}" ${m.kolId===k.id?'selected':''}>${esc(k.name)}</option>`).join('')}</select>`:esc(kn(m.kolId))):'—'}</td>
+        <td><span class="tag">Đã mời (giả lập)</span></td>${owner?`<td><button class="btn danger" data-mdel="${m.id}">Xóa</button></td>`:''}</tr>`).join('')}
+    </tbody></table></div>
+    ${owner?`<form class="stack" id="memForm" novalidate><h4>Mời thành viên</h4>
+      <div class="row" style="align-items:flex-end"><label class="f" style="flex:1;min-width:150px">Tên<input type="text" id="mName" maxlength="40"></label>
+      <label class="f" style="flex:1.4;min-width:180px">Email<input type="email" id="mEmail" maxlength="80"></label>
+      <label class="f" style="min-width:150px">Vai trò<select id="mRole"><option value="manager">${ROLES.manager}</option><option value="koc">${ROLES.koc}</option><option value="viewer">${ROLES.viewer}</option></select></label>
+      <label class="f" style="min-width:150px" id="mKolL" hidden>KOC/KOL<select id="mKol"><option value="">— Chọn —</option>${K.map(k=>`<option value="${k.id}">${esc(k.name)}</option>`).join('')}</select></label>
+      <button class="btn primary" type="submit">Mời</button></div>
+      <div class="small muted" id="mRoleD">${ROLE_DESC.manager}</div><div class="err" id="mErr" role="alert"></div></form>`:'<div class="small muted">Chỉ chủ workspace mới thêm hoặc đổi quyền thành viên.</div>'}
+  </div>`;
+}
+function wireMembers(){
+  const B=$('#memBox');if(!B)return;
+  const go=()=>{fillViewAs();renderKol()};
+  B.querySelectorAll('[data-mrole]').forEach(s=>s.onchange=()=>{saveMembers(members().map(m=>m.id===s.dataset.mrole?{...m,role:s.value,kolId:s.value==='koc'?m.kolId:''}:m));memMsg='Đã đổi vai trò.';go();applyRole()});
+  B.querySelectorAll('[data-mkol]').forEach(s=>s.onchange=()=>{saveMembers(members().map(m=>m.id===s.dataset.mkol?{...m,kolId:s.value}:m));memMsg='Đã cập nhật.';go()});
+  B.querySelectorAll('[data-mdel]').forEach(b=>b.onclick=()=>{saveMembers(members().filter(m=>m.id!==b.dataset.mdel));if(viewAs===b.dataset.mdel)viewAs='owner';memMsg='Đã xóa thành viên.';go();applyRole()});
+  const f=$('#memForm');if(!f)return;
+  $('#mRole').onchange=()=>{$('#mKolL').hidden=$('#mRole').value!=='koc';$('#mRoleD').textContent=ROLE_DESC[$('#mRole').value]};
+  f.addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=cleanName($('#mName').value),email=$('#mEmail').value.trim().toLowerCase(),r=$('#mRole').value,kolId=$('#mKol').value,err=m=>{$('#mErr').textContent=m};
+    if(!name)return err('Nhập tên thành viên.');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))return err('Email chưa đúng định dạng.');
+    if(email===ME.email||members().some(m=>m.email===email))return err('Email này đã có trong workspace.');
+    if(r==='koc'&&!kolId)return err('Chọn KOC/KOL mà người này phụ trách.');
+    if(members().length>=20)return err('Gói Doanh nghiệp tối đa 20 thành viên.');
+    saveMembers([...members(),{id:rid(),name,email,role:r,kolId:r==='koc'?kolId:'',created:Date.now()}]);
+    memMsg=`Đã ghi nhận lời mời cho ${name} (giả lập, chưa gửi email).`;go();
+  });
+}
+/* --- Doanh thu / giờ, so sánh, insight --- */
+const moneyS=n=>n===null||n===undefined?'–':n>=1e6?(Math.round(n/1e5)/10).toLocaleString('vi-VN')+' tr':fmtN(n)+'đ';
+function revAgg(list){
+  const R=list.filter(s=>s.revenue>0&&s.dur>0),rev=R.reduce((a,s)=>a+s.revenue,0),h=R.reduce((a,s)=>a+s.dur,0)/3600,ord=R.reduce((a,s)=>a+(s.orders||0),0);
+  return{n:R.length,rev,ord,rph:h>0?rev/h:null};
+}
+function revTiles(S){
+  const a=revAgg(S);
+  const tile=(l,v,s)=>`<div class="tile"><div class="small muted">${l}</div><b class="mono">${v}</b><div class="small muted">${s}</div></div>`;
+  return `<div class="ktiles" style="margin-top:12px">${tile('Doanh thu đã nhập',a.n?moneyS(a.rev):'–',a.n?`${a.n} phiên · ${a.ord} đơn`:'Nhập ở Lịch sử hoặc khi kết thúc phiên')}${tile('Doanh thu / giờ live',a.rph===null?'–':moneyS(a.rph),'Chỉ tính phiên có nhập doanh thu')}${tile('Doanh thu / đơn',a.ord?moneyS(a.rev/a.ord):'–','Giá trị đơn trung bình')}</div>`;
+}
+function insightHTML(S){
+  const R=S.filter(s=>s.revenue>0&&s.dur>=600).map(s=>({v:s.bad+s.warn,rph:s.revenue/(s.dur/3600)}));
+  const cap='<div class="small muted">Chỉ là tương quan trên ít phiên, không chứng minh nguyên nhân: sản phẩm, khung giờ và khuyến mãi cũng ảnh hưởng doanh thu.</div>';
+  if(R.length<4)return `<div class="box stack"><h4>Vi phạm và doanh thu</h4><div class="small muted">Cần ít nhất 4 phiên có nhập doanh thu (và dài từ 10 phút) để so sánh. Hiện có ${R.length} phiên.</div></div>`;
+  R.sort((a,b)=>a.v-b.v);const h=Math.floor(R.length/2),lo=R.slice(0,h),hi=R.slice(R.length-h);
+  const m=a=>a.reduce((x,y)=>x+y.rph,0)/a.length,ml=m(lo),mh=m(hi),d=(ml-mh)/mh*100;
+  const txt=Math.abs(d)<5?'Chưa thấy chênh lệch rõ giữa hai nhóm.':d>0?`Nhóm ít vi phạm cao hơn khoảng ${Math.round(d)}%.`:`Nhóm nhiều vi phạm lại cao hơn khoảng ${Math.round(-d)}%: cho thấy doanh thu không tự chứng minh phát ngôn an toàn.`;
+  return `<div class="box stack"><h4>Vi phạm và doanh thu</h4><div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))"><div class="tile"><div class="small muted">Nhóm ít vi phạm (${lo.length} phiên, tối đa ${lo[lo.length-1].v} lỗi)</div><b class="mono">${moneyS(ml)}/giờ</b></div><div class="tile"><div class="small muted">Nhóm nhiều vi phạm (${hi.length} phiên, từ ${hi[0].v} lỗi)</div><b class="mono">${moneyS(mh)}/giờ</b></div></div><div>${txt}</div>${cap}</div>`;
+}
+let kolMetric='score';
+function cmpHTML(rows){
+  const M={score:['Điểm tuân thủ',r=>r.a.avg,v=>String(v),false],rph:['Doanh thu/giờ',r=>revAgg(r.S).rph,v=>moneyS(v),false],vph:['Vi phạm/giờ',r=>r.a.dur>0?(r.a.bad+r.a.warn)/(r.a.dur/3600):null,v=>(Math.round(v*10)/10).toLocaleString('vi-VN'),true]};
+  const [lab,get,fmt,asc]=M[kolMetric],data=rows.map(r=>({k:r.k,v:get(r)})).filter(x=>x.v!==null&&x.v!==undefined).sort((a,b)=>asc?a.v-b.v:b.v-a.v),mx=Math.max(...data.map(x=>x.v),1);
+  return `<div class="box stack" id="cmpBox"><div class="row"><h4 style="margin-right:auto">So sánh giữa các KOC/KOL</h4><div class="cycle noprint" role="group" aria-label="Chỉ số so sánh">${Object.entries(M).map(([k,v])=>`<button data-metric="${k}" aria-pressed="${kolMetric===k}">${v[0]}</button>`).join('')}</div></div>
+    ${data.length?data.map(x=>`<div class="bar"><div class="h"><span>${esc(x.k.name)} <span class="tag">${x.k.type}</span></span><b class="mono">${fmt(x.v)}</b></div><div class="t"><i style="width:${Math.max(3,Math.round(x.v/mx*100))}%"></i></div></div>`).join(''):`<div class="empty">Chưa có dữ liệu ${lab.toLowerCase()} trong kỳ này.</div>`}
+    <div class="small muted">${kolMetric==='vph'?'Càng thấp càng tốt. ':''}Chỉ số: ${lab}. Bảng phía trên có đủ số liệu để đối chiếu.</div></div>`;
+}
+window.addEventListener('beforeprint',()=>{const h=$('#printHead');if(h&&ME)h.innerHTML=`<b>LiveCore AI</b> · Báo cáo tuân thủ livestream · ${esc(ME.name)} · ${new Date().toLocaleDateString('vi-VN')}<div class="small">Số liệu từ bản demo, chưa phải tư vấn pháp lý.</div>`});
+$('#viewAs').onchange=e=>{viewAs=e.target.value;memMsg='';applyRole()};
+$('#rPrint').onclick=()=>window.print();
+entReady=true;
+
+/* ===== Hướng dẫn người mới, tiến bộ luyện tập, đồng ý micro, sao lưu ===== */
+const ONB=[['profile','Sửa thử một thông tin trong Hồ sơ sản phẩm chủ','profile'],['scan','Rà soát kịch bản bằng nút “Rà soát ngay”','script'],['live','Bắt đầu một phiên live trong Phòng live','live'],['speech','Nói hoặc gõ một câu ở ô Phát ngôn','live'],['sim','Luyện xong một phiên Live tập sự','sim'],['report','Xem Báo cáo và AI Coach','report']];
+const onbGet=()=>store.get('lc_onb')||{};
+function onb(k){const o=onbGet();if(o[k])return;o[k]=1;store.set('lc_onb',o);renderOnb(k)}
+function renderOnb(justDone){
+  const box=$('#onb');if(!box||!ME)return;
+  const o=onbGet(),n=ONB.filter(s=>o[s[0]]).length,all=n===ONB.length;
+  if(o.dismissed){box.hidden=true;return}
+  box.hidden=false;
+  box.innerHTML=`<div class="row"><h3 style="margin-right:auto">${all?'Bạn đã làm quen xong LiveCore AI':'Bắt đầu nhanh'} <span class="tag ${all?'ok':''}">${n}/${ONB.length}</span></h3><button class="btn" id="onbHide">${all?'Đóng':'Ẩn'}</button></div>
+    <div class="bar"><div class="t"><i style="width:${Math.round(n/ONB.length*100)}%"></i></div></div>
+    <div class="onbl">${ONB.map(([k,t,tab])=>`<button type="button" class="onbi ${o[k]?'done':''}" data-tab="${tab}"><span class="dot ${o[k]?'ok':'no'}" aria-hidden="true">${o[k]?'✓':'○'}</span><span>${esc(t)}</span></button>`).join('')}</div>`;
+  $('#onbHide').onclick=()=>{const x=onbGet();x.dismissed=1;store.set('lc_onb',x);renderOnb()};
+  box.querySelectorAll('.onbi').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+  if(justDone&&all)burst(box);
+}
+/* --- Tiến bộ Live tập sự và gợi ý luyện --- */
+const DRILL=[['health',/thuốc|cam kết|vượt phạm vi|danh nghĩa|thời gian có kết quả|phi thực tế|cụm bị cấm|đáp án chuẩn/i],['price',/khuyến mãi|sai giá|giá không khớp|khan hiếm/i],['picky',/so sánh tuyệt đối|chất liệu|độ bền|công năng/i]];
+function lineChart(vals){
+  if(vals.length<2)return '';
+  const W=620,H=190,L=34,R=12,T=14,B=26,pw=W-L-R,ph=H-T-B,n=vals.length,X=i=>L+i*pw/(n-1),Y=v=>T+ph-(v/100)*ph;
+  const grid=[0,50,100].map(t=>`<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" stroke="var(--line)"/><text x="${L-6}" y="${Y(t)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${t}</text>`).join('');
+  const pts=vals.map((v,i)=>[X(i),Y(v)]),last=pts[n-1];
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Điểm ${n} phiên tập gần nhất: ${vals.join(', ')}">${grid}<polyline points="${pts.map(p=>p.map(x=>x.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${pts.map((p,i)=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${i===n-1?5:3.5}" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>`).join('')}<text x="${Math.min(last[0],W-R-8)}" y="${last[1]-10}" text-anchor="end" font-size="12" font-weight="600" fill="var(--ink)">${vals[n-1]}</text><text x="${L}" y="${H-6}" font-size="11" fill="var(--muted)">Phiên đầu</text><text x="${W-R}" y="${H-6}" text-anchor="end" font-size="11" fill="var(--muted)">Gần nhất</text></svg>`;
+}
+function renderSimProgress(){
+  const box=$('#simProg');if(!box||!ME)return;
+  const all=visSessions().sort((a,b)=>a.start-b.start),S=all.filter(s=>s.type==='sim'&&s.score!==null&&s.score!==undefined);
+  if(!S.length){box.innerHTML='<h3>Tiến bộ luyện tập</h3><div class="empty">Chưa có phiên tập nào được lưu. Hoàn thành một phiên rồi bấm “Kết thúc” để thấy biểu đồ điểm và gợi ý luyện tiếp.</div>';return}
+  const vals=S.slice(-12).map(s=>s.score),first=vals[0],lastV=vals[vals.length-1],best=Math.max(...S.map(s=>s.score));
+  const recent=all.slice(-15),cnt={},ex={};
+  recent.forEach(s=>Object.entries(s.viol||{}).forEach(([t,c])=>{const d=DRILL.find(x=>x[1].test(t));if(!d)return;cnt[d[0]]=(cnt[d[0]]||0)+c;(ex[d[0]]=ex[d[0]]||{})[t]=((ex[d[0]]||{})[t]||0)+c}));
+  const byP={};S.forEach(s=>{const p=PERSONAS.find(x=>x.label===s.persona);if(p)(byP[p.id]=byP[p.id]||[]).push(s.score)});
+  const sug={};
+  Object.entries(cnt).forEach(([id,c])=>{const t=Object.entries(ex[id]).sort((a,b)=>b[1]-a[1])[0];sug[id]={w:c*2,why:`bạn hay mắc lỗi “${t[0]}” (${t[1]} lần gần đây)`}});
+  Object.entries(byP).forEach(([id,a])=>{const avg=Math.round(a.reduce((x,y)=>x+y,0)/a.length);if(avg<70){const s=sug[id]||(sug[id]={w:0,why:''});s.w+=(70-avg)/5+1;s.why+=(s.why?'; ':'')+`điểm trung bình dạng này mới ${avg}`}});
+  const list=Object.entries(sug).sort((a,b)=>b[1].w-a[1].w).slice(0,3);
+  const cap=PLANS[ME.plan].personas;
+  const tile=(l,v,s)=>`<div class="tile"><div class="small muted">${l}</div><b class="mono">${v}</b><div class="small muted">${s}</div></div>`;
+  box.innerHTML=`<h3>Tiến bộ luyện tập</h3>
+    <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">${tile('Số phiên tập',S.length,'đã lưu')}${tile('Điểm gần nhất',lastV,S.length>1?(lastV>=first?`tăng ${lastV-first} so với phiên đầu`:`giảm ${first-lastV} so với phiên đầu`):'')}${tile('Điểm cao nhất',best,'')}</div>
+    ${vals.length>1?lineChart(vals):'<div class="small muted">Cần ít nhất 2 phiên để vẽ biểu đồ.</div>'}
+    <h4>Gợi ý luyện tiếp</h4>
+    ${list.length?list.map(([id,x])=>{const p=PERSONAS.find(q=>q.id===id),ok=PERSONAS.findIndex(q=>q.id===id)<cap;return `<div class="find warn"><b>${esc(p.label)}</b><div class="fix">Vì ${esc(x.why)}.</div><div class="row" style="margin-top:6px"><button class="btn ${ok?'primary':''}" data-drill="${id}" ${ok?'':'disabled'}>${ok?'Luyện ngay':'Cần gói cao hơn'}</button></div></div>`}).join(''):'<div class="find ok"><b>Chưa thấy lỗi lặp lại.</b><div class="fix">Hãy thử dạng khách khó hơn để kiểm tra bản thân.</div></div>'}`;
+  box.querySelectorAll('[data-drill]').forEach(b=>b.onclick=()=>{$('#persona').value=b.dataset.drill;window.scrollTo({top:0,behavior:'smooth'});$('#simStart').focus()});
+}
+/* --- Đồng ý dùng micro --- */
+const micOk=()=>!!store.get('lc_micok');
+let micAsk=false;
+function askMic(yes,no){
+  if(micAsk)return;micAsk=true;
+  const o=document.createElement('div');o.className='lb';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','mcT');
+  o.innerHTML=`<div class="box stack" style="max-width:480px;background:var(--surface)"><h3 id="mcT">Cho phép dùng micro?</h3>
+    <p class="small">LiveCore dùng micro để chuyển lời nói của bạn thành chữ và kiểm tra tuân thủ ngay khi bạn nói. Ứng dụng không ghi âm và không lưu file âm thanh; chỉ lưu phần chữ nhận được vào Lịch sử ngay trên máy bạn.</p>
+    <p class="small muted">Việc nhận diện do trình duyệt thực hiện: Chrome hoặc Edge có thể gửi âm thanh tới dịch vụ nhận diện giọng nói của Google hoặc Microsoft. Đừng bật micro khi đang nói thông tin cá nhân của người khác. Bạn tắt micro được bất cứ lúc nào.</p>
+    <div class="row"><button class="btn primary" type="button" id="mcYes">Đồng ý, bật micro</button><button class="btn" type="button" id="mcNo">Để sau</button></div></div>`;
+  const close=()=>{micAsk=false;o.remove();document.removeEventListener('keydown',k)};
+  const k=e=>{if(e.key==='Escape'){close();no&&no()}};
+  document.addEventListener('keydown',k);document.body.appendChild(o);
+  o.querySelector('#mcYes').onclick=()=>{store.set('lc_micok',true);close();yes&&yes()};
+  o.querySelector('#mcNo').onclick=()=>{close();no&&no()};
+  o.querySelector('#mcYes').focus();
+}
+/* --- Sao lưu / phục hồi (thay cho máy chủ trong bản demo) --- */
+const BK_KEYS=['lc_products','lc_script','lc_kols','lc_sessions','lc_members','lc_onb','lc_usage'];
+function backupBuild(){
+  const d={};BK_KEYS.forEach(k=>{const v=store.get(k);if(v!==null&&v!==undefined)d[k]=v});
+  return JSON.stringify({app:'livecore-ai',v:1,exported:new Date().toISOString(),account:{name:ME.name,plan:ME.plan},data:d});
+}
+function backupCheck(txt){
+  if(txt.length>6e6)return{err:'File quá lớn (trên 6 MB).'};
+  let o;try{o=JSON.parse(txt)}catch(e){return{err:'Đây không phải file JSON hợp lệ.'}}
+  if(!o||o.app!=='livecore-ai'||!o.data||typeof o.data!=='object')return{err:'File không phải bản sao lưu của LiveCore AI.'};
+  const d=o.data,out={};
+  if(d.lc_products!==undefined){
+    if(!Array.isArray(d.lc_products)||!d.lc_products.length||d.lc_products.length>50)return{err:'Danh sách sản phẩm trong bản sao lưu không hợp lệ.'};
+    const ok=d.lc_products.every(p=>p&&typeof p.name==='string'&&typeof p.id==='string');
+    if(!ok)return{err:'Có sản phẩm trong bản sao lưu thiếu tên hoặc mã.'};
+    if(d.lc_products.length>PLANS[ME.plan].products)return{err:`Bản sao lưu có ${d.lc_products.length} sản phẩm, vượt giới hạn ${PLANS[ME.plan].products} của gói ${PLANS[ME.plan].name}.`};
+    out.lc_products=migrateP(d.lc_products.map(p=>({...p,price:Number(p.price)||0,promo:Number(p.promo)||0})));
+  }
+  if(d.lc_script!==undefined){if(typeof d.lc_script!=='string')return{err:'Kịch bản trong bản sao lưu không hợp lệ.'};out.lc_script=d.lc_script.slice(0,20000)}
+  ['lc_kols','lc_sessions','lc_members'].forEach(k=>{if(d[k]!==undefined){if(!Array.isArray(d[k])){out.__bad=k;return}out[k]=d[k].filter(x=>x&&typeof x==='object'&&typeof x.id==='string').slice(0,k==='lc_sessions'?60:200)}});
+  if(out.__bad)return{err:'Dữ liệu '+out.__bad+' trong bản sao lưu không hợp lệ.'};
+  if(d.lc_onb&&typeof d.lc_onb==='object')out.lc_onb=d.lc_onb;
+  return{ok:out,when:o.exported};
+}
+function backupApply(out){
+  Object.entries(out).forEach(([k,v])=>store.set(k,v));
+  loadUserData();updateHeader();applyRole();renderOnb();renderAccount();
+}
+function wireData(){
+  const note=$('#bkNote'),say=(m,c)=>{note.className='small '+(c||'muted');note.textContent=m};
+  $('#bkExp').onclick=()=>{
+    const blob=new Blob([backupBuild()],{type:'application/json'}),a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download='livecore-sao-luu-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+    say('Đã tạo file sao lưu. Nếu trình duyệt chặn tải về, hãy dùng nút “Sao chép”.');
+  };
+  $('#bkCopy').onclick=async()=>{
+    try{await navigator.clipboard.writeText(backupBuild());say('Đã sao chép nội dung sao lưu. Dán vào một file .json để lưu giữ.','ok')}
+    catch(e){$('#bkTxt').value=backupBuild();say('Trình duyệt chặn sao chép tự động. Nội dung đã đặt vào ô bên dưới, hãy chọn hết và sao chép thủ công.','warn')}
+  };
+  const load=txt=>{
+    const r=backupCheck(txt);
+    if(r.err){$('#bkGo').hidden=true;window.__bk=null;return say(r.err,'bad')}
+    window.__bk=r.ok;$('#bkGo').hidden=false;
+    say(`Bản sao lưu hợp lệ${r.when?' (tạo lúc '+new Date(r.when).toLocaleString('vi-VN')+')':''}: ${Object.keys(r.ok).length} nhóm dữ liệu. Bấm “Phục hồi” để ghi đè dữ liệu hiện tại.`,'ok');
+  };
+  $('#bkFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(f)load(await f.text())};
+  $('#bkTxt').oninput=()=>{const t=$('#bkTxt').value.trim();if(t)load(t)};
+  $('#bkGo').onclick=()=>{if(window.__bk){backupApply(window.__bk);acctMsg='Đã phục hồi dữ liệu từ bản sao lưu.';window.__bk=null;renderAccount()}};
+}
+
+/* ===== Đám mây (Supabase): đăng nhập, hồ sơ và đồng bộ dữ liệu =====
+   Chỉ dùng khóa anon/publishable (công khai). An toàn dữ liệu do Row Level Security ở phía Supabase (xem supabase-setup.sql). */
+const SB_DEFAULT={url:'',key:''}; /* Dán Project URL và khóa anon vào đây để mọi người dùng bản này tự động kết nối đám mây */
+const sbCfg=()=>{
+  const c=raw.get('lc_sbcfg')||{};
+  const url=String(SB_DEFAULT.url||c.url||'').trim().replace(/\/+$/,''),key=String(SB_DEFAULT.key||c.key||'').trim();
+  return /^(https:\/\/[a-z0-9.-]+|http:\/\/(localhost|127\.0\.0\.1)(:\d+)?)$/i.test(url)&&key.length>=20?{url,key,fixed:!!(SB_DEFAULT.url&&SB_DEFAULT.key)}:null;
+};
+let sbSess=null;
+function keyIsSecret(k){
+  if(/^sb_secret_/i.test(k))return true;
+  try{const p=JSON.parse(atob(k.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));return p&&p.role==='service_role'}catch(e){return false}
+}
+async function sbFetch(path,o={}){
+  const c=sbCfg();if(!c)throw{code:'nocfg'};
+  const h={apikey:c.key,'Content-Type':'application/json',...(o.prefer?{Prefer:o.prefer}:{})};
+  if(o.token)h.Authorization='Bearer '+o.token;else if(!/^sb_/i.test(c.key))h.Authorization='Bearer '+c.key;
+  let r,t;
+  try{r=await fetch(c.url+path,{method:o.method||'GET',headers:h,body:o.body===undefined?undefined:JSON.stringify(o.body)});t=await r.text()}catch(e){throw{code:'network'}}
+  let j=null;try{j=t?JSON.parse(t):null}catch(e){}
+  if(!r.ok)throw{code:'http',status:r.status,msg:(j&&(j.msg||j.error_description||j.message||j.error_code||j.error))||('HTTP '+r.status)};
+  return j;
+}
+function sbMsg(e){
+  if(!e)return 'Có lỗi không xác định.';
+  if(e.code==='network')return 'Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.';
+  if(e.code==='nocfg')return 'Chưa kết nối máy chủ.';
+  if(e.code==='expired')return 'Phiên đăng nhập đã hết hạn, hãy đăng nhập lại.';
+  const m=String(e.msg||'').toLowerCase();
+  if(e.status===429||/rate limit|too many/.test(m))return 'Gửi quá nhiều yêu cầu, hãy thử lại sau ít phút.';
+  if(/invalid login|invalid_credentials/.test(m))return 'Email hoặc mật khẩu chưa đúng.';
+  if(/not confirmed/.test(m))return 'Email chưa được xác nhận. Mở thư xác nhận (kể cả thư rác) rồi đăng nhập lại.';
+  if(/already registered|already exists|user_already_exists/.test(m))return 'Email này đã có tài khoản. Hãy chuyển sang Đăng nhập.';
+  if(/signups? (not allowed|disabled)|signup_disabled/.test(m))return 'Máy chủ đang tắt đăng ký tài khoản mới.';
+  if(/password/.test(m)&&/(short|weak|least|characters)/.test(m))return 'Máy chủ từ chối mật khẩu này vì quá yếu hoặc quá ngắn.';
+  if(e.status===404)return 'Chưa tạo bảng dữ liệu trên Supabase. Hãy chạy file supabase-setup.sql trong SQL Editor.';
+  if(e.status===401||e.status===403)return 'Máy chủ từ chối quyền truy cập. Kiểm tra lại khóa anon và các chính sách RLS.';
+  return 'Máy chủ báo lỗi: '+(e.msg||e.status);
+}
+const sessFrom=r=>({access:r.access_token,refresh:r.refresh_token,exp:Date.now()+(r.expires_in||3600)*1000,user:r.user});
+function saveSbSess(){raw.del('lc_sbsess');if(sbSess)raw.set('lc_sbsess',sbSess,sbSess.remember?'local':'session')}
+let sbRefreshing=null;
+async function sbToken(){
+  if(!sbSess)throw{code:'expired'};
+  if(sbSess.exp-Date.now()>60000)return sbSess.access;
+  if(!sbRefreshing)sbRefreshing=(async()=>{
+    try{
+      const r=await sbFetch('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:sbSess.refresh}});
+      sbSess={...sbSess,...sessFrom(r),user:r.user||sbSess.user};saveSbSess();
+    }catch(e){if(e.code==='http'&&e.status>=400&&e.status<500){sbSess=null;throw{code:'expired'}}throw e}
+    finally{sbRefreshing=null}
+  })();
+  await sbRefreshing;return sbSess.access;
+}
+const sbAuthed=async(path,o={})=>sbFetch(path,{...o,token:await sbToken()});
+const sbSignIn=async(email,pw)=>sessFrom(await sbFetch('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password:pw}}));
+async function sbSignUp(email,pw,name,plan){const r=await sbFetch('/auth/v1/signup',{method:'POST',body:{email,password:pw,data:{name,plan}}});return r&&r.access_token?sessFrom(r):null}
+const isUuid=s=>/^[0-9a-f-]{32,40}$/i.test(String(s||''));
+async function sbProfile(sess){
+  const id=sess.user.id;if(!isUuid(id))throw{code:'http',status:400,msg:'id không hợp lệ'};
+  const rows=await sbAuthed(`/rest/v1/profiles?id=eq.${id}&select=name,plan,created_at`);
+  if(rows&&rows[0])return rows[0];
+  const meta=sess.user.user_metadata||{},plan=PLANS[meta.plan]?meta.plan:'free',name=(meta.name||sess.user.email||'').slice(0,60);
+  try{await sbAuthed('/rest/v1/profiles',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',body:{id,name,plan}})}catch(e){}
+  return{name,plan,created_at:new Date().toISOString()};
+}
+/* --- Đồng bộ dữ liệu người dùng (một dòng jsonb cho mỗi tài khoản) --- */
+const hhmm=()=>new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+const metaKey=()=>uk('lc_syncmeta');
+const getMetaK=k=>{try{return k?JSON.parse(localStorage.getItem(k))||{}:{}}catch(e){return{}}};
+const setMetaK=(k,m)=>{try{if(k)localStorage.setItem(k,JSON.stringify(m))}catch(e){}};
+let syncT=null,syncBusy=false,syncVer=0;
+function setSync(state,detail){
+  const t=$('#syncTag');if(!t)return;
+  if(!ME||!ME.cloud){t.hidden=true;return}
+  const M={ok:['ok','Đã đồng bộ'],busy:['','Đang lưu…'],pend:['warn','Chờ đồng bộ…'],off:['warn','Chưa đồng bộ (mất kết nối)'],err:['bad','Lỗi đồng bộ'],exp:['bad','Hết phiên, hãy đăng nhập lại']};
+  const m=M[state]||M.err;t.hidden=false;t.className='tag '+m[0];t.textContent='☁ '+m[1]+(detail?' '+detail:'');
+  t.title='Bấm để đồng bộ ngay';t.dataset.state=state;
+}
+syncHook=k=>{
+  if(!ME||!ME.cloud||!BK_KEYS.includes(k))return;
+  syncVer++;const mk=metaKey(),m=getMetaK(mk);m.dirty=1;setMetaK(mk,m);
+  setSync('pend');clearTimeout(syncT);syncT=setTimeout(()=>syncNow(),1800);
+};
+function cloudBlob(){
+  const d={};
+  BK_KEYS.forEach(k=>{let v=store.get(k);if(v===null||v===undefined)return;if(k==='lc_products'&&Array.isArray(v))v=v.map(p=>{const{docs,...r}=p;r.docCount=(docs||[]).length;return r});d[k]=v});
+  return d;
+}
+async function syncNow(){
+  if(!ME||!ME.cloud||!sbSess)return false;
+  if(syncBusy){clearTimeout(syncT);syncT=setTimeout(()=>syncNow(),1500);return false}
+  syncBusy=true;clearTimeout(syncT);setSync('busy');
+  const uid=ME.id,mk=metaKey(),at=new Date().toISOString(),data=cloudBlob(),v0=syncVer;
+  try{
+    await sbAuthed('/rest/v1/user_data?on_conflict=user_id',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',body:{user_id:uid,data,updated_at:at}});
+    setMetaK(mk,{at,dirty:syncVer!==v0?1:0});
+    if(ME&&ME.id===uid)setSync('ok','lúc '+hhmm());
+    return true;
+  }catch(e){
+    if(ME&&ME.id===uid)setSync(e.code==='network'?'off':e.code==='expired'?'exp':'err');
+    if(e.code==='expired')toast('Phiên đăng nhập trên máy chủ đã hết hạn. Dữ liệu vẫn còn trong máy, hãy đăng nhập lại để đồng bộ tiếp.');
+    return false;
+  }finally{syncBusy=false}
+}
+function applyCloud(d){
+  const r=backupCheck(JSON.stringify({app:'livecore-ai',data:d||{}}));
+  if(r.err)throw{code:'bad',msg:r.err};
+  const localP=store.get('lc_products')||[],put=(k,v)=>{try{localStorage.setItem(uk(k),JSON.stringify(v))}catch(e){}};
+  Object.entries(r.ok).forEach(([k,v])=>{
+    if(k==='lc_products')v=v.map(p=>{const{docCount,...q}=p;const l=localP.find(x=>x.id===p.id);if(l&&l.docs)q.docs=l.docs;return q});
+    put(k,v);
+  });
+}
+async function cloudPull(){
+  const rows=await sbAuthed(`/rest/v1/user_data?user_id=eq.${ME.id}&select=data,updated_at`),row=rows&&rows[0],mk=metaKey(),m=getMetaK(mk);
+  if(!row){setMetaK(mk,{...m,dirty:1});return 'push'}
+  if(m.dirty&&m.at===row.updated_at)return 'push';
+  let how='pull';
+  if(m.dirty&&m.at!==row.updated_at){try{localStorage.setItem(uk('lc_stash'),backupBuild())}catch(e){}how='stash'}
+  applyCloud(row.data);setMetaK(mk,{at:row.updated_at,dirty:0});
+  return how;
+}
+async function cloudStart(sess,remember,cachedMe){
+  sess.remember=!!remember;sbSess=sess;
+  const u=sess.user,prof=cachedMe||await sbProfile(sess);
+  const me={id:u.id,name:prof.name||u.email,email:u.email,plan:PLANS[prof.plan]?prof.plan:'free',created:Date.parse(prof.created_at)||Date.now(),cloud:true};
+  sbSess.me={name:me.name,plan:me.plan,created_at:new Date(me.created).toISOString()};saveSbSess();
+  UID=me.id;ME=me;
+  let how='off';
+  if(!cachedMe){try{how=await cloudPull()}catch(e){how=e&&e.code==='expired'?'exp':'off'}}
+  startSession(me,remember);
+  if(how==='push')syncNow();
+  else if(how==='off'||how==='exp')setSync(how);
+  else{setSync('ok',getMetaK(metaKey()).at?'lúc '+hhmm():'');if(how==='stash')toast('Dữ liệu được sửa ở cả hai nơi. Mình lấy bản trên đám mây; bản cũ trong máy được giữ lại, bạn khôi phục được ở Tài khoản → Tài khoản của tôi.')}
+  return me;
+}
+async function cloudRestore(){
+  const s=raw.get('lc_sbsess','session')||raw.get('lc_sbsess');
+  if(!s||!s.user||!sbCfg())return false;
+  sbSess=s;
+  try{
+    await sbToken();
+    try{sbSess.user=await sbAuthed('/auth/v1/user')}catch(e){if(e.code!=='network')throw e;if(!sbSess.me)throw e;await cloudStart(sbSess,sbSess.remember,sbSess.me);return true}
+    await cloudStart(sbSess,sbSess.remember);return true;
+  }catch(e){
+    if(e&&e.code==='network'&&s.me){try{await cloudStart(s,s.remember,s.me);return true}catch(x){}}
+    sbSess=null;raw.del('lc_sbsess');return false;
+  }
+}
+function cloudLogout(){
+  const tok=sbSess;clearTimeout(syncT);
+  const done=syncNow();
+  Promise.resolve(done).then(()=>{
+    if(tok)fetch(sbCfg()?sbCfg().url+'/auth/v1/logout':'',{method:'POST',headers:{apikey:(sbCfg()||{}).key||'',Authorization:'Bearer '+tok.access}}).catch(()=>{});
+  }).catch(()=>{});
+  sbSess=null;raw.del('lc_sbsess');
+}
+window.addEventListener('online',()=>{if(ME&&ME.cloud&&getMetaK(metaKey()).dirty)syncNow()});
+setInterval(()=>{if(ME&&ME.cloud&&!syncBusy&&getMetaK(metaKey()).dirty)syncNow()},30000);
+$('#syncTag').onclick=()=>syncNow();
+window.addEventListener('pagehide',()=>{if(ME&&ME.cloud&&getMetaK(metaKey()).dirty)syncNow()});
+/* --- Thông báo nhỏ --- */
+function toast(msg){
+  let t=$('#toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');document.body.appendChild(t)}
+  t.textContent=msg;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>{t.hidden=true},9000);
+}
+/* --- Cấu hình kết nối trên màn hình đăng nhập --- */
+function authMode(){
+  const c=sbCfg(),s=$('#sbState');
+  if(s){s.className='tag '+(c?'ok':'');s.textContent=c?'Đám mây (Supabase)':'Lưu trên máy này'}
+  const f=$('#sbForm'),fx=$('#sbFixed');
+  if(f)f.hidden=!!(c&&c.fixed);if(fx)fx.hidden=!(c&&c.fixed);
+  if(c&&!c.fixed&&!$('#sb-url').value){$('#sb-url').value=c.url;$('#sb-key').value=c.key}
+  const lab=$('#rg-terms-l');
+  if(lab)lab.textContent=c?'Mình hiểu đây là bản demo của đồ án: tài khoản và dữ liệu được lưu trên máy chủ Supabase của nhóm, không dùng mật khẩu thật của các dịch vụ khác.':'Mình hiểu đây là bản demo: tài khoản chỉ lưu trong trình duyệt này, không dùng mật khẩu thật của các dịch vụ khác.';
+  const hint=$('#cloudHint');if(hint)hint.hidden=!c;
+}
+$('#sb-save').onclick=async()=>{
+  const url=$('#sb-url').value.trim().replace(/\/+$/,''),key=$('#sb-key').value.trim(),m=$('#sb-msg'),say=(t,c)=>{m.className='small '+(c||'muted');m.textContent=t};
+  if(!/^(https:\/\/[a-z0-9.-]+|http:\/\/(localhost|127\.0\.0\.1)(:\d+)?)$/i.test(url))return say('Địa chỉ cần có dạng https://xxxx.supabase.co','bad');
+  if(key.length<20)return say('Khóa anon/publishable chưa đúng, hãy dán lại từ trang Project Settings → API.','bad');
+  if(keyIsSecret(key))return say('Đây là khóa BÍ MẬT (service_role/secret). Tuyệt đối không dán vào web. Hãy dùng khóa anon public hoặc publishable.','bad');
+  raw.set('lc_sbcfg',{url,key});say('Đang kiểm tra kết nối…');
+  try{
+    const st=await sbFetch('/auth/v1/settings');
+    let tbl='';try{await sbFetch('/rest/v1/user_data?select=user_id&limit=1')}catch(e){if(e.status===404)tbl=' Nhưng chưa thấy bảng dữ liệu: hãy chạy file supabase-setup.sql trong SQL Editor.'}
+    const conf=st&&st.mailer_autoconfirm===false?' Đăng ký sẽ cần xác nhận qua email.':' Đăng ký không cần xác nhận email.';
+    say('Kết nối được.'+conf+tbl,tbl?'warn':'ok');authMode();
+  }catch(e){raw.del('lc_sbcfg');authMode();say(e.code==='http'&&(e.status===401||e.status===404)?'Máy chủ không nhận khóa hoặc địa chỉ này. Kiểm tra lại Project URL và khóa.':sbMsg(e),'bad')}
+};
+$('#sb-clear').onclick=()=>{raw.del('lc_sbcfg');$('#sb-url').value='';$('#sb-key').value='';$('#sb-msg').textContent='Đã xóa kết nối, quay về lưu trên máy.';authMode()};
+/* --- Mục đồng bộ trong Tài khoản của tôi --- */
+function cloudBox(){
+  if(!ME.cloud)return sbCfg()?`<div class="box stack" style="margin-top:14px"><h3>Đồng bộ đám mây</h3><div class="small muted">Tài khoản này đang lưu trên máy. Muốn đồng bộ giữa nhiều máy, hãy đăng ký một tài khoản đám mây (Đăng xuất → Đăng ký).</div></div>`:'';
+  const m=getMetaK(metaKey()),has=!!localStorage.getItem(uk('lc_stash'));
+  return `<div class="box stack" style="margin-top:14px"><h3>Đồng bộ đám mây</h3>
+    <div class="small">Dữ liệu của bạn được lưu trên Supabase, đăng nhập bằng tài khoản này ở máy khác sẽ thấy đúng dữ liệu. Lần đồng bộ gần nhất: <b>${m.at?new Date(m.at).toLocaleString('vi-VN'):'chưa có'}</b>${m.dirty?' · <span class="tag warn">có thay đổi chưa đồng bộ</span>':''}.</div>
+    <div class="small muted">Ảnh giấy tờ đính kèm chỉ nằm trên máy đã thêm ảnh, không lên đám mây. Máy chủ chỉ cho bạn đọc và ghi dữ liệu của chính mình (Row Level Security).</div>
+    <div class="row"><button class="btn primary" id="cSync">Đồng bộ ngay</button>${has?'<button class="btn" id="cStash">Khôi phục bản trong máy trước lần đồng bộ</button>':''}<button class="btn danger" id="cWipe">Xóa dữ liệu trên máy này</button></div>
+    <div class="small muted" id="cNote" role="status">Dùng nút xóa khi đăng nhập trên máy chung: dữ liệu vẫn còn trên đám mây.</div></div>`;
+}
+function wireCloud(){
+  const say=t=>{const n=$('#cNote');if(n)n.textContent=t};
+  if($('#cSync'))$('#cSync').onclick=async()=>{say('Đang đồng bộ…');const ok=await syncNow();say(ok?'Đã đồng bộ xong.':'Chưa đồng bộ được, dữ liệu vẫn an toàn trong máy và sẽ tự thử lại.');renderAccount()};
+  if($('#cStash'))$('#cStash').onclick=()=>{
+    const r=backupCheck(localStorage.getItem(uk('lc_stash'))||'');
+    if(r.err)return say(r.err);
+    backupApply(r.ok);localStorage.removeItem(uk('lc_stash'));acctMsg='Đã khôi phục bản trong máy. Bản này sẽ được đồng bộ lên đám mây.';renderAccount();
+  };
+  if($('#cWipe'))$('#cWipe').onclick=async function(){
+    if(this.dataset.arm!=='1'){this.dataset.arm='1';this.textContent='Bấm lần nữa để xóa và đăng xuất';return}
+    say('Đang đồng bộ lần cuối…');await syncNow();
+    if(getMetaK(metaKey()).dirty)return say('Chưa đồng bộ được lần cuối nên chưa xóa, để tránh mất dữ liệu. Thử lại khi có mạng.');
+    const uid=ME.id;Object.keys(localStorage).forEach(k=>{if(k.endsWith('_'+uid))localStorage.removeItem(k)});
+    logout();
+  };
+}
+
+/* ===== Tab: Lịch sử phiên (live và live tập sự) ===== */
+let histFilter={type:'all',only:false},histSel=null,histFlagOnly=false,histDelAll=false;
+const histCap=()=>ME?(PLANS[ME.plan].hist||Infinity):Infinity;
+const fmtSec=o=>String(Math.floor(o/60)).padStart(2,'0')+':'+String(Math.round(o%60)).padStart(2,'0');
+const fcomp=fs=>fs.slice(0,3).map(f=>({sev:f.sev,title:f.title,phrase:String(f.phrase).slice(0,120),fix:String(f.fix).slice(0,260),ref:f.ref?f.ref.s:'',p:f.price?1:0}));
+const money=n=>n||n===0?fmtN(n)+'đ':'–';
+function hlStored(text,fs){
+  const ranges=[],low=text.toLowerCase();
+  (fs||[]).forEach(f=>{
+    const ph=String(f.phrase||'').replace(/…$/,'').toLowerCase();if(!ph)return;
+    const i=low.indexOf(ph);
+    if(i>=0&&!ranges.some(r=>i<r[1]&&i+ph.length>r[0]))ranges.push([i,i+ph.length,f.sev,f.title]);
+  });
+  ranges.sort((a,b)=>a[0]-b[0]);
+  let out='',pos=0;
+  ranges.forEach(([a,b,sev,t])=>{out+=esc(text.slice(pos,a))+`<mark class="${sev}" title="${esc(t)}">${esc(text.slice(a,b))}</mark>`;pos=b});
+  return out+esc(text.slice(pos));
+}
+function updateSession(id,patch){saveSessions(sessions().map(x=>x.id===id?{...x,...patch}:x))}
+function saveSimSession(){
+  const r=sim.rec;sim.rec=null;
+  if(!r||!r.tl.length)return null;
+  const n=r.tl.length,good=r.tl.filter(x=>x.good).length,viol={};
+  let bad=0,warn=0,pe=0;
+  r.tl.forEach(x=>x.f.forEach(f=>{f.sev==='bad'?bad++:warn++;if(f.p)pe++;viol[f.title]=(viol[f.title]||0)+1}));
+  const score=Math.round((good/n*100+clamp(100-bad*16-warn*6,0,100)+clamp(100-pe*22,0,100))/3);
+  const rec={id:rid(),type:'sim',start:r.start,end:Date.now(),dur:Math.max(1,Math.round((Date.now()-r.start)/1000)),persona:r.persona,prod:r.prod,
+    speeches:n,good,bad,warn,priceErr:pe,cmtSeen:0,cmtAns:0,viol,tl:r.tl,score};
+  saveSessions([...sessions(),rec]);
+  return rec;
+}
+function histRowHTML(s){
+  const sim=s.type==='sim';
+  return `<tr class="clk" data-h="${s.id}" ${s.id===histSel?'aria-selected="true"':''} tabindex="0"><td>${fmtWhen(s.start)}</td>
+    <td><span class="tag ${sim?'':'ok'}">${sim?'Live tập sự':'Phiên live'}</span></td>
+    <td>${sim?esc(s.persona||'')+`<div class="small muted">${esc(s.prod||'')}</div>`:(s.kolName?esc(s.kolName):'<span class="muted">—</span>')}</td>
+    <td class="mono">${fmtDur(s.dur)}</td><td>${scoreHTML(s.score)}</td><td class="mono">${s.bad}</td><td class="mono">${s.warn}</td>
+    <td class="mono">${s.revenue?money(s.revenue):'–'}</td></tr>`;
+}
+function tlItemHTML(x){
+  const flagged=x.f&&x.f.length;
+  const dot=x.sev==='bad'?'no':x.sev==='warn'?'warnd':'ok';
+  const head=x.k==='cmt'?`<span class="tag">Bình luận</span> ${esc(x.text)} <span class="muted small">→ ${esc(x.intent||'')}${x.gap?' · thiếu dữ liệu trong hồ sơ':''}</span>`
+    :x.k==='qa'?`<div class="small muted">Khách hỏi</div><div>${esc(x.q||'')}</div><div class="small muted" style="margin-top:6px">Bạn trả lời</div><div>${hlStored(x.text,x.f)}</div>`
+    :`<div>${hlStored(x.text,x.f)}</div>`;
+  return `<div class="tli ${x.sev||'ok'}"><time class="mono">${fmtSec(x.o||0)}</time><span class="dot ${dot}" aria-hidden="true">${x.sev==='bad'?'!':x.sev==='warn'?'!':'✓'}</span>
+    <div class="tlb">${head}${flagged?x.f.map(f=>`<div class="find ${f.sev}" style="margin-top:8px"><b>${esc(f.title)}</b> <span class="mono muted">“${esc(f.phrase)}”</span><div class="fix">Nên nói: ${esc(f.fix)}</div>${f.ref?`<div class="ref">Căn cứ: ${esc(f.ref)}</div>`:''}</div>`).join(''):''}</div></div>`;
+}
+function histDetailHTML(s){
+  const sim=s.type==='sim',top=Object.entries(s.viol||{}).sort((a,b)=>b[1]-a[1]).slice(0,5),mx=top.length?top[0][1]:1;
+  const tl=(s.tl||[]).slice().sort((a,b)=>(a.o||0)-(b.o||0)).filter(x=>!histFlagOnly||(x.f&&x.f.length));
+  const tile=(l,v,sub)=>`<div class="tile"><div class="small muted">${l}</div><b class="mono">${v}</b>${sub?`<div class="small muted">${sub}</div>`:''}</div>`;
+  return `<div class="box stack" id="histDetail" style="margin-top:14px">
+    <div class="row"><h3 style="margin-right:auto">${sim?'Live tập sự':'Phiên live'} · ${fmtWhen(s.start)}${!sim&&s.kolName?' · '+esc(s.kolName):''}</h3>${scoreHTML(s.score)}
+      <button class="btn noprint" id="hPrint">In / lưu PDF</button><button class="btn danger noprint" data-delsess="${s.id}">Xóa phiên</button></div>
+    ${sim?`<div class="small muted">${esc(s.persona||'')} · ${esc(s.prod||'')}</div>`:''}
+    <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">${tile('Thời lượng',fmtDur(s.dur))}${tile(sim?'Câu trả lời':'Phát ngôn',s.speeches,sim?`${s.good} câu đạt`:'')}${tile('Vi phạm nghiêm trọng',s.bad)}${tile('Cảnh báo',s.warn)}${tile('Sai giá / KM',s.priceErr)}${sim?'':tile('Bình luận đã trả lời',`${s.cmtAns}/${s.cmtSeen}`)}</div>
+    ${!sim?`<form class="row noprint" id="hRev" style="align-items:flex-end"><label class="f" style="flex:1;min-width:150px">Doanh thu phiên (đ)<input type="text" id="hr-rev" inputmode="numeric" value="${s.revenue||''}"></label><label class="f" style="flex:1;min-width:110px">Số đơn<input type="text" id="hr-ord" inputmode="numeric" value="${s.orders||''}"></label><button class="btn" type="submit">Lưu doanh thu</button><span class="tag ok" id="hr-ok" hidden>Đã lưu</span></form>`:''}
+    ${top.length?`<div class="stack"><h4>Lỗi lặp lại trong phiên</h4>${top.map(([t,n])=>`<div class="bar"><div class="h"><span>${esc(t)}</span><b class="mono">${n}</b></div><div class="t"><i style="width:${Math.round(n/mx*100)}%"></i></div></div>`).join('')}</div>`:''}
+    ${s.sample?'<div class="find warn"><b>Dữ liệu mẫu</b><div class="fix">Đây là phiên mẫu để xem thử, chỉ hiển thị trích đoạn lời nói.</div></div>':''}
+    <div class="row"><h4 style="margin-right:auto">Dòng thời gian (${tl.length} mục)</h4><label class="row small muted noprint" for="hFlag" style="gap:6px"><input type="checkbox" id="hFlag" ${histFlagOnly?'checked':''}> Chỉ hiện mục có lỗi</label></div>
+    <div class="tl">${tl.length?tl.map(tlItemHTML).join(''):'<div class="empty">Không có mục nào để hiển thị.</div>'}</div></div>`;
+}
+function renderHistory(){
+  if(!ME)return;
+  const all=visSessions().sort((a,b)=>b.start-a.start),cap=histCap();
+  let list=all.filter(s=>histFilter.type==='all'||(s.type||'live')===histFilter.type).filter(s=>!histFilter.only||s.bad+s.warn>0);
+  const capped=cap!==Infinity&&list.length>cap;if(capped)list=list.slice(0,cap);
+  if(!list.some(s=>s.id===histSel))histSel=null;
+  const sel=list.find(s=>s.id===histSel);
+  const chip=(k,t)=>`<button data-hf="${k}" aria-pressed="${histFilter.type===k}">${t}</button>`;
+  $('#histBody').innerHTML=`<div class="phead"><div><h2>Lịch sử phiên</h2><p class="muted">Xem lại từng câu đã nói, lỗi ở đâu và nên nói thế nào. Mỗi lần bấm “Kết thúc & lưu kết quả” (Phòng live) hoặc “Kết thúc” (Live tập sự), phiên được lưu tại đây.</p></div>
+    <div class="row"><div class="cycle" role="group" aria-label="Loại phiên"><span>Loại:</span>${chip('all','Tất cả')}${chip('live','Phiên live')}${chip('sim','Live tập sự')}</div></div></div>
+    <div class="row" style="margin-bottom:12px"><label class="row small muted" for="hOnly" style="gap:6px"><input type="checkbox" id="hOnly" ${histFilter.only?'checked':''}> Chỉ phiên có lỗi</label>
+      <span class="muted small" style="margin-left:auto">${all.length} phiên đã lưu</span>${all.length?`<button class="btn danger" id="hDelAll">${histDelAll?'Bấm lần nữa để xóa hết':'Xóa toàn bộ lịch sử'}</button>`:''}</div>
+    ${capped?`<div class="confirm" role="status"><span style="margin-right:auto">Gói ${esc(PLANS[ME.plan].name)} chỉ xem lại ${cap} phiên gần nhất. Nâng cấp để xem toàn bộ lịch sử.</span><button class="btn primary" id="hUp">Xem các gói</button></div>`:''}
+    ${list.length?`<div class="box" style="padding:0"><div style="overflow-x:auto"><table class="ktable"><thead><tr><th>Thời điểm</th><th>Loại</th><th>Người live / tình huống</th><th>Thời lượng</th><th>Điểm</th><th>Vi phạm</th><th>Cảnh báo</th><th>Doanh thu</th></tr></thead><tbody>${list.map(histRowHTML).join('')}</tbody></table></div></div>`
+      :`<div class="empty">Chưa có phiên nào${all.length?' khớp bộ lọc':''}. Vào <a href="#" id="hGoLive">Phòng live</a> bấm “Bắt đầu phiên live” rồi “Kết thúc & lưu kết quả”, hoặc luyện ở <a href="#" id="hGoSim">Live tập sự</a>.</div>`}
+    ${sel?histDetailHTML(sel):''}`;
+  const B=$('#histBody');
+  B.querySelectorAll('[data-hf]').forEach(b=>b.onclick=()=>{histFilter.type=b.dataset.hf;renderHistory()});
+  if($('#hOnly'))$('#hOnly').onchange=e=>{histFilter.only=e.target.checked;renderHistory()};
+  B.querySelectorAll('tr[data-h]').forEach(tr=>{const go=()=>{histSel=tr.dataset.h;histFlagOnly=false;renderHistory();const d=$('#histDetail');d&&d.scrollIntoView({block:'nearest'})};tr.onclick=go;tr.onkeydown=e=>{if(e.key==='Enter')go()}});
+  if($('#hGoLive'))$('#hGoLive').onclick=e=>{e.preventDefault();showTab('live')};
+  if($('#hGoSim'))$('#hGoSim').onclick=e=>{e.preventDefault();showTab('sim')};
+  if($('#hUp'))$('#hUp').onclick=()=>{acctView='plans';showTab('account')};
+  if($('#hDelAll'))$('#hDelAll').onclick=()=>{if(!histDelAll){histDelAll=true;renderHistory();return}histDelAll=false;saveSessions([]);histSel=null;renderHistory()};
+  if($('#hFlag'))$('#hFlag').onchange=e=>{histFlagOnly=e.target.checked;renderHistory()};
+  if($('#hPrint'))$('#hPrint').onclick=()=>window.print();
+  const dl=B.querySelector('[data-delsess]');if(dl)dl.onclick=()=>{saveSessions(sessions().filter(x=>x.id!==dl.dataset.delsess));histSel=null;renderHistory()};
+  if($('#hRev'))$('#hRev').addEventListener('submit',e=>{
+    e.preventDefault();
+    const n=v=>Number(String(v).replace(/[^\d]/g,''))||0;
+    updateSession(sel.id,{revenue:n($('#hr-rev').value),orders:n($('#hr-ord').value)});
+    $('#hr-ok').hidden=false;setTimeout(()=>{const o=$('#hr-ok');if(o)o.hidden=true},1500);renderHistory();
+  });
+}
+
 /* tài khoản thử nhanh + khôi phục phiên */
 async function ensureDemoUser(){
   const ex=users().find(u=>u.email==='demo@livecore.vn');
@@ -1852,7 +3135,14 @@ async function ensureDemoUser(){
 (function boot(){
   const inSession=raw.get('lc_session','session'),inLocal=raw.get('lc_session');
   const ss=inSession||inLocal,u=ss&&users().find(x=>x.id===ss.uid);
-  if(u)startSession(u,!inSession);else showAuth('login');
+  if(u)startSession(u,!inSession);
+  else{
+    showAuth('login');
+    if(sbCfg()&&(raw.get('lc_sbsess','session')||raw.get('lc_sbsess'))){
+      $('#lg-err').textContent='Đang khôi phục phiên đăng nhập…';
+      cloudRestore().then(ok=>{if(!ok){$('#lg-err').textContent=''}else $('#lg-err').textContent=''}).catch(()=>{$('#lg-err').textContent=''});
+    }
+  }
   ensureDemoUser().catch(()=>{});
 })();
 </script>
