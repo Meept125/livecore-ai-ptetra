@@ -574,7 +574,13 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
         </div>
         <div class="row" id="srcRow"><div class="cycle" role="group" aria-label="Nguồn bình luận"><span>Nguồn:</span><button data-src="sim" aria-pressed="true">Mô phỏng</button><button data-src="real" aria-pressed="false">Bình luận thật</button></div></div>
         <div class="stack" id="realBox" hidden style="border:1px dashed var(--line);border-radius:12px;padding:12px">
-          <p class="small muted" style="margin:0">Sao chép bình luận từ TikTok/Facebook Live dán vào đây, mỗi dòng một bình luận (có thể ghi “Tên: nội dung”). Hoặc dán/tải ảnh chụp màn hình phần bình luận để AI đọc giúp.</p>
+          <div class="row" id="platRow"><div class="cycle" role="group" aria-label="Chọn nền tảng đang live" style="flex-wrap:wrap"><span>Nền tảng:</span><button data-plat="facebook" aria-pressed="true">Facebook</button><button data-plat="tiktok" aria-pressed="false">TikTok</button><button data-plat="youtube" aria-pressed="false">YouTube</button><button data-plat="shopee" aria-pressed="false">Shopee</button><button data-plat="khac" aria-pressed="false">Khác</button></div></div>
+          <div class="box stack" style="background:var(--bg);padding:12px">
+            <div class="row"><b style="margin-right:auto">Nhận diện bình luận tự động</b><span class="tag" id="autoCapTag" hidden></span></div>
+            <p class="small muted" style="margin:0" id="autoCapHint">Bấm bắt đầu rồi chọn đúng tab hoặc cửa sổ đang mở phiên <b id="autoCapPlatName">Facebook</b> Live của bạn khi trình duyệt hỏi chia sẻ màn hình. Hệ thống tự chụp và đọc khung bình luận mỗi vài giây, không cần bạn dán tay.</p>
+            <div class="row"><button class="btn primary" type="button" id="autoCapBtn">Bắt đầu nhận diện tự động</button><span class="small muted" id="autoCapNote" role="status"></span></div>
+          </div>
+          <p class="small muted" style="margin:8px 0 0">Hoặc làm thủ công: sao chép bình luận dán vào đây, mỗi dòng một bình luận (có thể ghi “Tên: nội dung”). Hoặc dán/tải một ảnh chụp màn hình để AI đọc giúp.</p>
           <textarea id="realTxt" rows="4" aria-label="Bình luận thật" placeholder="Ngọc Anh: Serum Lumi giá sao shop&#10;Minh Tuấn: Áo Nami còn size XL không"></textarea>
           <div class="row"><button class="btn primary" id="realAdd">Thêm vào danh sách</button><label class="btn" for="realImg" id="realImgL" style="cursor:pointer">Đọc từ ảnh chụp</label><input type="file" id="realImg" accept="image/png,image/jpeg,image/webp" hidden><span class="small muted" id="realNote" role="status"></span></div>
         </div>
@@ -1335,15 +1341,60 @@ function renderEval(){
 }
 $('#evalRun').onclick=renderEval;
 
-/* ===== AI (Claude qua capability "sample"; không có thì chạy theo luật) ===== */
-let sample=null;
+/* ===== AI (Claude qua capability "sample" khi mở bằng link Claude, hoặc qua cầu nối ai-bridge trên Supabase — hiện gọi Google Gemini miễn phí — khi mở trên web; không có gì thì chạy theo luật) ===== */
+let sample=null,aiBackend=null;
+const AI_LABEL={artifact:'AI: Claude sẵn sàng',edge:'AI: đã sẵn sàng (qua máy chủ nhóm)'};
 function setAi(){
   const t=$('#aiState');
   t.className='tag '+(sample?'ok':'warn');
-  t.textContent=sample?'AI: Claude sẵn sàng':'AI: chế độ mô phỏng theo luật';
+  t.textContent=sample?(AI_LABEL[aiBackend]||'AI: đã sẵn sàng'):'AI: chế độ mô phỏng theo luật';
 }
-(async()=>{try{sample=(await window.claude?.use?.('sample'))||null}catch(e){sample=null}setAi()})();
+(async()=>{try{sample=(await window.claude?.use?.('sample'))||null}catch(e){sample=null}if(sample)aiBackend='artifact';setAi()})();
 const aiErr=e=>({not_granted:'Bạn chưa cho phép dùng AI nên hệ thống chuyển sang mô phỏng theo luật.',rate_limited:'AI đang quá tải hoặc hết hạn mức, thử lại sau ít phút.',upstream_error:'Kết nối AI bị gián đoạn.'}[e&&e.code]||'AI chưa trả lời được lần này.');
+function aiOffHint(base){
+  return sbCfg()&&(!ME||!ME.cloud)?base+' Hoặc đăng nhập bằng tài khoản đám mây để dùng AI qua máy chủ của nhóm.':base;
+}
+function fileToB64(file){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=()=>{const s=String(r.result||''),i=s.indexOf(',');resolve({data:i>=0?s.slice(i+1):s,mime:file.type||'image/jpeg'})};
+    r.onerror=()=>reject(new Error('read_failed'));
+    r.readAsDataURL(file);
+  });
+}
+function makeEdgeBridge(cfg){
+  const endpoint=cfg.url+'/functions/v1/ai-bridge';
+  async function callEdge(body){
+    let token;try{token=await sbToken()}catch(e){const err=new Error('not_granted');err.code='not_granted';throw err}
+    let r,j=null;
+    try{r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json',apikey:cfg.key,Authorization:'Bearer '+token},body:JSON.stringify(body)})}
+    catch(e){const err=new Error('upstream_error');err.code='upstream_error';throw err}
+    try{j=await r.json()}catch(e){}
+    if(!r.ok){const err=new Error((j&&j.error)||'upstream_error');err.code=r.status===401||r.status===403?'not_granted':r.status===429?'rate_limited':'upstream_error';throw err}
+    return j;
+  }
+  const fn=async(turns,opts={})=>{
+    const j=await callEdge({mode:'chat',turns,modelTier:opts.modelTier});
+    const text=(j&&j.text)||'';
+    if(opts.onText)opts.onText({text});
+    return{text};
+  };
+  fn.json=async(prompt,opts={})=>{
+    let images=null;
+    if(opts.images){const files=Array.isArray(opts.images)?opts.images:[opts.images];images=await Promise.all(files.map(fileToB64))}
+    const j=await callEdge({mode:'json',prompt,images,modelTier:opts.modelTier});
+    if(!j||j.data===undefined){const err=new Error('upstream_error');err.code='upstream_error';throw err}
+    return j.data;
+  };
+  fn.limits=async()=>({images:true,text:true});
+  return fn;
+}
+function tryEdgeAI(){
+  if(sample)return;
+  const cfg=sbCfg();
+  if(!cfg||!sbSess)return;
+  sample=makeEdgeBridge(cfg);aiBackend='edge';setAi();
+}
 
 /* ===== Truy xuất câu trả lời từ Hồ sơ (dùng cho Phòng live) ===== */
 const STOP=new Set('cho có không là và của này kia thì mà ạ ơi nhé shop bạn chị anh em được với mình cái sao thế nào vậy gì hả'.split(' '));
@@ -1427,6 +1478,7 @@ function setSrc(v){
   cmtSrc=v;
   document.querySelectorAll('#srcRow [data-src]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.src===v)));
   $('#realBox').hidden=v!=='real';
+  if(v!=='real'&&typeof autoCapStop==='function')autoCapStop();
   cm.length=0;selC=null;renderFeed();renderSuggest();
   if(liveTimer){clearInterval(liveTimer);liveTimer=null;startFeed()}
 }
@@ -1440,7 +1492,7 @@ $('#realAdd').onclick=()=>{
 async function readCmtImage(file){
   const note=$('#realNote');
   if(!file)return;
-  if(!sample){note.textContent='Đọc ảnh cần AI Claude, hiện chưa bật ở bản này. Bạn dán chữ bình luận vào khung phía trên nhé.';return}
+  if(!sample){note.textContent=aiOffHint('Đọc ảnh cần bật tính năng AI, hiện chưa bật ở bản này. Bạn dán chữ bình luận vào khung phía trên nhé.');return}
   let lim=null;try{lim=await sample.limits()}catch(e){}
   if(!lim||!lim.images){note.textContent='Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI. Bạn dán chữ bình luận vào khung phía trên nhé.';return}
   note.textContent='AI đang đọc ảnh…';$('#realImgL').setAttribute('aria-busy','true');
@@ -1463,6 +1515,78 @@ $('#realTxt').addEventListener('paste',e=>{
   const f=[...(e.dataTransfer?e.dataTransfer.files:[])].find(x=>/^image\//.test(x.type));
   if(f)readCmtImage(f);else{const t=e.dataTransfer&&e.dataTransfer.getData('text');if(t)$('#realTxt').value+=(($('#realTxt').value?'\n':'')+t)}
 }));
+/* --- Chọn nền tảng & nhận diện bình luận tự động qua chia sẻ màn hình --- */
+const PLATFORMS={facebook:'Facebook',tiktok:'TikTok',youtube:'YouTube',shopee:'Shopee',khac:'nền tảng bạn đang dùng'};
+let platform='facebook';
+function setPlat(v){
+  platform=v;
+  document.querySelectorAll('#platRow [data-plat]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.plat===v)));
+  $('#autoCapPlatName').textContent=PLATFORMS[v];
+}
+document.querySelectorAll('#platRow [data-plat]').forEach(b=>b.onclick=()=>setPlat(b.dataset.plat));
+const autoCap={stream:null,video:null,canvas:null,timer:null,busy:false,seen:new Set(),ticks:0,fails:0,max:80,every:8000};
+function autoCapSetUI(on){
+  $('#autoCapBtn').textContent=on?'Dừng nhận diện':'Bắt đầu nhận diện tự động';
+  $('#autoCapTag').hidden=!on;
+  if(on)$('#autoCapTag').textContent='Đang nhận diện '+PLATFORMS[platform]+'…';
+  $('#platRow').querySelectorAll('button').forEach(b=>b.disabled=on);
+}
+function autoCapStop(msg){
+  if(autoCap.timer){clearInterval(autoCap.timer);autoCap.timer=null}
+  if(autoCap.stream){autoCap.stream.getTracks().forEach(t=>t.stop());autoCap.stream=null}
+  autoCap.video=null;autoCap.busy=false;autoCap.ticks=0;autoCap.fails=0;
+  autoCapSetUI(false);
+  if(msg)$('#autoCapNote').textContent=msg;
+}
+async function autoCapTick(){
+  if(autoCap.busy||!autoCap.stream)return;
+  autoCap.busy=true;autoCap.ticks++;
+  try{
+    if(autoCap.ticks>autoCap.max){autoCapStop('Đã đạt giới hạn phiên nhận diện tự động (để tránh tốn hạn mức AI). Bấm bắt đầu lại nếu cần tiếp tục.');return}
+    const v=autoCap.video;
+    if(!v||!v.videoWidth){return}
+    if(!autoCap.canvas)autoCap.canvas=document.createElement('canvas');
+    const w=Math.min(1280,v.videoWidth),h=Math.round(w*v.videoHeight/v.videoWidth);
+    autoCap.canvas.width=w;autoCap.canvas.height=h;
+    autoCap.canvas.getContext('2d').drawImage(v,0,0,w,h);
+    const blob=await new Promise(res=>autoCap.canvas.toBlob(res,'image/jpeg',0.7));
+    if(!blob)return;
+    const arr=await sample.json(`Ảnh chụp là màn hình đang phát trực tiếp trên ${PLATFORMS[platform]}. Trích riêng phần bình luận (chat) của người xem trong ảnh thành mảng JSON [{"name":"tên người bình luận","text":"nội dung"}]. Bỏ qua tiêu đề, số lượt xem, nút bấm, quà tặng, thông báo hệ thống (đã thích, đã theo dõi, đã vào phòng, đã mua). Nếu không thấy khung bình luận hoặc không có bình luận nào, trả về []. Chỉ trả về JSON.`,{images:blob,modelTier:'quick'});
+    autoCap.fails=0;
+    const list=(Array.isArray(arr)?arr:[]).map(x=>({u:String((x&&x.name)||'Khách').slice(0,26),text:String((x&&x.text)||'').slice(0,300)})).filter(x=>x.text.length>=2).slice(0,40);
+    let added=0;
+    list.forEach(c=>{
+      const sig=c.u+'|'+c.text;
+      if(autoCap.seen.has(sig))return;
+      autoCap.seen.add(sig);added++;addComment(c.text,c.u);
+    });
+    if(autoCap.seen.size>400)autoCap.seen=new Set([...autoCap.seen].slice(-200));
+    $('#autoCapNote').textContent=`Đã kiểm tra lúc ${nowT()}${added?` — thêm ${added} bình luận mới`:' — chưa có bình luận mới'}.`;
+  }catch(e){
+    autoCap.fails++;
+    $('#autoCapNote').textContent=e&&e.code==='images_unavailable'?'Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI.':aiErr(e);
+    if(autoCap.fails>=3)autoCapStop('Nhận diện tự động gặp lỗi liên tiếp nên đã dừng. Bạn có thể bắt đầu lại, hoặc dùng cách dán/tải ảnh thủ công bên dưới.');
+  }finally{autoCap.busy=false}
+}
+$('#autoCapBtn').onclick=async()=>{
+  if(autoCap.stream){autoCapStop('Đã dừng nhận diện tự động.');return}
+  if(autoCap.starting)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia){$('#autoCapNote').textContent='Trình duyệt này chưa hỗ trợ chia sẻ màn hình, hoặc trang chưa mở qua địa chỉ https. Hãy dán chữ hoặc tải ảnh chụp thủ công bên dưới.';return}
+  if(!sample){$('#autoCapNote').textContent=aiOffHint('Nhận diện tự động cần bật tính năng AI, hiện chưa bật ở bản này. Bạn dán chữ hoặc tải ảnh chụp thủ công bên dưới nhé.');return}
+  let lim=null;try{lim=await sample.limits()}catch(e){}
+  if(!lim||!lim.images){$('#autoCapNote').textContent='Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI. Bạn dán chữ hoặc tải ảnh chụp thủ công bên dưới nhé.';return}
+  autoCap.starting=true;$('#autoCapNote').textContent='Đang mở hộp thoại chọn màn hình để chia sẻ…';
+  let stream=null;
+  try{stream=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false})}
+  catch(e){autoCap.starting=false;$('#autoCapNote').textContent='Bạn đã hủy chia sẻ màn hình.';return}
+  autoCap.starting=false;
+  const v=document.createElement('video');v.srcObject=stream;v.muted=true;await v.play().catch(()=>{});
+  autoCap.stream=stream;autoCap.video=v;autoCap.ticks=0;autoCap.fails=0;autoCap.seen=new Set();
+  stream.getVideoTracks()[0].onended=()=>autoCapStop('Bạn đã dừng chia sẻ màn hình.');
+  autoCapSetUI(true);
+  $('#autoCapNote').textContent=`Đang chọn đúng tab/cửa sổ ${PLATFORMS[platform]} bạn vừa chia sẻ… lần đọc đầu tiên sau vài giây.`;
+  autoCapTick();autoCap.timer=setInterval(autoCapTick,autoCap.every);
+};
 /* ===== Kịch bản dẫn (teleprompter), checklist tự tích, bảng cảnh báo nổi, âm báo ===== */
 const tp={sents:[],cur:0,done:new Set(),spoken:'',src:null};
 function tpSplit(text){return sentences(text).map(([a,b])=>text.slice(a,b).trim()).filter(x=>x.length>3)}
@@ -1901,7 +2025,7 @@ $('#coachBtn').onclick=async()=>{
   btn.disabled=true;btn.textContent='AI Coach đang phân tích…';
   try{
     const c=await sample.json(prompt,{modelTier:'default'});
-    $('#coach').innerHTML=coachHTML(c,'Nhận xét bởi Claude dựa trên dữ liệu phiên.');
+    $('#coach').innerHTML=coachHTML(c,'Nhận xét bởi AI dựa trên dữ liệu phiên.');
   }catch(e){
     $('#coach').insertAdjacentHTML('afterbegin',`<div class="find bad" style="margin-bottom:10px"><b>${esc(aiErr(e))}</b></div>`);
   }
@@ -2018,6 +2142,7 @@ function startSession(u,remember){
 }
 function logout(){
   if(ME&&ME.cloud)cloudLogout();
+  if(aiBackend==='edge'){sample=null;aiBackend=null;setAi()}
   raw.del('lc_session');UID=null;ME=null;setSync('ok');
   products=SAMPLE_PRODUCTS();curP=products[0].id;
   resetSession();
@@ -2238,7 +2363,7 @@ function viewMe(){
     <div class="row"><button class="btn primary" type="submit">Lưu mật khẩu mới</button></div></form></div>
   <div class="box stack" style="margin-top:14px"><h3>Dữ liệu, sao lưu và quyền riêng tư</h3>
     <div class="small">${ME.cloud?'Tài khoản đám mây: hồ sơ sản phẩm, kịch bản, lịch sử phiên và danh sách KOC/KOL được đồng bộ lên máy chủ Supabase và cả trong trình duyệt này. Bạn vẫn nên tải file sao lưu định kỳ.':'Bản demo chưa có máy chủ: hồ sơ sản phẩm, kịch bản, lịch sử phiên và danh sách KOC/KOL được lưu ngay trong trình duyệt này và không gửi đi đâu. Vì vậy xóa dữ liệu trình duyệt, đổi máy hoặc đổi trình duyệt sẽ mất dữ liệu, hãy sao lưu định kỳ.'}</div>
-    <div class="small muted">Micro: ứng dụng không ghi âm hay lưu file âm thanh, chỉ lưu phần chữ nhận được. Tính năng AI Claude (khi bật) chỉ nhận đoạn chữ hoặc ảnh bạn chủ động gửi, theo tài khoản Claude của bạn.</div>
+    <div class="small muted">Micro: ứng dụng không ghi âm hay lưu file âm thanh, chỉ lưu phần chữ nhận được. Tính năng AI (khi bật) chỉ nhận đoạn chữ hoặc ảnh bạn chủ động gửi — qua tài khoản Claude nếu mở bằng link claude.ai, hoặc qua máy chủ của nhóm (Supabase) nếu mở trên trang web, theo tài khoản đám mây bạn đang đăng nhập.</div>
     <div class="row"><button class="btn primary" id="bkExp">Tải file sao lưu (JSON)</button><button class="btn" id="bkCopy">Sao chép nội dung</button><label class="btn" for="bkFile" style="cursor:pointer">Chọn file để phục hồi</label><input type="file" id="bkFile" accept=".json,application/json" hidden></div>
     <textarea id="bkTxt" rows="3" aria-label="Dán nội dung sao lưu để phục hồi" placeholder="Hoặc dán nội dung sao lưu vào đây"></textarea>
     <div class="row"><button class="btn danger" id="bkGo" hidden>Phục hồi (ghi đè dữ liệu hiện tại)</button></div>
@@ -2398,6 +2523,7 @@ $('#liveToggle').onclick=()=>{
   if(liveTimer){
     clearInterval(liveTimer);liveTimer=null;
     if(liveSess&&liveSess.t0){liveSess.ms+=Date.now()-liveSess.t0;liveSess.t0=null}
+    if(autoCap.stream)autoCapStop('Đã tạm dừng nhận diện tự động cùng phiên live.');
     setLive(false);$('#liveToggle').textContent='Tiếp tục phiên live';hudSync();return;
   }
   if(!liveSess){
@@ -2418,6 +2544,7 @@ $('#liveToggle').onclick=()=>{
 };
 $('#liveEnd').onclick=()=>{
   if(!liveSess)return;
+  if(autoCap.stream)autoCapStop();
   if(liveTimer){clearInterval(liveTimer);liveTimer=null}
   if(liveSess.t0){liveSess.ms+=Date.now()-liveSess.t0;liveSess.t0=null}
   const s=liveSess;
@@ -2985,7 +3112,7 @@ async function cloudStart(sess,remember,cachedMe){
   const u=sess.user,prof=cachedMe||await sbProfile(sess);
   const me={id:u.id,name:prof.name||u.email,email:u.email,plan:PLANS[prof.plan]?prof.plan:'free',created:Date.parse(prof.created_at)||Date.now(),cloud:true};
   sbSess.me={name:me.name,plan:me.plan,created_at:new Date(me.created).toISOString()};saveSbSess();
-  UID=me.id;ME=me;
+  UID=me.id;ME=me;tryEdgeAI();
   let how='off';
   if(!cachedMe){try{how=await cloudPull()}catch(e){how=e&&e.code==='expired'?'exp':'off'}}
   startSession(me,remember);
