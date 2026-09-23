@@ -591,24 +591,26 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
         <div class="feed" id="feed"><div class="empty">Bấm “Bắt đầu phiên live” để bình luận bắt đầu đổ về.</div></div>
         <div class="suggest" id="suggest" hidden></div>
       </div>
-      <div class="box stack">
-        <h3>Phát ngôn của streamer</h3>
-        <p class="small muted">Gõ đúng như bạn sẽ nói trên sóng. Thử: “Serum này rẻ nhất thị trường, chỉ 299k, khỏi mụn sau 3 ngày”.</p>
-        <textarea id="speech" rows="4" aria-label="Phát ngôn"></textarea>
-        <div class="row"><button class="btn primary" id="sendSpeech">Kiểm tra &amp; ghi nhật ký</button></div>
-        <div id="micBox" class="stack" style="border-top:1px dashed var(--line);padding-top:12px">
-          <div class="row"><button class="btn" id="micBtn">Bật micro nhận diện giọng nói</button><span class="tag" id="micStat">Micro đang tắt</span><span class="eq" id="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
-          <label class="row small muted" for="ttsOn" style="gap:6px;flex-wrap:nowrap;align-items:flex-start"><input type="checkbox" id="ttsOn" style="margin-top:3px;flex:none"> Đọc cảnh báo nghiêm trọng bằng giọng nói (chỉ nên bật khi đeo tai nghe, kẻo cảnh báo bị phát lên sóng)</label>
-          <div class="preview" id="interim" style="min-height:44px;max-height:120px" aria-live="polite"><span class="muted">Bật micro rồi nói thử, ví dụ: “Serum này rẻ nhất thị trường”.</span></div>
+      <div class="stack" style="gap:16px">
+        <div class="box stack" id="camBoxLive">
+          <div class="row"><h3 style="margin-right:auto">Camera xem trước</h3><span class="tag" id="camLiveTag" hidden>Đang bật</span></div>
+          <p class="small muted" style="margin:0">Tự bật mỗi khi bạn bấm “Bắt đầu phiên live”, để bạn xem trước hình ảnh của mình như trên sóng thật. Chỉ hiện ngay trên máy bạn, không ghi hay gửi đi đâu.</p>
+          <div class="camwrap"><video id="camLiveVid" autoplay playsinline muted hidden class="camvid"></video></div>
+          <div class="row"><button class="btn" type="button" id="camLiveBtn">Bật camera</button><button class="btn" type="button" id="camLivePipBtn" disabled>Mở camera nổi</button><span class="small muted" id="camLiveNote" role="status"></span></div>
         </div>
-        <div id="speechOut"></div>
+        <div class="box stack">
+          <h3>Phát ngôn của streamer</h3>
+          <p class="small muted">Gõ đúng như bạn sẽ nói trên sóng. Thử: “Serum này rẻ nhất thị trường, chỉ 299k, khỏi mụn sau 3 ngày”.</p>
+          <textarea id="speech" rows="4" aria-label="Phát ngôn"></textarea>
+          <div class="row"><button class="btn primary" id="sendSpeech">Kiểm tra &amp; ghi nhật ký</button></div>
+          <div id="micBox" class="stack" style="border-top:1px dashed var(--line);padding-top:12px">
+            <div class="row"><button class="btn" id="micBtn">Bật micro nhận diện giọng nói</button><span class="tag" id="micStat">Micro đang tắt</span><span class="eq" id="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
+            <label class="row small muted" for="ttsOn" style="gap:6px;flex-wrap:nowrap;align-items:flex-start"><input type="checkbox" id="ttsOn" style="margin-top:3px;flex:none"> Đọc cảnh báo nghiêm trọng bằng giọng nói (chỉ nên bật khi đeo tai nghe, kẻo cảnh báo bị phát lên sóng)</label>
+            <div class="preview" id="interim" style="min-height:44px;max-height:120px" aria-live="polite"><span class="muted">Bật micro rồi nói thử, ví dụ: “Serum này rẻ nhất thị trường”.</span></div>
+          </div>
+          <div id="speechOut"></div>
+        </div>
       </div>
-    </div>
-    <div class="box stack" id="camBoxLive" style="margin-top:16px">
-      <div class="row"><h3 style="margin-right:auto">Camera xem trước</h3><span class="tag" id="camLiveTag" hidden>Đang bật</span></div>
-      <p class="small muted" style="margin:0">Xem trước hình ảnh của bạn như trên sóng thật, để chỉnh góc quay, ánh sáng, bố cục trước và trong khi live. Chỉ hiện ngay trên máy bạn, không ghi hay gửi đi đâu.</p>
-      <div class="camwrap"><video id="camLiveVid" autoplay playsinline muted hidden class="camvid"></video></div>
-      <div class="row"><button class="btn primary" type="button" id="camLiveBtn">Bật camera</button><button class="btn" type="button" id="camLivePipBtn" disabled>Mở camera nổi</button><span class="small muted" id="camLiveNote" role="status"></span></div>
     </div>
     <div class="box stack" id="tpBox" style="margin-top:16px">
       <div class="row"><h3 style="margin-right:auto">Kịch bản dẫn và checklist</h3><label class="row small muted" for="tpBig" style="gap:6px"><input type="checkbox" id="tpBig"> Chữ lớn</label><button class="btn" id="tpReload">Nạp lại kịch bản</button><button class="btn" id="tpReset">Bắt đầu lại</button></div>
@@ -1716,8 +1718,7 @@ function makeCam(vidId,btnId,pipBtnId,noteId,tagId){
     tag.hidden=true;
     if(msg)note.textContent=msg;
   }
-  async function start(){
-    if(stream)return stop();
+  async function startInternal(){
     if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){note.textContent='Trình duyệt này chưa hỗ trợ mở camera, hoặc trang chưa mở qua địa chỉ https.';return}
     btn.disabled=true;note.textContent='Đang mở camera…';
     try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false})}
@@ -1731,7 +1732,9 @@ function makeCam(vidId,btnId,pipBtnId,noteId,tagId){
     btn.disabled=false;btn.textContent='Tắt camera';pipBtn.disabled=!(document.pictureInPictureEnabled&&v.requestPictureInPicture);
     tag.hidden=false;note.textContent='';
   }
-  btn.onclick=start;
+  function toggle(){if(stream)return stop();return startInternal()}
+  function ensureOn(){if(stream)return;return startInternal()}
+  btn.onclick=toggle;
   pipBtn.onclick=async()=>{
     if(!stream)return;
     try{
@@ -1741,7 +1744,7 @@ function makeCam(vidId,btnId,pipBtnId,noteId,tagId){
       v.addEventListener('leavepictureinpicture',()=>{pipWin=null;pipBtn.textContent='Mở camera nổi'},{once:true});
     }catch(e){note.textContent='Trình duyệt không cho mở camera nổi ở đây.'}
   };
-  return{stop,get on(){return!!stream}};
+  return{stop,ensureOn,get on(){return!!stream}};
 }
 const camLive=makeCam('#camLiveVid','#camLiveBtn','#camLivePipBtn','#camLiveNote','#camLiveTag');
 const camSim=makeCam('#camSimVid','#camSimBtn','#camSimPipBtn','#camSimNote','#camSimTag');
@@ -2624,6 +2627,7 @@ $('#liveToggle').onclick=()=>{
   liveSess.t0=Date.now();
   $('#liveResult').hidden=true;setLive(true);
   $('#liveToggle').textContent='Dừng phiên live';
+  camLive.ensureOn();
   startFeed();
   liveUI();tickClock();hudSync();
 };
