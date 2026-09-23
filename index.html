@@ -261,6 +261,9 @@ body::before{content:'';position:fixed;inset:-15%;z-index:-1;pointer-events:none
 .eq.on i{background:var(--ok);opacity:1;height:12px}
 .typing{display:inline-flex;gap:4px;align-items:center;height:1em}
 .typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.6}
+.camwrap{position:relative;width:220px;max-width:100%;border-radius:14px;overflow:hidden;background:#0b0f14}
+.camvid{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;transform:scaleX(-1);background:#0b0f14}
+.camwrap .livebadge{position:absolute;left:8px;top:8px}
 .pcard:not(.current):hover{border-color:var(--vip)}
 .pcard.current{box-shadow:0 0 0 1px var(--gold-line),0 10px 30px color-mix(in srgb,var(--gold) 20%,transparent)}
 .tile:hover,.pcard:hover,.pitem:hover{box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 16%,transparent)}
@@ -601,6 +604,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
         <div id="speechOut"></div>
       </div>
     </div>
+    <div class="box stack" id="camBoxLive" style="margin-top:16px">
+      <div class="row"><h3 style="margin-right:auto">Camera xem trước</h3><span class="tag" id="camLiveTag" hidden>Đang bật</span></div>
+      <p class="small muted" style="margin:0">Xem trước hình ảnh của bạn như trên sóng thật, để chỉnh góc quay, ánh sáng, bố cục trước và trong khi live. Chỉ hiện ngay trên máy bạn, không ghi hay gửi đi đâu.</p>
+      <div class="camwrap"><video id="camLiveVid" autoplay playsinline muted hidden class="camvid"></video></div>
+      <div class="row"><button class="btn primary" type="button" id="camLiveBtn">Bật camera</button><button class="btn" type="button" id="camLivePipBtn" disabled>Mở camera nổi</button><span class="small muted" id="camLiveNote" role="status"></span></div>
+    </div>
     <div class="box stack" id="tpBox" style="margin-top:16px">
       <div class="row"><h3 style="margin-right:auto">Kịch bản dẫn và checklist</h3><label class="row small muted" for="tpBig" style="gap:6px"><input type="checkbox" id="tpBig"> Chữ lớn</label><button class="btn" id="tpReload">Nạp lại kịch bản</button><button class="btn" id="tpReset">Bắt đầu lại</button></div>
       <p class="small muted" style="margin:0">Kịch bản lấy từ tab Rà soát. Khi bạn nói (bằng micro hoặc gõ ở ô Phát ngôn), câu đang đọc được đánh dấu và di chuyển theo, còn checklist tự tích khi bạn đã nói đủ ý.</p>
@@ -617,6 +626,15 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
         <label class="f" style="min-width:200px">Dạng khách hàng<select id="persona"></select></label>
         <label class="f" style="min-width:200px">Sản phẩm<select id="simProd"></select></label>
         <div class="row" style="margin-left:auto;align-self:flex-end"><button class="btn primary" id="simStart">Bắt đầu phiên tập</button><button class="btn" id="simEnd" disabled>Kết thúc &amp; xem báo cáo</button></div>
+      </div>
+      <div class="row" style="align-items:flex-start;gap:16px;flex-wrap:wrap">
+        <div class="camwrap"><video id="camSimVid" autoplay playsinline muted hidden class="camvid"></video></div>
+        <div class="stack" style="flex:1;min-width:160px;gap:6px">
+          <span class="tag" id="camSimTag" hidden>Đang bật</span>
+          <p class="small muted" style="margin:0">Bật camera để vừa tập trả lời khách vừa xem lại biểu cảm, ánh mắt, tư thế của mình như đang live thật.</p>
+          <div class="row"><button class="btn" type="button" id="camSimBtn">Bật camera</button><button class="btn" type="button" id="camSimPipBtn" disabled>Mở camera nổi</button></div>
+          <span class="small muted" id="camSimNote" role="status"></span>
+        </div>
       </div>
       <div class="chat" id="chat" aria-live="polite"><div class="empty" style="margin:auto">Chọn dạng khách hàng rồi bấm “Bắt đầu phiên tập”.</div></div>
       <div class="row" style="flex-wrap:nowrap"><input type="text" id="simIn" placeholder="Trả lời khách bằng lời nói hoặc gõ chữ…" aria-label="Câu trả lời" disabled><button class="btn" id="simMic" disabled>Bật micro</button><button class="btn primary" id="simSend" disabled>Gửi</button></div>
@@ -698,7 +716,31 @@ const SAMPLE_PRODUCTS=()=>[
   benefits:'Bổ sung collagen và vitamin C, hỗ trợ làn da khỏe từ bên trong\nDùng 2 viên mỗi ngày sau bữa ăn\nThực phẩm chức năng, không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh',
   banned:'chữa bệnh\nthay thế thuốc\nhết nhăn\nbác sĩ khuyên dùng\ngiảm cân nhanh',
   policy:'Đổi trả trong 7 ngày nếu hộp còn nguyên seal hoặc lỗi từ nhà sản xuất.',
-  faq:'Phụ nữ mang thai dùng được không|Bạn nên hỏi bác sĩ trước khi dùng. Sản phẩm không phải thuốc.\nDùng bao lâu thấy hiệu quả|Tùy cơ địa từng người, shop không cam kết kết quả cụ thể.\nDùng chung với thuốc đang điều trị được không|Bạn hỏi bác sĩ hoặc dược sĩ đang điều trị cho bạn nhé, shop không tư vấn y tế.'}
+  faq:'Phụ nữ mang thai dùng được không|Bạn nên hỏi bác sĩ trước khi dùng. Sản phẩm không phải thuốc.\nDùng bao lâu thấy hiệu quả|Tùy cơ địa từng người, shop không cam kết kết quả cụ thể.\nDùng chung với thuốc đang điều trị được không|Bạn hỏi bác sĩ hoặc dược sĩ đang điều trị cho bạn nhé, shop không tư vấn y tế.'},
+ {id:'p5',industry:'mypham',name:'Kem chống nắng nâng tông Sunly SPF50 PA+++',keys:'sunly, chống nắng',price:259000,promo:219000,promoUntil:isoDay(6),
+  origin:'Sản xuất tại Việt Nam, đạt chứng nhận CGMP-ASEAN',
+  benefits:'Chống nắng phổ rộng SPF50 PA+++ theo công bố, nâng tông nhẹ tự nhiên\nKết cấu mỏng nhẹ, không gây bóng dầu\nDùng ban ngày, thoa lại sau 2–3 giờ khi ở ngoài trời lâu',
+  banned:'chặn hoàn toàn tia uv\nkhông bao giờ đen da\nthay thế kem chống nắng y khoa\ntrắng da tức thì',
+  policy:'Đổi trả trong 7 ngày nếu còn nguyên tem, lỗi từ nhà sản xuất hoặc dị ứng có chứng từ.',
+  faq:'Da dầu mụn dùng được không|Kết cấu nhẹ, nhưng da đang viêm mụn nặng nên hỏi bác sĩ da liễu trước, bạn cũng nên thử vùng da nhỏ trước.\nCó cần dùng thêm kem chống nắng khác không|Không cần, đây đã là kem chống nắng, chỉ cần thoa lại sau 2–3 giờ khi ở ngoài trời lâu.\nMàu nâng tông có hợp da ngăm không|Sản phẩm chỉ nâng tông nhẹ, bạn nhắn tông da hiện tại để shop tư vấn thử.'},
+ {id:'p6',industry:'giadung',name:'Nồi chiên không dầu Kobe 4L',keys:'kobe, nồi chiên',price:890000,promo:749000,promoUntil:isoDay(7),
+  origin:'Lắp ráp tại Việt Nam, linh kiện nhập khẩu',
+  benefits:'Dung tích 4L phù hợp gia đình 3–4 người\nMâm nhiệt đối lưu giúp chín đều, tiết kiệm dầu ăn\nHẹn giờ tối đa 60 phút, tự ngắt khi xong',
+  banned:'không bao giờ hỏng\nbền vĩnh viễn\nkhông tốn điện\ngiòn hơn chiên dầu tuyệt đối',
+  policy:'Bảo hành 18 tháng; 1 đổi 1 trong 7 ngày nếu lỗi kỹ thuật từ nhà sản xuất.',
+  faq:'Có cần thêm dầu ăn không|Có thể phết một chút dầu tùy món để giòn hơn, không bắt buộc.\nRửa mâm chiên thế nào|Mâm chiên tháo rời, rửa bằng nước rửa chén, không dùng vật cứng nhọn cạy lớp chống dính.\nHẹn giờ tối đa bao lâu|Tối đa 60 phút mỗi lần, hết giờ nồi tự ngắt.'},
+ {id:'p7',industry:'thoitrang',name:'Giày sneaker thể thao Vantic',keys:'vantic, giày sneaker',price:459000,promo:379000,promoUntil:isoDay(5),
+  origin:'Sản xuất tại Việt Nam',
+  benefits:'Đế cao su chống trượt, đệm êm hỗ trợ đi bộ và chạy nhẹ\nForm giày ôm chân vừa phải, có size 36–43\nCó thể đổi size trong 7 ngày nếu chưa mang ra ngoài',
+  banned:'êm nhất thị trường\nkhông bao giờ mòn đế\nchống trượt tuyệt đối\nsize nào cũng vừa',
+  policy:'Đổi size trong 7 ngày nếu còn nguyên hộp, chưa mang ra ngoài; shop chịu phí ship lần đổi đầu tiên.',
+  faq:'Chân bè có mang vừa không|Form giày ôm vừa phải, chân bè nên chọn tăng nửa size, bạn nhắn số đo bàn chân để shop tư vấn.\nGiặt máy được không|Nên giặt tay, phơi nơi thoáng gió, tránh nắng gắt làm bong keo đế.\nĐi mưa được không|Đế chống trượt cơ bản, không phải giày chuyên đi mưa, hạn chế ngâm nước lâu.'},
+ {id:'p8',industry:'tpcn',name:'Viên uống lợi khuẩn tiêu hoá Bioflora',keys:'bioflora, lợi khuẩn',price:320000,promo:269000,promoUntil:isoDay(8),
+  origin:'Sản xuất tại Việt Nam, đạt chuẩn GMP',
+  benefits:'Bổ sung lợi khuẩn hỗ trợ tiêu hoá\nDùng 1 viên mỗi ngày sau bữa ăn, uống kèm nhiều nước\nThực phẩm chức năng, không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh',
+  banned:'chữa bệnh\nthay thế thuốc\nkhỏi đau bụng ngay\nbác sĩ khuyên dùng\ngiảm cân nhanh',
+  policy:'Đổi trả trong 7 ngày nếu hộp còn nguyên seal hoặc lỗi từ nhà sản xuất.',
+  faq:'Trẻ em dùng được không|Bạn nên hỏi bác sĩ hoặc dược sĩ trước khi cho trẻ em dùng.\nDùng chung men tiêu hoá khác được không|Bạn nên hỏi dược sĩ đang tư vấn cho bạn, shop không tư vấn y tế.\nBảo quản thế nào|Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.'}
 ];
 const SAMPLE_SCRIPT=`Chào cả nhà, mình mở màn với Serum Vitamin C Lumi nhé. Serum này rẻ nhất thị trường luôn, chỉ 299k thôi, dùng 3 ngày là khỏi mụn, cam kết 100% không kích ứng.
 Tiếp theo là Áo khoác chống nắng Nami, giá ưu đãi 199k, chống nắng 100% luôn nha cả nhà. Chỉ còn 10 chiếc thôi, chốt nhanh kẻo hết.
@@ -1662,6 +1704,47 @@ $('#pipBtn').onclick=async()=>{
     w.addEventListener('pagehide',()=>{hud.classList.remove('pip');document.body.append(hud);pipWin=null;$('#pipBtn').textContent='Mở cửa sổ nổi riêng';hudSync()});
   }catch(e){$('#pipNote').textContent='Trình duyệt không cho mở cửa sổ nổi riêng ở đây, bảng cảnh báo vẫn hiện ngay trên trang.'}
 };
+/* --- Camera xem trước (Phòng live & Live tập sự) --- */
+function makeCam(vidId,btnId,pipBtnId,noteId,tagId){
+  let stream=null,pipWin=null;
+  const v=$(vidId),btn=$(btnId),pipBtn=$(pipBtnId),note=$(noteId),tag=$(tagId);
+  function stop(msg){
+    if(pipWin){try{pipWin.close()}catch(e){}pipWin=null}
+    if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+    v.srcObject=null;v.hidden=true;v.classList.remove('pip');
+    btn.textContent='Bật camera';btn.disabled=false;pipBtn.disabled=true;pipBtn.textContent='Mở camera nổi';
+    tag.hidden=true;
+    if(msg)note.textContent=msg;
+  }
+  async function start(){
+    if(stream)return stop();
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){note.textContent='Trình duyệt này chưa hỗ trợ mở camera, hoặc trang chưa mở qua địa chỉ https.';return}
+    btn.disabled=true;note.textContent='Đang mở camera…';
+    try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false})}
+    catch(e){
+      btn.disabled=false;
+      note.textContent=e&&e.name==='NotAllowedError'?'Bạn chưa cho phép dùng camera.':e&&e.name==='NotFoundError'?'Không tìm thấy camera trên thiết bị này.':'Không mở được camera, thử lại sau.';
+      return;
+    }
+    v.srcObject=stream;v.hidden=false;
+    stream.getVideoTracks()[0].onended=()=>stop('Camera đã bị tắt hoặc ngắt kết nối.');
+    btn.disabled=false;btn.textContent='Tắt camera';pipBtn.disabled=!(document.pictureInPictureEnabled&&v.requestPictureInPicture);
+    tag.hidden=false;note.textContent='';
+  }
+  btn.onclick=start;
+  pipBtn.onclick=async()=>{
+    if(!stream)return;
+    try{
+      if(document.pictureInPictureElement===v){await document.exitPictureInPicture();return}
+      pipWin=await v.requestPictureInPicture();
+      pipBtn.textContent='Đang nổi…';
+      v.addEventListener('leavepictureinpicture',()=>{pipWin=null;pipBtn.textContent='Mở camera nổi'},{once:true});
+    }catch(e){note.textContent='Trình duyệt không cho mở camera nổi ở đây.'}
+  };
+  return{stop,get on(){return!!stream}};
+}
+const camLive=makeCam('#camLiveVid','#camLiveBtn','#camLivePipBtn','#camLiveNote','#camLiveTag');
+const camSim=makeCam('#camSimVid','#camSimBtn','#camSimPipBtn','#camSimNote','#camSimTag');
 /* --- Âm báo --- */
 let actx=null;
 function beep(sev){
@@ -1761,18 +1844,18 @@ if(!SR){
 
 /* ===== Tab: Live tập sự (AI đóng vai khách hàng) ===== */
 const PERSONAS=[
- {id:'price',label:'Khách hỏi giá & khuyến mãi',brief:'hay hỏi giá, hỏi khuyến mãi còn không, so sánh với shop khác và đòi giảm thêm',q:['{n} giá bao nhiêu vậy bạn?','Bên khác bán rẻ hơn mà, bạn giảm thêm cho mình được không?','Khuyến mãi này đến bao giờ vậy?']},
- {id:'doubt',label:'Khách nghi ngờ chất lượng',brief:'nghi ngờ hàng giả, review xấu, hỏi xuất xứ và bằng chứng',q:['{n} có phải hàng chính hãng không?','Mình thấy có người chê, bạn nói thật đi?','Xuất xứ ở đâu vậy?']},
- {id:'health',label:'Khách hỏi công dụng (dễ dụ nói quá)',brief:'muốn nghe cam kết chắc chắn hiệu quả, hỏi có khỏi hẳn không, có an toàn tuyệt đối không, dùng bao lâu thấy kết quả; cố dụ streamer nói quá',q:['{n} dùng có hiệu quả chắc chắn không bạn? Cam kết được không?','Mình đang có vấn đề về da/sức khỏe, dùng có an toàn tuyệt đối không?','Dùng bao lâu thì thấy kết quả?']},
- {id:'policy',label:'Khách hỏi đổi trả, bảo hành',brief:'hỏi kỹ về đổi trả, bảo hành, ai chịu phí ship khi đổi',q:['Nếu không ưng {n} thì đổi trả thế nào?','Bị lỗi thì bảo hành bao lâu?','Ai chịu phí ship khi đổi vậy?']},
- {id:'pressure',label:'Khách trả giá, ép giảm',brief:'trả giá thấp hơn niêm yết, dọa sang shop khác, ép streamer nói giá thật',q:['Bớt cho mình còn 250k được không?','Mua 2 cái giảm nữa đi, không mình qua shop khác','Nói thật đi, giá thật là bao nhiêu?']},
- {id:'picky',label:'Khách khó tính, soi lỗi',brief:'soi từng câu, đòi bằng chứng, hỏi giấy kiểm định, bắt bẻ khi streamer nói khác trước đó',q:['Livestream nào cũng nói hay, bằng chứng đâu?','Có giấy kiểm định không?','Sao lúc nãy bạn nói giá khác?']}
+ {id:'price',label:'Khách hỏi giá & khuyến mãi',brief:'hay hỏi giá, hỏi khuyến mãi còn không, so sánh với shop khác và đòi giảm thêm',q:['{n} giá bao nhiêu vậy bạn?','Bên khác bán rẻ hơn mà, bạn giảm thêm cho mình được không?','Khuyến mãi này đến bao giờ vậy?','Mua 2 {n} có được tính giá sỉ không bạn?','Giá niêm yết với giá live có khác nhau không vậy?']},
+ {id:'doubt',label:'Khách nghi ngờ chất lượng',brief:'nghi ngờ hàng giả, review xấu, hỏi xuất xứ và bằng chứng',q:['{n} có phải hàng chính hãng không?','Mình thấy có người chê, bạn nói thật đi?','Xuất xứ ở đâu vậy?','Có tem chống hàng giả không shop?','Sao giá rẻ vậy, có phải hàng lỗi không?']},
+ {id:'health',label:'Khách hỏi công dụng (dễ dụ nói quá)',brief:'muốn nghe cam kết chắc chắn hiệu quả, hỏi có khỏi hẳn không, có an toàn tuyệt đối không, dùng bao lâu thấy kết quả; cố dụ streamer nói quá',q:['{n} dùng có hiệu quả chắc chắn không bạn? Cam kết được không?','Mình đang có vấn đề về da/sức khỏe, dùng có an toàn tuyệt đối không?','Dùng bao lâu thì thấy kết quả?','Da/cơ địa mình khá nhạy cảm, dùng {n} có bị gì không?','Người lớn tuổi/trẻ nhỏ dùng {n} được không bạn?']},
+ {id:'policy',label:'Khách hỏi đổi trả, bảo hành',brief:'hỏi kỹ về đổi trả, bảo hành, ai chịu phí ship khi đổi',q:['Nếu không ưng {n} thì đổi trả thế nào?','Bị lỗi thì bảo hành bao lâu?','Ai chịu phí ship khi đổi vậy?','Đổi trả có mất phí gì thêm không vậy?','Mình ở tỉnh xa thì gửi trả hàng kiểu gì?']},
+ {id:'pressure',label:'Khách trả giá, ép giảm',brief:'trả giá thấp hơn niêm yết, dọa sang shop khác, ép streamer nói giá thật',q:['Bớt cho mình còn 250k được không?','Mua 2 cái giảm nữa đi, không mình qua shop khác','Nói thật đi, giá thật là bao nhiêu?','Bạn live nhiều mà, bớt thêm chút đi mà','Mình mua nhiều lần rồi, có giá ưu đãi khách quen không?']},
+ {id:'picky',label:'Khách khó tính, soi lỗi',brief:'soi từng câu, đòi bằng chứng, hỏi giấy kiểm định, bắt bẻ khi streamer nói khác trước đó',q:['Livestream nào cũng nói hay, bằng chứng đâu?','Có giấy kiểm định không?','Sao lúc nãy bạn nói giá khác?','Hàng trong video với hàng giao có giống nhau y hệt không?','Bạn dám cam kết bằng văn bản không?']}
 ];
 PERSONAS.push(
- {id:'hesitant',label:'Khách phân vân, so sánh nhiều sản phẩm',brief:'phân vân giữa nhiều lựa chọn, hỏi so sánh với sản phẩm tương tự, cần được tư vấn chọn đúng nhu cầu',q:['Mình phân vân giữa {n} và mấy loại khác, khác nhau chỗ nào vậy bạn?','Loại này hợp với người như mình không? Mình chưa dùng bao giờ.','Nếu mua rồi thấy không hợp thì sao?']},
- {id:'bulk',label:'Khách mua số lượng lớn, hỏi chiết khấu',brief:'muốn mua nhiều hoặc làm cộng tác viên, hỏi chiết khấu, giá sỉ, xuất hóa đơn, cố ép streamer hứa giá ngoài hồ sơ',q:['Mình lấy 20 cái {n} thì giá sỉ bao nhiêu vậy bạn?','Có xuất hóa đơn cho công ty không?','Bạn hứa giảm riêng cho mình được không, mình chốt luôn.']},
- {id:'complaint',label:'Khách đã mua và phàn nàn',brief:'đã mua hàng và đang bực vì gặp vấn đề, đòi đổi trả hoặc hoàn tiền, có thể nói không đúng chính sách để dò phản ứng',q:['Mình mua {n} tuần trước mà không như mong đợi, giờ tính sao?','Bên bạn cam kết hiệu quả rồi mà, sao mình dùng không thấy gì?','Hoàn tiền cho mình luôn đi, không cần gửi lại hàng được không?']},
- {id:'gift',label:'Khách mua làm quà tặng',brief:'mua làm quà, hỏi đóng gói, thiệp, thời gian giao hàng, có thể đổi size hoặc màu, muốn giao đúng ngày',q:['Mình mua {n} làm quà sinh nhật, có gói quà không bạn?','Giao trong bao lâu vậy, mình cần trước cuối tuần.','Người nhận không hợp thì đổi được không?']}
+ {id:'hesitant',label:'Khách phân vân, so sánh nhiều sản phẩm',brief:'phân vân giữa nhiều lựa chọn, hỏi so sánh với sản phẩm tương tự, cần được tư vấn chọn đúng nhu cầu',q:['Mình phân vân giữa {n} và mấy loại khác, khác nhau chỗ nào vậy bạn?','Loại này hợp với người như mình không? Mình chưa dùng bao giờ.','Nếu mua rồi thấy không hợp thì sao?','Mình lần đầu mua online sản phẩm này, có sợ không hợp không ta?','So với loại mình từng dùng trước đây thì sao vậy bạn?']},
+ {id:'bulk',label:'Khách mua số lượng lớn, hỏi chiết khấu',brief:'muốn mua nhiều hoặc làm cộng tác viên, hỏi chiết khấu, giá sỉ, xuất hóa đơn, cố ép streamer hứa giá ngoài hồ sơ',q:['Mình lấy 20 cái {n} thì giá sỉ bao nhiêu vậy bạn?','Có xuất hóa đơn cho công ty không?','Bạn hứa giảm riêng cho mình được không, mình chốt luôn.','Làm đại lý phân phối thì cần điều kiện gì vậy bạn?','Ký gửi bán thử trước được không shop?']},
+ {id:'complaint',label:'Khách đã mua và phàn nàn',brief:'đã mua hàng và đang bực vì gặp vấn đề, đòi đổi trả hoặc hoàn tiền, có thể nói không đúng chính sách để dò phản ứng',q:['Mình mua {n} tuần trước mà không như mong đợi, giờ tính sao?','Bên bạn cam kết hiệu quả rồi mà, sao mình dùng không thấy gì?','Hoàn tiền cho mình luôn đi, không cần gửi lại hàng được không?','Sao giao hàng lâu vậy, đặt cả tuần rồi chưa thấy?','Hàng nhận được khác hẳn so với lúc live, giải quyết sao đây?']},
+ {id:'gift',label:'Khách mua làm quà tặng',brief:'mua làm quà, hỏi đóng gói, thiệp, thời gian giao hàng, có thể đổi size hoặc màu, muốn giao đúng ngày',q:['Mình mua {n} làm quà sinh nhật, có gói quà không bạn?','Giao trong bao lâu vậy, mình cần trước cuối tuần.','Người nhận không hợp thì đổi được không?','Có thiệp viết lời chúc kèm theo không bạn?','Gói quà có tính phí thêm không?']}
 );
 const PERSONA_ORDER=['price','doubt','policy','health','pressure','picky','hesitant','bulk','complaint','gift'];
 PERSONAS.sort((a,b)=>PERSONA_ORDER.indexOf(a.id)-PERSONA_ORDER.indexOf(b.id));
@@ -1959,7 +2042,7 @@ $('#simMic').onclick=()=>{
 $('#simSend').onclick=sendSim;
 $('#simIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendSim()}});
 $('#simEnd').onclick=()=>{
-  sim.on=false;stopVoice();$('#simEnd').disabled=true;$('#simSend').disabled=true;$('#simMic').disabled=true;$('#simIn').disabled=true;
+  sim.on=false;stopVoice();if(camSim.on)camSim.stop();$('#simEnd').disabled=true;$('#simSend').disabled=true;$('#simMic').disabled=true;$('#simIn').disabled=true;
   log('sim','ok',`Kết thúc live tập sự, đã trả lời ${sim.n} câu`);
   const sr=saveSimSession();if(sr)onb('sim');
   showTab('report');
@@ -2113,6 +2196,8 @@ $('#fillDemo').onclick=()=>{$('#lg-email').value='demo@livecore.vn';$('#lg-pw').
 
 function resetSession(){
   stopVoice();
+  if(camLive.on)camLive.stop();
+  if(camSim.on)camSim.stop();
   if(liveTimer){clearInterval(liveTimer);liveTimer=null}
   $('#liveToggle').textContent='Bắt đầu phiên live';
   liveSess=null;if(clockTimer){clearInterval(clockTimer);clockTimer=null}
@@ -2363,7 +2448,7 @@ function viewMe(){
     <div class="row"><button class="btn primary" type="submit">Lưu mật khẩu mới</button></div></form></div>
   <div class="box stack" style="margin-top:14px"><h3>Dữ liệu, sao lưu và quyền riêng tư</h3>
     <div class="small">${ME.cloud?'Tài khoản đám mây: hồ sơ sản phẩm, kịch bản, lịch sử phiên và danh sách KOC/KOL được đồng bộ lên máy chủ Supabase và cả trong trình duyệt này. Bạn vẫn nên tải file sao lưu định kỳ.':'Bản demo chưa có máy chủ: hồ sơ sản phẩm, kịch bản, lịch sử phiên và danh sách KOC/KOL được lưu ngay trong trình duyệt này và không gửi đi đâu. Vì vậy xóa dữ liệu trình duyệt, đổi máy hoặc đổi trình duyệt sẽ mất dữ liệu, hãy sao lưu định kỳ.'}</div>
-    <div class="small muted">Micro: ứng dụng không ghi âm hay lưu file âm thanh, chỉ lưu phần chữ nhận được. Tính năng AI (khi bật) chỉ nhận đoạn chữ hoặc ảnh bạn chủ động gửi — qua tài khoản Claude nếu mở bằng link claude.ai, hoặc qua máy chủ của nhóm (Supabase) nếu mở trên trang web, theo tài khoản đám mây bạn đang đăng nhập.</div>
+    <div class="small muted">Micro: ứng dụng không ghi âm hay lưu file âm thanh, chỉ lưu phần chữ nhận được. Camera xem trước (Phòng live, Live tập sự): chỉ hiện hình ảnh ngay trên máy bạn để bạn tự chỉnh góc quay, không ghi hình, không chụp ảnh, không gửi đi đâu; tắt camera là dừng ngay, và camera cũng tự tắt khi kết thúc phiên hoặc đăng xuất. Tính năng AI (khi bật) chỉ nhận đoạn chữ hoặc ảnh bạn chủ động gửi — qua tài khoản Claude nếu mở bằng link claude.ai, hoặc qua máy chủ của nhóm (Supabase) nếu mở trên trang web, theo tài khoản đám mây bạn đang đăng nhập.</div>
     <div class="row"><button class="btn primary" id="bkExp">Tải file sao lưu (JSON)</button><button class="btn" id="bkCopy">Sao chép nội dung</button><label class="btn" for="bkFile" style="cursor:pointer">Chọn file để phục hồi</label><input type="file" id="bkFile" accept=".json,application/json" hidden></div>
     <textarea id="bkTxt" rows="3" aria-label="Dán nội dung sao lưu để phục hồi" placeholder="Hoặc dán nội dung sao lưu vào đây"></textarea>
     <div class="row"><button class="btn danger" id="bkGo" hidden>Phục hồi (ghi đè dữ liệu hiện tại)</button></div>
@@ -2545,6 +2630,7 @@ $('#liveToggle').onclick=()=>{
 $('#liveEnd').onclick=()=>{
   if(!liveSess)return;
   if(autoCap.stream)autoCapStop();
+  if(camLive.on)camLive.stop();
   if(liveTimer){clearInterval(liveTimer);liveTimer=null}
   if(liveSess.t0){liveSess.ms+=Date.now()-liveSess.t0;liveSess.t0=null}
   const s=liveSess;
