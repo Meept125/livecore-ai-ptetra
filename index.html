@@ -333,18 +333,20 @@ body::before{content:'';position:fixed;inset:-15%;z-index:-1;pointer-events:none
 
 /* ===== Sticker nền: hoa và ánh lấp lánh ===== */
 #deco{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
-#deco .st{position:absolute;display:block;opacity:.15;will-change:transform,opacity}
+#deco .st{position:absolute;display:block;opacity:.15;--op:.15;will-change:transform,opacity}
 #deco .st.sp{opacity:.3;filter:drop-shadow(0 0 5px currentColor)}
 #deco .st.rg{opacity:.2}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #deco .st.fl,:root:not([data-theme="light"]) #deco .st.rg{opacity:.26}}
-:root[data-theme="dark"] #deco .st.fl,:root[data-theme="dark"] #deco .st.rg{opacity:.26}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #deco .st.fl,:root:not([data-theme="light"]) #deco .st.rg{opacity:.26;--op:.26}}
+:root[data-theme="dark"] #deco .st.fl,:root[data-theme="dark"] #deco .st.rg{opacity:.26;--op:.26}
 @media (max-width:640px){#deco .st.more{display:none}}
 @media (prefers-reduced-motion:no-preference){
-  #deco .st.fl,#deco .st.rg{animation:sway var(--dur,14s) ease-in-out var(--del,0s) infinite alternate}
+  #deco .st.fl{animation:swayFade var(--dur,14s) ease-in-out var(--del,0s) infinite}
+  #deco .st.rg{animation:sway var(--dur,14s) ease-in-out var(--del,0s) infinite alternate}
   #deco .st.sp{animation:twinkle var(--dur,4s) ease-in-out var(--del,0s) infinite}
   #deco .st.dt{animation:bob var(--dur,9s) ease-in-out var(--del,0s) infinite alternate}
 }
 @keyframes sway{0%{transform:translate(0,0) rotate(0)}100%{transform:translate(var(--dx,20px),var(--dy,-26px)) rotate(var(--rot,40deg))}}
+@keyframes swayFade{0%{transform:translate(0,0) rotate(0) scale(.72);opacity:0}18%{opacity:var(--op,.15)}50%{transform:translate(var(--dx,20px),var(--dy,-26px)) rotate(var(--rot,40deg)) scale(1);opacity:var(--op,.15)}82%{opacity:0}100%{transform:translate(0,0) rotate(0) scale(.72);opacity:0}}
 @keyframes twinkle{0%,100%{opacity:.06;transform:scale(.55) rotate(0)}50%{opacity:.6;transform:scale(1.15) rotate(50deg)}}
 @keyframes bob{to{transform:translateY(-18px)}}
 
@@ -604,6 +606,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
           <textarea id="speech" rows="4" aria-label="Phát ngôn"></textarea>
           <div class="row"><button class="btn primary" id="sendSpeech">Kiểm tra &amp; ghi nhật ký</button></div>
           <div id="micBox" class="stack" style="border-top:1px dashed var(--line);padding-top:12px">
+            <p class="small muted" style="margin:0">Tự bật cùng lúc với camera mỗi khi bạn bấm “Bắt đầu phiên live”, để kiểm tra phát ngôn ngay khi bạn vừa nói xong.</p>
             <div class="row"><button class="btn" id="micBtn">Bật micro nhận diện giọng nói</button><span class="tag" id="micStat">Micro đang tắt</span><span class="eq" id="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
             <label class="row small muted" for="ttsOn" style="gap:6px;flex-wrap:nowrap;align-items:flex-start"><input type="checkbox" id="ttsOn" style="margin-top:3px;flex:none"> Đọc cảnh báo nghiêm trọng bằng giọng nói (chỉ nên bật khi đeo tai nghe, kẻo cảnh báo bị phát lên sóng)</label>
             <div class="preview" id="interim" style="min-height:44px;max-height:120px" aria-live="polite"><span class="muted">Bật micro rồi nói thử, ví dụ: “Serum này rẻ nhất thị trường”.</span></div>
@@ -1831,17 +1834,21 @@ function startMic(){
   rec.onend=()=>{if(micOn)try{rec.start()}catch(e){}};
   rec.start();
 }
+function micGo(){
+  micOn=true;$('#micBtn').textContent='Tắt micro';micStat('Đang nghe (vi-VN)','ok');
+  try{startMic()}catch(e){micOn=false;micStat('Không bật được micro','bad');$('#micBtn').textContent='Bật micro nhận diện giọng nói'}
+}
+function micEnsureOn(){
+  if(!SR||micOn)return;
+  micOk()?micGo():askMic(micGo);
+}
 if(!SR){
   $('#micBtn').disabled=true;$('#ttsOn').disabled=true;
   micStat('Trình duyệt chưa hỗ trợ nhận diện giọng nói','warn');
 }else{
   $('#micBtn').onclick=()=>{
     if(micOn){micOn=false;try{rec.stop()}catch(e){}$('#micBtn').textContent='Bật micro nhận diện giọng nói';micStat('Micro đang tắt');return}
-    const go=()=>{
-      micOn=true;$('#micBtn').textContent='Tắt micro';micStat('Đang nghe (vi-VN)','ok');
-      try{startMic()}catch(e){micOn=false;micStat('Không bật được micro','bad');$('#micBtn').textContent='Bật micro nhận diện giọng nói'}
-    };
-    micOk()?go():askMic(go);
+    micOk()?micGo():askMic(micGo);
   };
 }
 
@@ -2314,7 +2321,7 @@ $('#regForm').addEventListener('submit',async e=>{
     <symbol id="s-dot" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="currentColor"/></symbol></defs></svg>`;
   let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
   const cols=['var(--accent)','var(--vip)','var(--gold)','color-mix(in srgb,var(--bad) 45%,#f7a8d0)','var(--ok)'];
-  const kinds=[['fl','s-flower',[34,72]],['sp','s-spark',[14,30]],['fl','s-flower',[30,56]],['sp','s-spark',[12,24]],['rg','s-ring',[18,34]],['dt','s-dot',[6,11]]];
+  const kinds=[['fl','s-flower',[24,50]],['sp','s-spark',[14,30]],['fl','s-flower',[20,38]],['sp','s-spark',[12,24]],['rg','s-ring',[18,34]],['dt','s-dot',[6,11]]];
   const COLS=6,ROWS=4;let n=0;
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
     const [cls,sym,[a,b]]=kinds[(r*COLS+c)%kinds.length],sz=Math.round(a+rnd()*(b-a));
@@ -2627,7 +2634,7 @@ $('#liveToggle').onclick=()=>{
   liveSess.t0=Date.now();
   $('#liveResult').hidden=true;setLive(true);
   $('#liveToggle').textContent='Dừng phiên live';
-  camLive.ensureOn();
+  camLive.ensureOn();micEnsureOn();
   startFeed();
   liveUI();tickClock();hudSync();
 };
