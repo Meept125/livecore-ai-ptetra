@@ -56,7 +56,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* layout */
 .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
 .grid-side{display:grid;grid-template-columns:240px minmax(0,1fr);gap:18px}
-@media (max-width:820px){.grid2,.grid-side{grid-template-columns:minmax(0,1fr)}}
+.watchGrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.grid2,.grid-side,.watchGrid{grid-template-columns:minmax(0,1fr)}}
 .box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
 .box>h3+*{margin-top:10px}
 .lead{max-width:68ch;color:var(--muted);margin-bottom:16px}
@@ -264,6 +265,8 @@ body::before{content:'';position:fixed;inset:-15%;z-index:-1;pointer-events:none
 .camwrap{position:relative;width:220px;max-width:100%;border-radius:14px;overflow:hidden;background:#0b0f14}
 .camvid{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;transform:scaleX(-1);background:#0b0f14}
 .camwrap .livebadge{position:absolute;left:8px;top:8px}
+.scrwrap{position:relative;width:100%;border-radius:14px;overflow:hidden;background:#0b0f14}
+.scrvid{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#0b0f14}
 .pcard:not(.current):hover{border-color:var(--vip)}
 .pcard.current{box-shadow:0 0 0 1px var(--gold-line),0 10px 30px color-mix(in srgb,var(--gold) 20%,transparent)}
 .tile:hover,.pcard:hover,.pitem:hover{box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 16%,transparent)}
@@ -476,10 +479,8 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
       <div class="fld"><label for="rg-pw">Mật khẩu (ít nhất 8 ký tự, có chữ và số)</label><div class="pw"><input type="password" id="rg-pw" autocomplete="new-password"><button type="button" class="pwt" data-for="rg-pw" aria-label="Hiện hoặc ẩn mật khẩu">Hiện</button></div></div>
       <div class="fld"><label for="rg-pw2">Nhập lại mật khẩu</label><input type="password" id="rg-pw2" autocomplete="new-password"></div>
       <fieldset class="plans" style="border:0;padding:0;margin:0"><legend class="small muted" style="padding:0;margin-bottom:6px;font-weight:500">Chọn gói dùng thử (bản demo, không thu phí)</legend>
-        <label class="plan" for="pl-free"><input type="radio" name="plan" id="pl-free" value="free"><div><b>Dùng thử · Miễn phí</b><span>1 Product Master, 5 phiên phân tích/tháng</span></div></label>
-        <label class="plan" for="pl-basic"><input type="radio" name="plan" id="pl-basic" value="basic"><div><b>Cá nhân Cơ bản · 249.000đ/tháng</b><span>5 Product Master, 100 phiên phân tích/tháng, 3 dạng tình huống luyện tập</span></div></label>
-        <label class="plan" for="pl-pro"><input type="radio" name="plan" id="pl-pro" value="pro" checked><div><b>Cá nhân Chuyên nghiệp · 699.000đ/tháng</b><span>20 Product Master, 500 phiên phân tích/tháng, đủ 10 dạng tình huống, AI Coach</span></div></label>
-        <label class="plan" for="pl-biz"><input type="radio" name="plan" id="pl-biz" value="business"><div><b>Doanh nghiệp · 2.999.000đ/tháng</b><span>Không giới hạn Product Master, kèm 10 tài khoản phân quyền</span></div></label>
+        <label class="plan" for="pl-pro"><input type="radio" name="plan" id="pl-pro" value="pro" checked><div><b>Pro (Cá nhân) · 899.000đ/tháng</b><span>100 Hồ sơ Sản phẩm Chủ, 20 giờ Live AI Compliance, AI Coach, 50 lượt rà soát kịch bản live</span></div></label>
+        <label class="plan" for="pl-biz"><input type="radio" name="plan" id="pl-biz" value="business"><div><b>Business (Doanh nghiệp) · 3.599.000đ/tháng</b><span>600 Hồ sơ Sản phẩm Chủ, 1 tài khoản quản trị + 5 tài khoản phân quyền, Báo cáo nâng cao</span></div></label>
       </fieldset>
       <div class="row small muted" style="gap:6px;flex-wrap:nowrap;align-items:flex-start"><input type="checkbox" id="rg-terms" style="margin-top:3px;flex:none"><label id="rg-terms-l" for="rg-terms">Mình hiểu đây là bản demo: tài khoản chỉ lưu trong trình duyệt này, không dùng mật khẩu thật của các dịch vụ khác.</label></div>
       <div class="err" id="rg-err" role="alert"></div><div class="okmsg" id="rg-ok" role="status"></div>
@@ -585,13 +586,22 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
             <p class="small muted" style="margin:0" id="autoCapHint">Bấm bắt đầu rồi chọn đúng tab hoặc cửa sổ đang mở phiên <b id="autoCapPlatName">Facebook</b> Live của bạn khi trình duyệt hỏi chia sẻ màn hình. Hệ thống tự chụp và đọc khung bình luận mỗi vài giây, không cần bạn dán tay.</p>
             <div class="row"><button class="btn primary" type="button" id="autoCapBtn">Bắt đầu nhận diện tự động</button><span class="small muted" id="autoCapNote" role="status"></span></div>
           </div>
+          <div class="watchGrid" id="autoCapWatch" hidden style="margin-top:4px">
+            <div class="scrwrap"><video id="autoCapVid" autoplay playsinline muted class="scrvid"></video></div>
+            <div class="stack" id="autoCapSide">
+              <div class="box stack" id="realWarn" style="background:var(--bg)">
+                <div class="row"><h3 style="margin-right:auto;font-size:15px">Cảnh báo phát ngôn</h3><span class="tag bad" id="realWarnBad" hidden>0 nghiêm trọng</span><span class="tag warn" id="realWarnWarn" hidden>0 cảnh báo</span></div>
+                <div id="realWarnBody" class="small muted">Chưa có cảnh báo nào. Khi bạn nói (qua micro hoặc ô Phát ngôn), cảnh báo mới nhất so với hồ sơ sản phẩm sẽ hiện ở đây.</div>
+              </div>
+            </div>
+          </div>
           <p class="small muted" style="margin:8px 0 0">Hoặc làm thủ công: sao chép bình luận dán vào đây, mỗi dòng một bình luận (có thể ghi “Tên: nội dung”). Hoặc dán/tải một ảnh chụp màn hình để AI đọc giúp.</p>
           <textarea id="realTxt" rows="4" aria-label="Bình luận thật" placeholder="Ngọc Anh: Serum Lumi giá sao shop&#10;Minh Tuấn: Áo Nami còn size XL không"></textarea>
           <div class="row"><button class="btn primary" id="realAdd">Thêm vào danh sách</button><label class="btn" for="realImg" id="realImgL" style="cursor:pointer">Đọc từ ảnh chụp</label><input type="file" id="realImg" accept="image/png,image/jpeg,image/webp" hidden><span class="small muted" id="realNote" role="status"></span></div>
         </div>
         <div class="box stack" id="liveResult" hidden style="background:var(--bg)"></div>
         <div class="feed" id="feed"><div class="empty">Bấm “Bắt đầu phiên live” để bình luận bắt đầu đổ về.</div></div>
-        <div class="suggest" id="suggest" hidden></div>
+        <div class="suggest" id="suggest" hidden></div><div id="suggestHome" hidden></div>
       </div>
       <div class="stack" style="gap:16px">
         <div class="box stack" id="camBoxLive">
@@ -649,6 +659,19 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
         <span class="eq" id="simEq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span id="simVoiceNote"></span>
       </div>
     </div>
+    <details class="box" id="qsetBox" style="margin-top:16px">
+      <summary style="cursor:pointer"><b>Bộ câu hỏi tuỳ chỉnh</b> <span class="muted small">(tự soạn thêm dạng khách và câu hỏi riêng để luyện đa dạng hơn)</span></summary>
+      <div class="stack" style="margin-top:12px">
+        <p class="small muted" style="margin:0">Mỗi dòng là một câu hỏi khách sẽ hỏi bạn; hệ thống sẽ hỏi ngẫu nhiên theo thứ tự khác nhau mỗi phiên tập. Có thể dùng <code>{n}</code> để tự thay bằng tên sản phẩm đang chọn. Tải lên file .txt/.csv (mỗi dòng một câu) hoặc dán trực tiếp vào ô bên dưới.</p>
+        <div class="row">
+          <label class="f" style="min-width:220px">Tên dạng khách hàng<input type="text" id="qsName" placeholder="VD: Khách hay hỏi ship COD"></label>
+          <label class="btn" for="qsFile" style="cursor:pointer;align-self:flex-end">Chọn file để nạp câu hỏi</label><input type="file" id="qsFile" accept=".txt,.csv,text/plain,text/csv" hidden>
+        </div>
+        <textarea id="qsTxt" rows="5" aria-label="Danh sách câu hỏi, mỗi dòng một câu" placeholder="Mỗi dòng một câu hỏi, ví dụ:&#10;{n} còn hàng không bạn?&#10;Mua ở đây có được ship COD không?"></textarea>
+        <div class="row"><button class="btn primary" id="qsSave">Lưu bộ câu hỏi này</button><span class="small muted" id="qsNote" role="status"></span></div>
+        <div class="stack" id="qsList"></div>
+      </div>
+    </details>
     <div class="box stack" id="simProg" style="margin-top:16px"></div>
   </section>
 
@@ -686,6 +709,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const vnd=n=>Number(n||0).toLocaleString('vi-VN')+'đ';
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const isoDay=off=>{const d=new Date();d.setDate(d.getDate()+off);return d.toISOString().slice(0,10)};
 const dmy=iso=>iso?iso.split('-').reverse().join('/'):'';
 const today=()=>isoDay(0);
@@ -1578,11 +1602,20 @@ function autoCapSetUI(on){
   if(on)$('#autoCapTag').textContent='Đang nhận diện '+PLATFORMS[platform]+'…';
   $('#platRow').querySelectorAll('button').forEach(b=>b.disabled=on);
 }
+/* Khi đang nhận diện tự động: hiện to màn hình đang chia sẻ ngay trong trang, kèm khung gợi ý trả lời bình luận và khung cảnh báo phát ngôn bên cạnh, vì streamer nhìn thấy mặt mình và bình luận thật ngay trên màn hình đó rồi. */
+function watchLayout(on){
+  const box=$('#autoCapWatch'),side=$('#autoCapSide'),home=$('#suggestHome'),warn=$('#realWarn'),sug=$('#suggest');
+  if(!box)return;
+  box.hidden=!on;
+  if(on)side.insertBefore(sug,warn);
+  else if(home&&home.parentNode)home.parentNode.insertBefore(sug,home);
+}
 function autoCapStop(msg){
   if(autoCap.timer){clearInterval(autoCap.timer);autoCap.timer=null}
   if(autoCap.stream){autoCap.stream.getTracks().forEach(t=>t.stop());autoCap.stream=null}
   autoCap.video=null;autoCap.busy=false;autoCap.ticks=0;autoCap.fails=0;
-  autoCapSetUI(false);
+  const vv=$('#autoCapVid');if(vv)vv.srcObject=null;
+  autoCapSetUI(false);watchLayout(false);
   if(msg)$('#autoCapNote').textContent=msg;
 }
 async function autoCapTick(){
@@ -1627,10 +1660,10 @@ $('#autoCapBtn').onclick=async()=>{
   try{stream=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false})}
   catch(e){autoCap.starting=false;$('#autoCapNote').textContent='Bạn đã hủy chia sẻ màn hình.';return}
   autoCap.starting=false;
-  const v=document.createElement('video');v.srcObject=stream;v.muted=true;await v.play().catch(()=>{});
+  const v=$('#autoCapVid');v.srcObject=stream;v.muted=true;await v.play().catch(()=>{});
   autoCap.stream=stream;autoCap.video=v;autoCap.ticks=0;autoCap.fails=0;autoCap.seen=new Set();
   stream.getVideoTracks()[0].onended=()=>autoCapStop('Bạn đã dừng chia sẻ màn hình.');
-  autoCapSetUI(true);
+  autoCapSetUI(true);watchLayout(true);
   $('#autoCapNote').textContent=`Đang chọn đúng tab/cửa sổ ${PLATFORMS[platform]} bạn vừa chia sẻ… lần đọc đầu tiên sau vài giây.`;
   autoCapTick();autoCap.timer=setInterval(autoCapTick,autoCap.every);
 };
@@ -1687,14 +1720,19 @@ function hudClock(){
   $('#hudClock').textContent=fmtSec(liveSecs());
   $('#hudChecked').textContent=liveSess.speeches+' câu đã đối chiếu';
   $('#hudBad').textContent=liveSess.bad+' nghiêm trọng';$('#hudWarn').textContent=liveSess.warn+' cảnh báo';
+  const rb=$('#realWarnBad'),rw=$('#realWarnWarn');
+  if(rb){rb.textContent=liveSess.bad+' nghiêm trọng';rb.hidden=!liveSess.bad;rw.textContent=liveSess.warn+' cảnh báo';rw.hidden=!liveSess.warn}
 }
 function hudUpdate(a,text){
   if(!liveSess)return;
   hudClock();
   const f=a.findings.find(x=>x.sev==='bad')||a.findings[0];
   hud.classList.toggle('alert',!!f&&f.sev==='bad');
+  const bodyHTML=f?`<div class="find ${f.sev}" style="margin:0"><b>${esc(f.title)}</b> <span class="mono muted">“${esc(f.phrase)}”</span><div class="fix">Nên nói: ${esc(f.fix)}</div></div>`:`<span class="tag ok">Ổn</span> <span class="small muted">“${esc(text.slice(0,80))}${text.length>80?'…':''}”</span>`;
   $('#hudBody').className=f?'':'small muted';
-  $('#hudBody').innerHTML=f?`<div class="find ${f.sev}" style="margin:0"><b>${esc(f.title)}</b> <span class="mono muted">“${esc(f.phrase)}”</span><div class="fix">Nên nói: ${esc(f.fix)}</div></div>`:`<span class="tag ok">Ổn</span> <span class="small muted">“${esc(text.slice(0,80))}${text.length>80?'…':''}”</span>`;
+  $('#hudBody').innerHTML=bodyHTML;
+  const rwBody=$('#realWarnBody');
+  if(rwBody){rwBody.className=f?'':'small muted';rwBody.innerHTML=bodyHTML}
 }
 $('#hudOn').onchange=hudSync;
 $('#pipBtn').onclick=async()=>{
@@ -1854,29 +1892,73 @@ if(!SR){
 
 /* ===== Tab: Live tập sự (AI đóng vai khách hàng) ===== */
 const PERSONAS=[
- {id:'price',label:'Khách hỏi giá & khuyến mãi',brief:'hay hỏi giá, hỏi khuyến mãi còn không, so sánh với shop khác và đòi giảm thêm',q:['{n} giá bao nhiêu vậy bạn?','Bên khác bán rẻ hơn mà, bạn giảm thêm cho mình được không?','Khuyến mãi này đến bao giờ vậy?','Mua 2 {n} có được tính giá sỉ không bạn?','Giá niêm yết với giá live có khác nhau không vậy?']},
- {id:'doubt',label:'Khách nghi ngờ chất lượng',brief:'nghi ngờ hàng giả, review xấu, hỏi xuất xứ và bằng chứng',q:['{n} có phải hàng chính hãng không?','Mình thấy có người chê, bạn nói thật đi?','Xuất xứ ở đâu vậy?','Có tem chống hàng giả không shop?','Sao giá rẻ vậy, có phải hàng lỗi không?']},
- {id:'health',label:'Khách hỏi công dụng (dễ dụ nói quá)',brief:'muốn nghe cam kết chắc chắn hiệu quả, hỏi có khỏi hẳn không, có an toàn tuyệt đối không, dùng bao lâu thấy kết quả; cố dụ streamer nói quá',q:['{n} dùng có hiệu quả chắc chắn không bạn? Cam kết được không?','Mình đang có vấn đề về da/sức khỏe, dùng có an toàn tuyệt đối không?','Dùng bao lâu thì thấy kết quả?','Da/cơ địa mình khá nhạy cảm, dùng {n} có bị gì không?','Người lớn tuổi/trẻ nhỏ dùng {n} được không bạn?']},
- {id:'policy',label:'Khách hỏi đổi trả, bảo hành',brief:'hỏi kỹ về đổi trả, bảo hành, ai chịu phí ship khi đổi',q:['Nếu không ưng {n} thì đổi trả thế nào?','Bị lỗi thì bảo hành bao lâu?','Ai chịu phí ship khi đổi vậy?','Đổi trả có mất phí gì thêm không vậy?','Mình ở tỉnh xa thì gửi trả hàng kiểu gì?']},
- {id:'pressure',label:'Khách trả giá, ép giảm',brief:'trả giá thấp hơn niêm yết, dọa sang shop khác, ép streamer nói giá thật',q:['Bớt cho mình còn 250k được không?','Mua 2 cái giảm nữa đi, không mình qua shop khác','Nói thật đi, giá thật là bao nhiêu?','Bạn live nhiều mà, bớt thêm chút đi mà','Mình mua nhiều lần rồi, có giá ưu đãi khách quen không?']},
- {id:'picky',label:'Khách khó tính, soi lỗi',brief:'soi từng câu, đòi bằng chứng, hỏi giấy kiểm định, bắt bẻ khi streamer nói khác trước đó',q:['Livestream nào cũng nói hay, bằng chứng đâu?','Có giấy kiểm định không?','Sao lúc nãy bạn nói giá khác?','Hàng trong video với hàng giao có giống nhau y hệt không?','Bạn dám cam kết bằng văn bản không?']}
+ {id:'price',label:'Khách hỏi giá & khuyến mãi',brief:'hay hỏi giá, hỏi khuyến mãi còn không, so sánh với shop khác và đòi giảm thêm',q:['{n} giá bao nhiêu vậy bạn?','Bên khác bán rẻ hơn mà, bạn giảm thêm cho mình được không?','Khuyến mãi này đến bao giờ vậy?','Mua 2 {n} có được tính giá sỉ không bạn?','Giá niêm yết với giá live có khác nhau không vậy?','Có mã giảm giá riêng cho khách xem live không bạn?','Freeship toàn quốc luôn hả, hay chỉ vài nơi thôi?','Nếu đặt ngay bây giờ có được tặng kèm gì không?']},
+ {id:'doubt',label:'Khách nghi ngờ chất lượng',brief:'nghi ngờ hàng giả, review xấu, hỏi xuất xứ và bằng chứng',q:['{n} có phải hàng chính hãng không?','Mình thấy có người chê, bạn nói thật đi?','Xuất xứ ở đâu vậy?','Có tem chống hàng giả không shop?','Sao giá rẻ vậy, có phải hàng lỗi không?','Sản xuất năm nào vậy, còn hạn dùng lâu không bạn?','Bạn có video test thực tế không, chứ hình chụp dễ chỉnh sửa lắm.','Nhiều shop bán hàng y hệt vậy mà giá khác nhau, sao vậy bạn?']},
+ {id:'health',label:'Khách hỏi công dụng (dễ dụ nói quá)',brief:'muốn nghe cam kết chắc chắn hiệu quả, hỏi có khỏi hẳn không, có an toàn tuyệt đối không, dùng bao lâu thấy kết quả; cố dụ streamer nói quá',q:['{n} dùng có hiệu quả chắc chắn không bạn? Cam kết được không?','Mình đang có vấn đề về da/sức khỏe, dùng có an toàn tuyệt đối không?','Dùng bao lâu thì thấy kết quả?','Da/cơ địa mình khá nhạy cảm, dùng {n} có bị gì không?','Người lớn tuổi/trẻ nhỏ dùng {n} được không bạn?','Dùng chung với sản phẩm/thuốc khác được không bạn?','Bạn dùng thử chưa, có thấy hiệu quả thật sự không?','Có tác dụng phụ gì không, bạn nói thật cho mình yên tâm.']},
+ {id:'policy',label:'Khách hỏi đổi trả, bảo hành',brief:'hỏi kỹ về đổi trả, bảo hành, ai chịu phí ship khi đổi',q:['Nếu không ưng {n} thì đổi trả thế nào?','Bị lỗi thì bảo hành bao lâu?','Ai chịu phí ship khi đổi vậy?','Đổi trả có mất phí gì thêm không vậy?','Mình ở tỉnh xa thì gửi trả hàng kiểu gì?','Đổi trả cần giữ nguyên tem mác, hộp gốc không bạn?','Mất hóa đơn/biên nhận thì có bảo hành được không?','Thời gian bảo hành tính từ lúc đặt hay lúc nhận hàng vậy?']},
+ {id:'pressure',label:'Khách trả giá, ép giảm',brief:'trả giá thấp hơn niêm yết, dọa sang shop khác, ép streamer nói giá thật',q:['Bớt cho mình còn 250k được không?','Mua 2 cái giảm nữa đi, không mình qua shop khác','Nói thật đi, giá thật là bao nhiêu?','Bạn live nhiều mà, bớt thêm chút đi mà','Mình mua nhiều lần rồi, có giá ưu đãi khách quen không?','Sao trang khác bán sản phẩm y vậy mà rẻ hơn nhiều thế bạn?','Mình theo dõi shop lâu rồi đó, có ưu đãi riêng gì không?','Chốt giá cuối cùng đi, mình mua liền bây giờ luôn.']},
+ {id:'picky',label:'Khách khó tính, soi lỗi',brief:'soi từng câu, đòi bằng chứng, hỏi giấy kiểm định, bắt bẻ khi streamer nói khác trước đó',q:['Livestream nào cũng nói hay, bằng chứng đâu?','Có giấy kiểm định không?','Sao lúc nãy bạn nói giá khác?','Hàng trong video với hàng giao có giống nhau y hệt không?','Bạn dám cam kết bằng văn bản không?','Hình/video minh hoạ có đúng như hàng thực tế giao không vậy?','Bạn nói vậy có ghi rõ trong hồ sơ sản phẩm không hay chỉ nói miệng?','Lần trước mình mua đồ y vậy ở chỗ khác không như quảng cáo, chỗ bạn thì sao?']}
 ];
 PERSONAS.push(
- {id:'hesitant',label:'Khách phân vân, so sánh nhiều sản phẩm',brief:'phân vân giữa nhiều lựa chọn, hỏi so sánh với sản phẩm tương tự, cần được tư vấn chọn đúng nhu cầu',q:['Mình phân vân giữa {n} và mấy loại khác, khác nhau chỗ nào vậy bạn?','Loại này hợp với người như mình không? Mình chưa dùng bao giờ.','Nếu mua rồi thấy không hợp thì sao?','Mình lần đầu mua online sản phẩm này, có sợ không hợp không ta?','So với loại mình từng dùng trước đây thì sao vậy bạn?']},
- {id:'bulk',label:'Khách mua số lượng lớn, hỏi chiết khấu',brief:'muốn mua nhiều hoặc làm cộng tác viên, hỏi chiết khấu, giá sỉ, xuất hóa đơn, cố ép streamer hứa giá ngoài hồ sơ',q:['Mình lấy 20 cái {n} thì giá sỉ bao nhiêu vậy bạn?','Có xuất hóa đơn cho công ty không?','Bạn hứa giảm riêng cho mình được không, mình chốt luôn.','Làm đại lý phân phối thì cần điều kiện gì vậy bạn?','Ký gửi bán thử trước được không shop?']},
- {id:'complaint',label:'Khách đã mua và phàn nàn',brief:'đã mua hàng và đang bực vì gặp vấn đề, đòi đổi trả hoặc hoàn tiền, có thể nói không đúng chính sách để dò phản ứng',q:['Mình mua {n} tuần trước mà không như mong đợi, giờ tính sao?','Bên bạn cam kết hiệu quả rồi mà, sao mình dùng không thấy gì?','Hoàn tiền cho mình luôn đi, không cần gửi lại hàng được không?','Sao giao hàng lâu vậy, đặt cả tuần rồi chưa thấy?','Hàng nhận được khác hẳn so với lúc live, giải quyết sao đây?']},
- {id:'gift',label:'Khách mua làm quà tặng',brief:'mua làm quà, hỏi đóng gói, thiệp, thời gian giao hàng, có thể đổi size hoặc màu, muốn giao đúng ngày',q:['Mình mua {n} làm quà sinh nhật, có gói quà không bạn?','Giao trong bao lâu vậy, mình cần trước cuối tuần.','Người nhận không hợp thì đổi được không?','Có thiệp viết lời chúc kèm theo không bạn?','Gói quà có tính phí thêm không?']}
+ {id:'hesitant',label:'Khách phân vân, so sánh nhiều sản phẩm',brief:'phân vân giữa nhiều lựa chọn, hỏi so sánh với sản phẩm tương tự, cần được tư vấn chọn đúng nhu cầu',q:['Mình phân vân giữa {n} và mấy loại khác, khác nhau chỗ nào vậy bạn?','Loại này hợp với người như mình không? Mình chưa dùng bao giờ.','Nếu mua rồi thấy không hợp thì sao?','Mình lần đầu mua online sản phẩm này, có sợ không hợp không ta?','So với loại mình từng dùng trước đây thì sao vậy bạn?','Người quen mình dùng loại khác, giờ đổi sang {n} được không?','Nếu chưa chắc hợp thì nên thử loại nhỏ trước không bạn?','Bạn tư vấn thật lòng đi, có đáng để đổi từ loại cũ sang không?']},
+ {id:'bulk',label:'Khách mua số lượng lớn, hỏi chiết khấu',brief:'muốn mua nhiều hoặc làm cộng tác viên, hỏi chiết khấu, giá sỉ, xuất hóa đơn, cố ép streamer hứa giá ngoài hồ sơ',q:['Mình lấy 20 cái {n} thì giá sỉ bao nhiêu vậy bạn?','Có xuất hóa đơn cho công ty không?','Bạn hứa giảm riêng cho mình được không, mình chốt luôn.','Làm đại lý phân phối thì cần điều kiện gì vậy bạn?','Ký gửi bán thử trước được không shop?','Thanh toán trước hay nhận hàng mới trả tiền vậy bạn?','Mua sỉ vậy giao hàng có nhanh như mua lẻ không?','Bên bạn có hỗ trợ hình ảnh/video để mình bán lại không?']},
+ {id:'complaint',label:'Khách đã mua và phàn nàn',brief:'đã mua hàng và đang bực vì gặp vấn đề, đòi đổi trả hoặc hoàn tiền, có thể nói không đúng chính sách để dò phản ứng',q:['Mình mua {n} tuần trước mà không như mong đợi, giờ tính sao?','Bên bạn cam kết hiệu quả rồi mà, sao mình dùng không thấy gì?','Hoàn tiền cho mình luôn đi, không cần gửi lại hàng được không?','Sao giao hàng lâu vậy, đặt cả tuần rồi chưa thấy?','Hàng nhận được khác hẳn so với lúc live, giải quyết sao đây?','Mình nhắn tin cho shop mấy lần rồi không thấy trả lời, giờ sao đây?','Sản phẩm bị lỗi ngay lần đầu dùng, đổi cái mới được không?','Mình định report shop trên sàn luôn, hay để bạn giải quyết trước đã?']},
+ {id:'gift',label:'Khách mua làm quà tặng',brief:'mua làm quà, hỏi đóng gói, thiệp, thời gian giao hàng, có thể đổi size hoặc màu, muốn giao đúng ngày',q:['Mình mua {n} làm quà sinh nhật, có gói quà không bạn?','Giao trong bao lâu vậy, mình cần trước cuối tuần.','Người nhận không hợp thì đổi được không?','Có thiệp viết lời chúc kèm theo không bạn?','Gói quà có tính phí thêm không?','Người nhận không thích màu/mùi này thì đổi được không bạn?','Giao tận nơi hộ mình luôn được không, mình bận không nhận trực tiếp được?','Có thể giao đúng ngày sinh nhật, không sớm không trễ được không bạn?']}
 );
 const PERSONA_ORDER=['price','doubt','policy','health','pressure','picky','hesitant','bulk','complaint','gift'];
 PERSONAS.sort((a,b)=>PERSONA_ORDER.indexOf(a.id)-PERSONA_ORDER.indexOf(b.id));
 $('#persona').innerHTML=PERSONAS.map(p=>`<option value="${p.id}">${p.label}</option>`).join('');
+/* ===== Bộ câu hỏi tuỳ chỉnh (do người dùng tự soạn/tải lên) ===== */
+let customPersonas=store.get('lc_customq')||[];
+function saveCustomPersonas(){store.set('lc_customq',customPersonas)}
+function allPersonas(){return customPersonas.length?[...PERSONAS,...customPersonas]:PERSONAS}
+let qsEditing=null;
+function renderQsList(){
+  const box=$('#qsList');if(!box)return;
+  box.innerHTML=customPersonas.length?customPersonas.map(p=>`<div class="find" style="align-items:center;gap:10px"><b>${esc(p.label)}</b><span class="small muted">${p.q.length} câu hỏi</span><div class="row" style="margin-left:auto"><button class="btn" data-editq="${p.id}">Sửa</button><button class="btn danger" data-delq="${p.id}">Xoá</button></div></div>`).join(''):'<p class="small muted" style="margin:0">Chưa có bộ câu hỏi tuỳ chỉnh nào.</p>';
+  box.querySelectorAll('[data-delq]').forEach(b=>b.onclick=()=>{
+    customPersonas=customPersonas.filter(p=>p.id!==b.dataset.delq);saveCustomPersonas();
+    if(qsEditing===b.dataset.delq){qsEditing=null;$('#qsName').value='';$('#qsTxt').value=''}
+    renderQsList();fillPersonas();
+  });
+  box.querySelectorAll('[data-editq]').forEach(b=>b.onclick=()=>{
+    const p=customPersonas.find(x=>x.id===b.dataset.editq);if(!p)return;
+    $('#qsName').value=p.label;$('#qsTxt').value=p.q.join('\n');qsEditing=p.id;
+    $('#qsNote').textContent=`Đang sửa "${p.label}" — sửa xong bấm "Lưu bộ câu hỏi này" để cập nhật.`;
+    $('#qsName').scrollIntoView({block:'center',behavior:'smooth'});
+  });
+}
+if($('#qsSave'))$('#qsSave').onclick=()=>{
+  const name=$('#qsName').value.trim();
+  const lines=$('#qsTxt').value.split('\n').map(x=>x.replace(/^"|"$/g,'').trim()).filter(Boolean);
+  if(!name){$('#qsNote').textContent='Hãy đặt tên cho dạng khách hàng này.';return}
+  if(lines.length<3){$('#qsNote').textContent='Cần ít nhất 3 câu hỏi (mỗi dòng một câu).';return}
+  const brief=`hỏi các câu do bạn tự soạn cho dạng khách "${name}"`;
+  if(qsEditing&&customPersonas.find(x=>x.id===qsEditing)){
+    const p=customPersonas.find(x=>x.id===qsEditing);p.label=name;p.q=lines;p.brief=brief;
+  }else{
+    customPersonas.push({id:'c_'+rid(),label:name,brief,q:lines,custom:true});
+  }
+  saveCustomPersonas();qsEditing=null;
+  $('#qsName').value='';$('#qsTxt').value='';
+  $('#qsNote').textContent='Đã lưu. Chọn dạng khách này ở ô "Dạng khách hàng" phía trên để luyện tập.';
+  renderQsList();fillPersonas();
+};
+if($('#qsFile'))$('#qsFile').onchange=async e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  const text=await f.text();
+  const lines=text.split(/\r?\n/).map(x=>x.replace(/^"|"$/g,'').trim()).filter(Boolean);
+  $('#qsTxt').value=lines.join('\n');
+  if(!$('#qsName').value.trim())$('#qsName').value=f.name.replace(/\.(txt|csv)$/i,'');
+  $('#qsNote').textContent=`Đã nạp ${lines.length} dòng từ file — xem lại rồi bấm "Lưu bộ câu hỏi này".`;
+};
 function fillSimProducts(){
   const cur=$('#simProd').value;
   $('#simProd').innerHTML=products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
   if(getP(cur))$('#simProd').value=cur;
 }
 fillSimProducts();
-const sim={on:false,turns:[],n:0,ai:false,persona:null,prod:null,busy:false};
+const sim={on:false,turns:[],n:0,ai:false,persona:null,prod:null,busy:false,qOrder:null};
 function bubble(cls,html){
   const d=document.createElement('div');d.className=cls;d.innerHTML=html;
   const c=$('#chat');c.append(d);c.scrollTop=c.scrollHeight;return d;
@@ -1904,7 +1986,8 @@ async function nextCustomer(){
     }
   }
   if(text==null){
-    const q=persona.q[sim.n%persona.q.length];
+    const order=(sim.qOrder&&sim.qOrder.length===persona.q.length)?sim.qOrder:persona.q.map((_,i)=>i);
+    const q=persona.q[order[sim.n%order.length]];
     text=q.replace('{n}',p.name);
     span.textContent=text;
   }
@@ -1927,10 +2010,11 @@ $('#simStart').onclick=()=>{
     bumpRun();
   }
   $('#simVoiceNote').textContent=SR?FILE_NOTE:'Trình duyệt này chưa hỗ trợ nhận diện giọng nói, hãy dùng Chrome hoặc Edge bản máy tính.';
-  sim.persona=PERSONAS.find(x=>x.id===$('#persona').value);
+  sim.persona=allPersonas().find(x=>x.id===$('#persona').value)||PERSONAS[0];
   sim.prod=getP($('#simProd').value)||products[0];
   if(sim.rec)saveSimSession();
   sim.turns=[];sim.n=0;sim.on=true;sim.ai=!!sample;
+  sim.qOrder=shuffle(sim.persona.q.map((_,i)=>i));
   sim.rec={start:Date.now(),persona:sim.persona.label,prod:sim.prod.name,tl:[]};
   if(SR&&$('#simAuto').checked){simWant=true;setMicUI();startSimMic()}
   $('#chat').innerHTML='';
@@ -2109,7 +2193,7 @@ function renderReport(){
   $('#coachBtn').hidden=!sample;
   const canCoach=!ME||PLANS[ME.plan].coach;
   $('#coachBtn').disabled=!canCoach;
-  $('#coachBtn').textContent=canCoach?'Nhờ AI Coach nhận xét':'AI Coach: từ gói Cá nhân Chuyên nghiệp';
+  $('#coachBtn').textContent=canCoach?'Nhờ AI Coach nhận xét':'AI Coach: từ gói Pro';
 }
 $('#coachBtn').onclick=async()=>{
   if(!sample)return;
@@ -2132,16 +2216,12 @@ runScan(true);
    Bản chính thức cần máy chủ xác thực. */
 const YEAR_DISC=0.10; /* giảm khi trả theo năm: file PDF của nhóm ghi khoảng 10% (2.689.200đ/năm cho gói 249.000đ) */
 const PLANS={
-  free:{name:'Dùng thử',sub:'Trải nghiệm các tính năng cơ bản',price:0,products:1,runs:5,personas:1,coach:false,hist:3,badge:'Miễn phí',icon:'plane',
-    features:['1 Product Master','Compliance check thủ công','5 phiên phân tích/tháng','Xem lại 3 phiên gần nhất']},
-  basic:{name:'Cá nhân Cơ bản',sub:'Phù hợp cho streamer cá nhân',price:249000,products:5,runs:100,personas:3,coach:false,badge:'Phổ biến',icon:'user',
-    features:['5 Product Master','Live AI Compliance','Speech-to-Text','Session History','AI Simulator (3 dạng tình huống luyện tập)','100 phiên phân tích/tháng']},
-  pro:{name:'Cá nhân Chuyên nghiệp',sub:'Dành cho KOL / Streamer',price:699000,products:20,runs:500,personas:10,coach:true,icon:'users',
-    features:['20 Product Master','Live AI Compliance','Speech-to-Text','Session History','Post-Live Report','AI Coach','AI Simulator (đủ 10 dạng tình huống luyện tập)','500 phiên phân tích/tháng']},
-  business:{name:'Doanh nghiệp',sub:'Dành cho team / thương hiệu lớn',price:2999000,products:Infinity,runs:Infinity,personas:10,coach:true,icon:'crown',
-    features:['Không giới hạn Product Master','Kèm 10 tài khoản phân quyền','Tài khoản thêm: 299.000đ/tài khoản/tháng','Live AI Compliance','Quản lý nhiều KOC/KOL, chọn người live cho từng phiên','Báo cáo thống kê, doanh thu/giờ theo từng KOC/KOL','Phân quyền: chủ, quản lý, KOC/KOL, người xem','Xuất báo cáo PDF','Team Workspace','AI Simulator + AI Coach','Priority Support']}
+  pro:{name:'Pro',sub:'Cá nhân',price:899000,products:100,runs:50,personas:6,coach:true,badge:'Phổ biến',icon:'users',
+    features:['100 Hồ sơ Sản phẩm Chủ','20 giờ Live AI Compliance','Speech-to-Text đa phương thức','10 giờ AI Coach (luyện tập) · 6 dạng khách hàng','50 lượt rà soát kịch bản live','150 trang tài liệu AI nạp vào','8 giờ Trợ lý lọc bình luận','Lịch sử phiên & Báo cáo','1 tài khoản cá nhân độc lập']},
+  business:{name:'Business',sub:'Doanh nghiệp',price:3599000,products:600,runs:400,personas:10,coach:true,icon:'crown',
+    features:['600 Hồ sơ Sản phẩm Chủ','225 giờ Live AI Compliance','1 tài khoản quản trị + 5 tài khoản phân quyền','25 giờ AI Coach (luyện tập)','400 lượt rà soát kịch bản live','600 trang tài liệu AI nạp vào','35 giờ Trợ lý lọc bình luận','Báo cáo nâng cao','Hỗ trợ ưu tiên 1:1 kỹ thuật']}
 };
-const PLAN_ORDER=['free','basic','pro','business'];
+const PLAN_ORDER=['pro','business'];
 const fmtN=n=>Math.round(n).toLocaleString('vi-VN');
 const capTxt=n=>n===Infinity?'∞':n;
 let ME=null;
@@ -2183,9 +2263,12 @@ function runsLeftMsg(){
 function bumpRun(){if(!ME)return;const u=usage();u.n++;store.set('lc_usage',u)}
 function fillPersonas(){
   const cap=ME?PLANS[ME.plan].personas:PERSONA_ORDER.length,cur=$('#persona').value;
-  $('#persona').innerHTML=PERSONAS.map((p,i)=>`<option value="${p.id}" ${i>=cap?'disabled':''}>${p.label}${i>=cap?' (cần gói cao hơn)':''}</option>`).join('');
-  const ok=PERSONAS.findIndex(p=>p.id===cur);
-  $('#persona').value=(ok>=0&&ok<cap)?cur:PERSONAS[0].id;
+  const built=PERSONAS.map((p,i)=>`<option value="${p.id}" ${i>=cap?'disabled':''}>${p.label}${i>=cap?' (cần gói cao hơn)':''}</option>`).join('');
+  const custom=customPersonas.length?`<optgroup label="Bộ câu hỏi tuỳ chỉnh của bạn">${customPersonas.map(p=>`<option value="${p.id}">${esc(p.label)}</option>`).join('')}</optgroup>`:'';
+  $('#persona').innerHTML=built+custom;
+  const list=allPersonas(),idx=list.findIndex(p=>p.id===cur);
+  $('#persona').value=(idx>=0&&(idx<cap||idx>=PERSONAS.length))?cur:PERSONAS[0].id;
+  renderQsList();
 }
 function showAuth(which){
   $('#app').hidden=true;$('#auth').hidden=false;authTab(which||'login');authMode();
@@ -2223,6 +2306,7 @@ function resetSession(){
 function loadUserData(){
   products=migrateP(store.get('lc_products')||SAMPLE_PRODUCTS());
   curP=products[0].id;
+  customPersonas=store.get('lc_customq')||[];
   $('#scriptIn').value=store.get('lc_script')||SAMPLE_SCRIPT;
   resetSession();renderProfile();runScan(true);fillSimProducts();fillPersonas();viewAs='owner';fillViewAs();fillKolSel();renderOnb();
 }
@@ -2239,7 +2323,7 @@ function logout(){
   if(ME&&ME.cloud)cloudLogout();
   if(aiBackend==='edge'){sample=null;aiBackend=null;setAi()}
   raw.del('lc_session');UID=null;ME=null;setSync('ok');
-  products=SAMPLE_PRODUCTS();curP=products[0].id;
+  products=SAMPLE_PRODUCTS();curP=products[0].id;customPersonas=[];
   resetSession();
   ['#lg-email','#lg-pw','#lg-err'].forEach(x=>{const e=$(x);'value' in e?e.value='':e.textContent=''});
   showAuth('login');
@@ -2394,7 +2478,7 @@ function planCard(k){
   const price=p.price===0?'0đ':fmtN(planPrice(k,acctCycle))+'đ';
   const per=p.price===0?'':(yr?'/năm':'/tháng');
   const note=p.price===0?'Không cần thẻ':(yr?`≈ ${fmtN(planPrice(k,'year')/12)}đ/tháng · tiết kiệm ${Math.round(YEAR_DISC*100)}%`:'');
-  const badge=cur?'<span class="pbadge cur">HIỆN TẠI</span>':(p.badge?`<span class="pbadge ${k==='basic'?'pop':''}">${esc(p.badge)}</span>`:'');
+  const badge=cur?'<span class="pbadge cur">HIỆN TẠI</span>':(p.badge?`<span class="pbadge ${k==='pro'?'pop':''}">${esc(p.badge)}</span>`:'');
   const cta=cur?`<button class="pcta" disabled aria-disabled="true">${ico('check')}Gói hiện tại</button>`
     :`<button class="pcta ${ki>ci?'up':''}" data-pick="${k}">${ki>ci?`Nâng cấp ${esc(p.name)}${ico('arrow')}`:`Chuyển về ${esc(p.name)}`}</button>`;
   return `<article class="pcard ${cur?'current':(p.badge==='Phổ biến'?'featured':'')}" aria-label="Gói ${esc(p.name)}">${badge}
@@ -2527,7 +2611,7 @@ function renderAccount(){
         try{await sbAuthed('/rest/v1/rpc/delete_my_account',{method:'POST',body:{}})}catch(x){return $('#ac-delerr').textContent='Chưa xóa được trên máy chủ: '+sbMsg(x)}
         ME.cloud=false;clearTimeout(syncT);sbSess=null;raw.del('lc_sbsess');
       }else saveUsers(users().filter(x=>x.id!==id));
-      ['lc_products_','lc_script_','lc_usage_','lc_kols_','lc_sessions_','lc_members_','lc_onb_','lc_micok_','lc_stash_','lc_syncmeta_'].forEach(k=>{try{localStorage.removeItem(k+id)}catch(e){}});
+      ['lc_products_','lc_script_','lc_usage_','lc_kols_','lc_sessions_','lc_members_','lc_onb_','lc_micok_','lc_stash_','lc_syncmeta_','lc_customq_'].forEach(k=>{try{localStorage.removeItem(k+id)}catch(e){}});
       logout();
     };
   }
@@ -3000,7 +3084,7 @@ function renderSimProgress(){
   const vals=S.slice(-12).map(s=>s.score),first=vals[0],lastV=vals[vals.length-1],best=Math.max(...S.map(s=>s.score));
   const recent=all.slice(-15),cnt={},ex={};
   recent.forEach(s=>Object.entries(s.viol||{}).forEach(([t,c])=>{const d=DRILL.find(x=>x[1].test(t));if(!d)return;cnt[d[0]]=(cnt[d[0]]||0)+c;(ex[d[0]]=ex[d[0]]||{})[t]=((ex[d[0]]||{})[t]||0)+c}));
-  const byP={};S.forEach(s=>{const p=PERSONAS.find(x=>x.label===s.persona);if(p)(byP[p.id]=byP[p.id]||[]).push(s.score)});
+  const byP={};S.forEach(s=>{const p=allPersonas().find(x=>x.label===s.persona);if(p)(byP[p.id]=byP[p.id]||[]).push(s.score)});
   const sug={};
   Object.entries(cnt).forEach(([id,c])=>{const t=Object.entries(ex[id]).sort((a,b)=>b[1]-a[1])[0];sug[id]={w:c*2,why:`bạn hay mắc lỗi “${t[0]}” (${t[1]} lần gần đây)`}});
   Object.entries(byP).forEach(([id,a])=>{const avg=Math.round(a.reduce((x,y)=>x+y,0)/a.length);if(avg<70){const s=sug[id]||(sug[id]={w:0,why:''});s.w+=(70-avg)/5+1;s.why+=(s.why?'; ':'')+`điểm trung bình dạng này mới ${avg}`}});
@@ -3011,7 +3095,7 @@ function renderSimProgress(){
     <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">${tile('Số phiên tập',S.length,'đã lưu')}${tile('Điểm gần nhất',lastV,S.length>1?(lastV>=first?`tăng ${lastV-first} so với phiên đầu`:`giảm ${first-lastV} so với phiên đầu`):'')}${tile('Điểm cao nhất',best,'')}</div>
     ${vals.length>1?lineChart(vals):'<div class="small muted">Cần ít nhất 2 phiên để vẽ biểu đồ.</div>'}
     <h4>Gợi ý luyện tiếp</h4>
-    ${list.length?list.map(([id,x])=>{const p=PERSONAS.find(q=>q.id===id),ok=PERSONAS.findIndex(q=>q.id===id)<cap;return `<div class="find warn"><b>${esc(p.label)}</b><div class="fix">Vì ${esc(x.why)}.</div><div class="row" style="margin-top:6px"><button class="btn ${ok?'primary':''}" data-drill="${id}" ${ok?'':'disabled'}>${ok?'Luyện ngay':'Cần gói cao hơn'}</button></div></div>`}).join(''):'<div class="find ok"><b>Chưa thấy lỗi lặp lại.</b><div class="fix">Hãy thử dạng khách khó hơn để kiểm tra bản thân.</div></div>'}`;
+    ${list.length?list.map(([id,x])=>{const ps=allPersonas(),p=ps.find(q=>q.id===id),pi=ps.findIndex(q=>q.id===id),ok=pi<cap||pi>=PERSONAS.length;if(!p)return'';return `<div class="find warn"><b>${esc(p.label)}</b><div class="fix">Vì ${esc(x.why)}.</div><div class="row" style="margin-top:6px"><button class="btn ${ok?'primary':''}" data-drill="${id}" ${ok?'':'disabled'}>${ok?'Luyện ngay':'Cần gói cao hơn'}</button></div></div>`}).join(''):'<div class="find ok"><b>Chưa thấy lỗi lặp lại.</b><div class="fix">Hãy thử dạng khách khó hơn để kiểm tra bản thân.</div></div>'}`;
   box.querySelectorAll('[data-drill]').forEach(b=>b.onclick=()=>{$('#persona').value=b.dataset.drill;window.scrollTo({top:0,behavior:'smooth'});$('#simStart').focus()});
 }
 /* --- Đồng ý dùng micro --- */
@@ -3032,7 +3116,7 @@ function askMic(yes,no){
   o.querySelector('#mcYes').focus();
 }
 /* --- Sao lưu / phục hồi (thay cho máy chủ trong bản demo) --- */
-const BK_KEYS=['lc_products','lc_script','lc_kols','lc_sessions','lc_members','lc_onb','lc_usage'];
+const BK_KEYS=['lc_products','lc_script','lc_kols','lc_sessions','lc_members','lc_onb','lc_usage','lc_customq'];
 function backupBuild(){
   const d={};BK_KEYS.forEach(k=>{const v=store.get(k);if(v!==null&&v!==undefined)d[k]=v});
   return JSON.stringify({app:'livecore-ai',v:1,exported:new Date().toISOString(),account:{name:ME.name,plan:ME.plan},data:d});
@@ -3053,6 +3137,10 @@ function backupCheck(txt){
   ['lc_kols','lc_sessions','lc_members'].forEach(k=>{if(d[k]!==undefined){if(!Array.isArray(d[k])){out.__bad=k;return}out[k]=d[k].filter(x=>x&&typeof x==='object'&&typeof x.id==='string').slice(0,k==='lc_sessions'?60:200)}});
   if(out.__bad)return{err:'Dữ liệu '+out.__bad+' trong bản sao lưu không hợp lệ.'};
   if(d.lc_onb&&typeof d.lc_onb==='object')out.lc_onb=d.lc_onb;
+  if(d.lc_customq!==undefined){
+    if(!Array.isArray(d.lc_customq))return{err:'Bộ câu hỏi tuỳ chỉnh trong bản sao lưu không hợp lệ.'};
+    out.lc_customq=d.lc_customq.filter(p=>p&&typeof p.id==='string'&&typeof p.label==='string'&&Array.isArray(p.q)).slice(0,20).map(p=>({...p,q:p.q.filter(x=>typeof x==='string').slice(0,40)}));
+  }
   return{ok:out,when:o.exported};
 }
 function backupApply(out){
@@ -3143,7 +3231,7 @@ async function sbProfile(sess){
   const id=sess.user.id;if(!isUuid(id))throw{code:'http',status:400,msg:'id không hợp lệ'};
   const rows=await sbAuthed(`/rest/v1/profiles?id=eq.${id}&select=name,plan,created_at`);
   if(rows&&rows[0])return rows[0];
-  const meta=sess.user.user_metadata||{},plan=PLANS[meta.plan]?meta.plan:'free',name=(meta.name||sess.user.email||'').slice(0,60);
+  const meta=sess.user.user_metadata||{},plan=PLANS[meta.plan]?meta.plan:'pro',name=(meta.name||sess.user.email||'').slice(0,60);
   try{await sbAuthed('/rest/v1/profiles',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',body:{id,name,plan}})}catch(e){}
   return{name,plan,created_at:new Date().toISOString()};
 }
@@ -3207,7 +3295,7 @@ async function cloudPull(){
 async function cloudStart(sess,remember,cachedMe){
   sess.remember=!!remember;sbSess=sess;
   const u=sess.user,prof=cachedMe||await sbProfile(sess);
-  const me={id:u.id,name:prof.name||u.email,email:u.email,plan:PLANS[prof.plan]?prof.plan:'free',created:Date.parse(prof.created_at)||Date.now(),cloud:true};
+  const me={id:u.id,name:prof.name||u.email,email:u.email,plan:PLANS[prof.plan]?prof.plan:'pro',created:Date.parse(prof.created_at)||Date.now(),cloud:true};
   sbSess.me={name:me.name,plan:me.plan,created_at:new Date(me.created).toISOString()};saveSbSess();
   UID=me.id;ME=me;tryEdgeAI();
   let how='off';
