@@ -166,6 +166,7 @@ th{color:var(--muted);font-weight:500;font-size:12px}
 .cycle>span{color:var(--muted);font-size:13px;margin-right:4px}
 .cycle button{border:0;background:none;border-radius:99px;padding:6px 14px;font-weight:500;cursor:pointer;color:var(--ink)}
 .cycle button[aria-pressed="true"]{background:var(--vip);color:var(--vip-ink);font-weight:600}
+.cycle button:disabled{opacity:.45;cursor:not-allowed}
 .cycle button{white-space:nowrap}@media (max-width:480px){.cycle>span{display:none}.cycle{padding-left:4px}.cycle button{padding:6px 10px}}
 .save{background:var(--bad-soft);color:var(--bad);border-radius:99px;padding:1px 8px;font-size:11px;font-weight:600;margin-left:6px}
 .pgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;align-items:stretch}
@@ -421,11 +422,18 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
 .tp .tps.cur{background:var(--accent-soft);color:var(--ink);font-weight:600;box-shadow:inset 3px 0 0 var(--accent)}
 .tp.big .tps{font-size:19px;line-height:1.55}
 .hud[hidden]{display:none}
-.hud{position:fixed;right:16px;bottom:16px;width:min(340px,calc(100vw - 32px));z-index:250;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;box-shadow:0 10px 30px rgba(10,20,40,.25)}
+.hud{position:fixed;right:16px;bottom:16px;width:min(420px,calc(100vw - 32px));z-index:250;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(10,20,40,.25)}
 .hud.alert{border-color:var(--bad);box-shadow:0 0 0 2px var(--bad-soft),0 10px 30px rgba(10,20,40,.25)}
-.hud #hudBody{max-height:150px;overflow:auto}
+.hud #hudBody{max-height:220px;overflow:auto;font-size:15px}
 .hud.pip{position:static;width:auto;box-shadow:none}
 .hud-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hud-h .tag,.hud-h .livebadge{font-size:14px;padding:5px 12px}
+.hud-h #hudClock{font-size:15px}
+.hud .find{padding:12px 14px}
+.hud .find b{font-size:16px}
+.hud .find .mono{font-size:14px}
+.hud .find .fix{font-size:15px;margin-top:6px}
+.hud .find .ref{font-size:12px}
 
 .onbl{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:6px}
 .onbi{display:flex;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;cursor:pointer}
@@ -573,6 +581,10 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
     <div class="grid2">
       <div class="box stack">
         <div class="row"><h3 style="margin-right:auto">Bình luận</h3><span class="livebadge" id="liveDot" hidden>LIVE</span><span class="tag" id="liveClock" hidden></span><button class="btn" id="liveToggle">Bắt đầu phiên live</button><button class="btn primary" id="liveEnd" hidden disabled>Kết thúc &amp; lưu kết quả</button></div>
+        <div class="stack" id="liveProdRow" style="gap:6px">
+          <p class="small muted" style="margin:0">Sản phẩm đang live (chọn một hoặc nhiều) — bình luận mô phỏng sẽ chỉ xoay quanh (các) sản phẩm này.</p>
+          <div class="cycle" id="liveProdWrap" role="group" aria-label="Sản phẩm đang live" style="flex-wrap:wrap;height:auto"></div>
+        </div>
         <div id="kolRow" class="stack" style="gap:6px" hidden>
           <div class="row" style="align-items:flex-end"><label class="f" style="flex:1;min-width:170px">KOC/KOL đang live<select id="kolSel"></select></label>
           <input type="text" id="kolQuickName" maxlength="40" placeholder="Thêm nhanh: tên KOC/KOL mới" aria-label="Tên KOC/KOL mới" style="flex:1;min-width:150px"><button class="btn" id="kolQuickAdd">Thêm</button></div>
@@ -832,7 +844,7 @@ function showTab(id){
   if(id==='profile'&&entReady)renderOnb();
   if(id==='sim'){fillSimProducts();if(entReady)renderSimProgress()}
   if(id==='history'&&typeof renderHistory==='function'&&ME)renderHistory();
-  if(id==='live'&&typeof fillKolSel==='function'&&ME){fillKolSel();if(typeof tpSync==='function'&&entReady)tpSync()}
+  if(id==='live'&&typeof fillKolSel==='function'&&ME){fillLiveProducts();fillKolSel();if(typeof tpSync==='function'&&entReady)tpSync()}
   if(id==='kol'&&typeof renderKol==='function'&&ME)renderKol();
   if(id==='account'&&typeof renderAccount==='function'&&ME)renderAccount();
 }
@@ -1515,13 +1527,46 @@ function answerFor(text){
 }
 
 /* ===== Tab: Phòng live ===== */
-const CMTS=['Serum Lumi giá sao shop','Lumi dùng cho da nhạy cảm được không','Blendy xay đá được không shop','Nami size XL cao 1m65 nặng 65kg mặc được không','Máy xay Blendy pin dùng được bao lâu','Áo Nami còn KM 199k không ạ','Mình dùng serum bị dị ứng thì đổi trả sao','Serum này trị mụn được không chị','Hàng Blendy xuất xứ ở đâu vậy','Xinh quá chị ơi','Serum Lumi ship COD được không','Máy xay bảo hành bao lâu vậy shop','Bạn bầu dùng Lumi được không','Áo Nami giặt máy được không','Blendy giá bao nhiêu vậy ạ','Collagen Kira giá sao shop','Kira uống có chữa được bệnh gì không chị','Mẹ bầu uống Kira được không','Nồi cơm điện Bear giá sao shop','Nồi Bear nấu được mấy bát cơm vậy chị','Nồi cơm Bear có phải hàng chính hãng không shop','Nồi cơm Bear bảo hành bao lâu vậy','Nồi áp suất Kendon giá bao nhiêu vậy ạ','Nồi áp suất Kendon nấu cho mấy người ăn được shop','Nồi áp suất Kendon xả hơi có an toàn không chị','Nồi chiên không dầu Kendon giá sao shop','Nồi chiên Kendon nướng được nguyên con gà không ạ','Nồi chiên Kendon 6L có tốn điện không shop'];
+const CMTS=[
+{pid:'p1',text:'Serum Lumi giá sao shop'},{pid:'p1',text:'Lumi dùng cho da nhạy cảm được không'},
+{pid:'p2',text:'Blendy xay đá được không shop'},{pid:'p3',text:'Nami size XL cao 1m65 nặng 65kg mặc được không'},
+{pid:'p2',text:'Máy xay Blendy pin dùng được bao lâu'},{pid:'p3',text:'Áo Nami còn KM 199k không ạ'},
+{pid:'p1',text:'Mình dùng serum bị dị ứng thì đổi trả sao'},{pid:'p1',text:'Serum này trị mụn được không chị'},
+{pid:'p2',text:'Hàng Blendy xuất xứ ở đâu vậy'},{pid:null,text:'Xinh quá chị ơi'},
+{pid:'p1',text:'Serum Lumi ship COD được không'},{pid:'p2',text:'Máy xay bảo hành bao lâu vậy shop'},
+{pid:'p1',text:'Bạn bầu dùng Lumi được không'},{pid:'p3',text:'Áo Nami giặt máy được không'},
+{pid:'p2',text:'Blendy giá bao nhiêu vậy ạ'},{pid:'p4',text:'Collagen Kira giá sao shop'},
+{pid:'p4',text:'Kira uống có chữa được bệnh gì không chị'},{pid:'p4',text:'Mẹ bầu uống Kira được không'},
+{pid:'p9',text:'Nồi cơm điện Bear giá sao shop'},{pid:'p9',text:'Nồi Bear nấu được mấy bát cơm vậy chị'},
+{pid:'p9',text:'Nồi cơm Bear có phải hàng chính hãng không shop'},{pid:'p9',text:'Nồi cơm Bear bảo hành bao lâu vậy'},
+{pid:'p10',text:'Nồi áp suất Kendon giá bao nhiêu vậy ạ'},{pid:'p10',text:'Nồi áp suất Kendon nấu cho mấy người ăn được shop'},
+{pid:'p10',text:'Nồi áp suất Kendon xả hơi có an toàn không chị'},{pid:'p11',text:'Nồi chiên không dầu Kendon giá sao shop'},
+{pid:'p11',text:'Nồi chiên Kendon nướng được nguyên con gà không ạ'},{pid:'p11',text:'Nồi chiên Kendon 6L có tốn điện không shop'}
+];
+const CMTS_GENERIC=['%N% giá sao shop','%N% còn hàng không ạ','%N% dùng có tốt không chị','%N% đổi trả/bảo hành thế nào ạ','%N% có ship COD không shop','Xinh quá chị ơi'];
+function liveCmtPool(pids){
+  pids=(Array.isArray(pids)?pids:[pids]).filter(Boolean);
+  if(!pids.length)return CMTS;
+  let pool=[];
+  pids.forEach(pid=>{
+    const p=getP(pid);
+    const tagged=CMTS.filter(c=>c.pid===pid);
+    pool=pool.concat(tagged);
+    if(p&&tagged.length<3)pool=pool.concat(CMTS_GENERIC.map(t=>({pid,text:t.replace(/%N%/g,p.name)})));
+  });
+  pool=pool.concat(CMTS.filter(c=>!c.pid));
+  return pool.length?pool:CMTS;
+}
 const NAMES=['Ngọc Anh','Minh Tuấn','Thu Hà','Quốc Bảo','Lan Chi','Đức Huy','Mai Phương','Hoàng Nam'];
 const PRI={high:['Ưu tiên','bad'],normal:['Thường','warn'],low:['Xã giao','']};
 let liveTimer=null,feedN=0,selC=null,liveSess=null,clockTimer=null;const cm=[];
 let cmtSrc='sim';
 function addComment(text,u){
-  if(!text){text=CMTS[Math.floor(Math.random()*CMTS.length)];u=NAMES[Math.floor(Math.random()*NAMES.length)]}
+  if(!text){
+    const pool=liveCmtPool(liveProdSel);
+    const c=pool[Math.floor(Math.random()*pool.length)];
+    text=c.text;u=NAMES[Math.floor(Math.random()*NAMES.length)];
+  }
   const r=answerFor(text);cm.unshift({id:++feedN,u:u||'Khách',text,r,done:false,fresh:true});
   if(r.pri!=='low'){stats.cmtSeen++;if(liveSess)liveSess.cmtSeen++}
   if(cm.length>60)cm.pop();
@@ -1976,6 +2021,22 @@ function fillSimProducts(){
   if(getP(cur))$('#simProd').value=cur;
 }
 fillSimProducts();
+let liveProdSel=[];
+function fillLiveProducts(){
+  const kept=liveProdSel.filter(id=>getP(id));
+  liveProdSel=kept.length?kept:(products[0]?[products[0].id]:[]);
+  $('#liveProdWrap').innerHTML=products.map(p=>`<button type="button" data-pid="${p.id}" aria-pressed="${liveProdSel.includes(p.id)}">${esc(p.name)}</button>`).join('');
+  $('#liveProdWrap').querySelectorAll('[data-pid]').forEach(b=>{
+    b.disabled=!!liveSess;
+    b.onclick=()=>{
+      const id=b.dataset.pid;
+      if(liveProdSel.includes(id)){
+        if(liveProdSel.length>1){liveProdSel=liveProdSel.filter(x=>x!==id);b.setAttribute('aria-pressed','false')}
+      }else{liveProdSel=[...liveProdSel,id];b.setAttribute('aria-pressed','true')}
+    };
+  });
+}
+fillLiveProducts();
 const sim={on:false,turns:[],n:0,ai:false,persona:null,prod:null,busy:false,qOrder:null};
 function bubble(cls,html){
   const d=document.createElement('div');d.className=cls;d.innerHTML=html;
@@ -2668,6 +2729,7 @@ function tickClock(){if(liveSess){$('#liveClock').textContent=(liveSess.kolName|
 function liveUI(){
   const biz=isBiz();
   $('#kolRow').hidden=!biz;$('#liveEnd').hidden=false;$('#liveClock').hidden=!liveSess;
+  document.querySelectorAll('#liveProdWrap [data-pid]').forEach(b=>b.disabled=!!liveSess);
   ['#kolSel','#kolQuickName','#kolQuickAdd'].forEach(x=>$(x).disabled=!!liveSess||(x==='#kolSel'&&role()==='koc'));
   ['#kolQuickName','#kolQuickAdd'].forEach(x=>$(x).hidden=!can.edit());
   $('#liveEnd').disabled=!liveSess;
