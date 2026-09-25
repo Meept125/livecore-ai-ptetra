@@ -533,6 +533,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
     <button class="tab" role="tab" id="t-history" aria-selected="false" aria-controls="tab-history">Lịch sử</button>
     <button class="tab" role="tab" id="t-report" aria-selected="false" aria-controls="tab-report">Báo cáo &amp; AI Coach<span class="n" id="badge" hidden>0</span></button>
     <button class="tab" role="tab" id="t-kol" aria-selected="false" aria-controls="tab-kol">KOC/KOL</button>
+    <button class="tab" role="tab" id="t-policy" aria-selected="false" aria-controls="tab-policy">Chính sách TikTok Shop</button>
     <button class="tab" role="tab" id="t-account" aria-selected="false" aria-controls="tab-account">Tài khoản</button>
   </div>
 
@@ -709,6 +710,13 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
     <div id="kolBody"></div>
   </section>
 
+  <!-- 5c. TIKTOK SHOP POLICY -->
+  <section class="panel" id="tab-policy" role="tabpanel" aria-labelledby="t-policy" hidden>
+    <p class="lead">Tóm tắt Chính sách Nội dung của TikTok Shop dành cho người bán/người sáng tạo, để bạn tra nhanh trước khi live. Đây là bản tóm tắt để đọc nhanh, không thay cho văn bản chính thức của TikTok Shop — bấm từng mục để xem chi tiết và ví dụ.</p>
+    <div class="row" style="margin-bottom:12px"><label class="f" style="min-width:220px;flex:1">Tìm trong chính sách<input type="text" id="ttSearch" placeholder="VD: giảm cân, zalo, cờ bạc, AIGC…"></label></div>
+    <div class="stack" id="ttPolicyBody"></div>
+  </section>
+
   <!-- 6. ACCOUNT -->
   <section class="panel" id="tab-account" role="tabpanel" aria-labelledby="t-account" hidden>
     <div id="acctBody"></div>
@@ -811,7 +819,8 @@ const REF={
  tpcn:{s:'Nghị định 15/2018/NĐ-CP, Đ.27',l:'Nghị định 15/2018/NĐ-CP, Điều 27: quảng cáo thực phẩm (gồm thực phẩm chức năng) phải có Giấy xác nhận nội dung quảng cáo, đúng công dụng đã công bố, không quảng cáo như thuốc chữa bệnh, không dùng tên, hình ảnh của cơ sở y tế, bác sĩ, dược sĩ.'},
  mp:{s:'Thông tư 06/2011/TT-BYT; Nghị định 181/2013/NĐ-CP',l:'Thông tư 06/2011/TT-BYT (quản lý mỹ phẩm) và Nghị định 181/2013/NĐ-CP: mỹ phẩm không được quảng cáo có công dụng như thuốc chữa bệnh (ví dụ “đặc trị”, “điều trị”, “chữa khỏi”, “trị mụn”, “trị nám”); công dụng phải phù hợp nội dung đã công bố với cơ quan quản lý.'},
  td:{s:'Luật Bảo vệ quyền lợi người tiêu dùng 19/2023/QH15',l:'Luật Bảo vệ quyền lợi người tiêu dùng số 19/2023/QH15 (hiệu lực 01/7/2024): thông tin về giá, chất lượng, điều kiện đổi trả và bảo hành phải đầy đủ, chính xác.'},
- nhan:{s:'Nghị định 43/2017/NĐ-CP (nhãn hàng hóa)',l:'Nghị định 43/2017/NĐ-CP về nhãn hàng hóa: thông tin chất liệu, thành phần, xuất xứ nói khi bán phải khớp với nhãn và công bố của sản phẩm.'}
+ nhan:{s:'Nghị định 43/2017/NĐ-CP (nhãn hàng hóa)',l:'Nghị định 43/2017/NĐ-CP về nhãn hàng hóa: thông tin chất liệu, thành phần, xuất xứ nói khi bán phải khớp với nhãn và công bố của sản phẩm.'},
+ tiktok:{s:'Chính sách Nội dung TikTok Shop, mục Nội dung gây nhầm lẫn & Điều hướng lưu lượng truy cập',l:'Chính sách Nội dung dành cho Người bán/Người sáng tạo trên TikTok Shop: cấm nội dung cường điệu hoặc gây nhầm lẫn về công dụng, giá, khuyến mãi; có quy tắc riêng, chặt hơn luật chung, cho nội dung quảng cáo giảm cân/quản lý cân nặng (không được hứa kết quả tức thì, tuyệt đối hoặc không cần ăn kiêng/tập luyện); cấm điều hướng người mua ra khỏi sàn (nhắn Zalo/Facebook, để lại số điện thoại, quét mã QR, mua/chuyển khoản ngoài sàn) để né phí sàn và chính sách bảo vệ người mua. Vi phạm có thể bị gỡ nội dung, tắt tiếng livestream, hạn chế hiển thị hoặc khóa tài khoản bán hàng. Xem đầy đủ ở phần “Chính sách TikTok Shop” trong app.'}
 };
 const INDS={mypham:'Mỹ phẩm',tpcn:'Thực phẩm chức năng',thoitrang:'Thời trang',giadung:'Gia dụng',khac:'Khác'};
 function guessIndustry(p){
@@ -833,7 +842,7 @@ const log=(kind,sev,text)=>{events.push({t:nowT(),kind,sev,text});updateBadge()}
 const updateBadge=()=>{const n=events.filter(e=>e.sev==='bad').length;const b=$('#badge');b.hidden=!n;b.textContent=n};
 
 /* ===== tabs ===== */
-const TABS=['profile','script','live','sim','history','report','kol','account'];
+const TABS=['profile','script','live','sim','history','report','kol','policy','account'];
 function showTab(id){
   TABS.forEach(t=>{
     const on=t===id;
@@ -1110,7 +1119,11 @@ const RULES=[
  {id:'tt-uv',ind:['thoitrang'],negGuard:1,re:/chống (?:nắng|tia uv)\s*(?:100%|tuyệt đối)|chặn (?:hoàn toàn|100%)\s*(?:tia )?uv/giu,sev:'bad',title:'Cam kết khả năng chống nắng tuyệt đối',ref:'nhan',
   fix:'Không nói chống nắng “100%/tuyệt đối”. Chỉ nói đúng chỉ số công bố, ví dụ “UPF 50+ theo công bố của nhà sản xuất”.'},
  {id:'gd-ben',ind:['giadung'],re:/không (?:bao giờ |dễ )?hỏng|bền vĩnh viễn|bảo hành trọn đời|xay được mọi thứ|dùng được mọi|tiết kiệm điện 100%|không tốn điện|tuyệt đối(?:\s+\S+){0,3}?\s+không(?:\s+\S+){0,2}?\s+bám dính|không\s+bao\s+giờ(?:\s+\S+){0,2}?\s+bám dính|vĩnh viễn(?:\s+\S+){0,3}?\s+tróc|bền(?:\s+\S+){0,2}?\s+(?:theo thời gian|vĩnh viễn|mãi mãi)/giu,sev:'warn',title:'Hứa độ bền hoặc công năng tuyệt đối',ref:'tmdt',
-  fix:'Nói đúng thông số và thời hạn bảo hành trong hồ sơ, ví dụ “bảo hành 12 tháng”.'}
+  fix:'Nói đúng thông số và thời hạn bảo hành trong hồ sơ, ví dụ “bảo hành 12 tháng”.'},
+ {id:'tt-cannang',ind:['tpcn','mypham'],negGuard:1,re:/giảm\s*(?:cân|mỡ|béo)\s*(?:nhanh|cấp tốc|thần tốc|siêu tốc|tức thì|ngay lập tức|chỉ trong \d+\s*(?:ngày|tuần))|đốt mỡ\s*(?:cấp tốc|thần tốc|siêu tốc|ngay|cực nhanh)|tan mỡ\s*(?:bụng|toàn thân)?\s*(?:sau một đêm|cấp tốc|thần tốc)|giảm\s*\d+\s*(?:kg|cân)\s*(?:trong|sau|chỉ trong)\s*\d+\s*(?:ngày|tuần)|giảm cân\s*(?:mà )?không cần (?:ăn kiêng|tập luyện|nhịn ăn)|tăng cơ\s*(?:thần tốc|siêu tốc|cấp tốc|nhanh chóng)|eo thon\s*(?:sau một đêm|tức thì|ngay lập tức)/giu,sev:'bad',title:'Quảng cáo giảm cân/quản lý cân nặng cường điệu',ref:'tiktok',
+  fix:'TikTok Shop có quy tắc riêng, chặt hơn luật chung, cho nội dung giảm cân/quản lý cân nặng: không hứa kết quả tức thì, tuyệt đối hoặc “không cần ăn kiêng/tập luyện”. Nói đúng công dụng đã công bố và nhắc “kết quả tùy cơ địa, cần kết hợp ăn uống/tập luyện hợp lý”.'},
+ {id:'tt-dieuhuong',re:/(?:ib|inbox|nhắn|liên hệ)\s+(?:qua\s+)?(?:zalo|facebook|fb|messenger)|để lại\s+(?:số điện thoại|sđt|sdt)|(?:quét|scan)\s+(?:mã\s+)?qr|mua\s+(?:ở|tại|qua\s+)?(?:ngoài sàn|kênh khác|shop khác|web khác)|đặt hàng\s+(?:ngoài (?:sàn|app)|trực tiếp qua zalo|trực tiếp qua facebook)|chuyển khoản\s+(?:trực tiếp|riêng)(?:\s+cho (?:mình|shop|em))?/giu,sev:'warn',title:'Điều hướng giao dịch ra ngoài sàn',ref:'tiktok',
+  fix:'Tránh mời khách nhắn Zalo/Facebook, để lại số điện thoại, quét QR hoặc mua/chuyển khoản ngoài sàn — vi phạm chính sách điều hướng lưu lượng của TikTok Shop và khách mất quyền bảo vệ khi mua ngoài sàn. Hướng dẫn khách đặt hàng qua giỏ hàng/link sản phẩm ngay trên phiên live.'}
 ];
 const CHECKS=[
  {label:'Nêu xuất xứ sản phẩm',re:/xuất xứ|sản xuất tại|may tại|lắp ráp|nhập khẩu/iu},
@@ -1296,6 +1309,56 @@ function renderRulesPanel(){
     <div class="find ok"><b>Ranh giới của hệ thống</b><div class="fix">LiveCore AI chỉ đối chiếu lời nói với những gì <i>bạn</i> khai trong Hồ sơ sản phẩm chủ và bộ quy tắc mẫu ở trên — hệ thống không tự chỉnh sửa hay chặn phát ngôn của bạn, không thay bạn quyết định, và không đảm bảo tuân thủ mọi quy định (kể cả quy định riêng của sàn/nền tảng livestream). Rủi ro nói sai vẫn có thật: mức phạt hành chính với quảng cáo sai công dụng có thể tới 10–20 triệu đồng/lần (Nghị định 87/2026/NĐ-CP, Điều 50 khoản 2), chưa kể rủi ro hình sự với trường hợp nghiêm trọng như vụ “kẹo Kera”. Hồ sơ càng đầy đủ, hệ thống càng đối chiếu được nhiều — phần bạn chưa khai, hệ thống sẽ không đoán.</div></div>`;
 }
 renderRulesPanel();
+
+/* ===== Chính sách Nội dung TikTok Shop — bản tóm tắt để đọc trong app =====
+   Tóm tắt từ tài liệu "NGUYÊN TẮC của TikTok Shop" người dùng cung cấp, rút gọn theo từng nhóm,
+   kèm ví dụ cụ thể, để ai chưa đọc bản đầy đủ vẫn tra được nhanh trước khi live. Không thay cho
+   văn bản chính thức của TikTok Shop, chỉ để tham khảo trong lúc chuẩn bị/luyện live. */
+const TT_POLICY=[
+ {t:'Sản phẩm bị cấm & hạn chế',sev:'bad',b:`<p>Một số ngành hàng bị cấm bán hoàn toàn (vũ khí, hàng giả/hàng nhái, chất kích thích, động vật hoang dã…) hoặc chỉ được bán có điều kiện (giới hạn theo khu vực, cần giấy phép, giới hạn tuổi người mua…).</p>
+  <ul><li>Kiểm tra ngành hàng của sản phẩm trong Trung tâm Người bán trước khi lên live, đừng chỉ dựa vào việc "vẫn đăng được".</li>
+  <li>Sản phẩm hạn chế (ví dụ: dao kéo, một số thực phẩm chức năng, mỹ phẩm chưa công bố) cần đủ giấy phép/công bố mới được livestream bán.</li></ul>`},
+ {t:'Nội dung gây nhầm lẫn (công dụng, giá, khuyến mãi)',sev:'bad',b:`<p>Không nói cường điệu công dụng, không đưa giá/khuyến mãi sai thực tế, không cho sản phẩm trong video/ảnh khác với sản phẩm thực sự giao cho khách.</p>
+  <ul><li>Không dùng “nhất/duy nhất/tuyệt đối” nếu không có tài liệu chứng minh hợp pháp.</li>
+  <li>Giá, khuyến mãi nói trên live phải khớp giá thật đang áp dụng trên sàn — hệ thống này tự đối chiếu ở mục “Rà soát kịch bản” và “Phòng live”.</li>
+  <li>Ảnh/video minh họa phải là đúng sản phẩm sẽ giao, không dùng ảnh hàng cao cấp hơn để câu khách.</li></ul>`},
+ {t:'Nội dung do AI tạo (AIGC)',sev:'warn',b:`<p>Nội dung có sự tham gia đáng kể của AI (giọng đọc AI, ảnh/video AI, avatar ảo…) phải được gắn nhãn rõ ràng là nội dung AI, không để người xem hiểu nhầm là người thật/quay thật.</p>
+  <ul><li>Dùng giọng AI lồng tiếng cho video sản phẩm → phải gắn nhãn AIGC theo hướng dẫn của TikTok.</li>
+  <li>Không dùng AI tạo hình ảnh bác sĩ/chuyên gia giả để tăng độ tin cậy cho sản phẩm.</li></ul>`},
+ {t:'Cờ bạc & nội dung rút thăm/quay số may rủi',sev:'bad',b:`<p>Không tổ chức hoặc quảng bá cờ bạc, cá cược. Minigame rút thăm/quay số tặng quà trong live phải rõ ràng, minh bạch, không mang tính chất may rủi đổi tiền/đổi thưởng giá trị lớn kiểu cá cược.</p>
+  <ul><li>“Chốt đơn xong quay số trúng thưởng nha” dùng để giải trí, có luật chơi rõ ràng thì được; tổ chức kiểu cá cược ăn tiền thì không.</li></ul>`},
+ {t:'Giảm cân & quản lý cân nặng',sev:'bad',b:`<p>Riêng nhóm quảng cáo giảm cân/quản lý cân nặng, TikTok Shop có quy tắc chặt hơn luật quảng cáo chung: không hứa kết quả tức thì/tuyệt đối, không nói “không cần ăn kiêng hay tập luyện”, không gắn hình ảnh cơ thể theo hướng so sánh phi thực tế trước/sau.</p>
+  <ul><li>Hệ thống tự động rà soát các cụm như “giảm cân cấp tốc”, “không cần ăn kiêng” ở mục “Rà soát kịch bản” và “Phòng live” (căn cứ: mục này).</li>
+  <li>Nói đúng công dụng đã công bố, luôn nhắc “kết quả tùy cơ địa, cần kết hợp ăn uống/tập luyện hợp lý”.</li></ul>`},
+ {t:'Nội dung khiêu dâm / người lớn',sev:'bad',b:`<p>Không hình ảnh, lời nói, cử chỉ khiêu dâm hoặc gợi dục, kể cả dùng sản phẩm làm cái cớ (ví dụ đồ lót, mỹ phẩm vùng nhạy cảm) để câu tương tác.</p>`},
+ {t:'Nội dung hướng đến trẻ em',sev:'bad',b:`<p>Không để trẻ em xuất hiện trong ngữ cảnh không phù hợp (mặc phản cảm, gắn với sản phẩm người lớn), không nhắm quảng cáo sản phẩm không phù hợp trẻ em vào đối tượng trẻ em.</p>`},
+ {t:'Nội dung gây sốc, phản cảm',sev:'warn',b:`<p>Không dùng hình ảnh máu me, tai nạn, kinh dị, ghê sợ hoặc hành vi nguy hiểm/tự gây hại để câu view, dù là để bán hàng theo hướng “giật gân”.</p>`},
+ {t:'Nội dung chính trị',sev:'warn',b:`<p>Livestream bán hàng không lồng ghép nội dung vận động chính trị, bầu cử, biểu tình. Giữ nội dung tập trung vào sản phẩm.</p>`},
+ {t:'Sự kiện nhạy cảm',sev:'warn',b:`<p>Không lợi dụng thiên tai, dịch bệnh, tai nạn, xung đột đang diễn ra để tạo cảm xúc câu view hoặc thúc bán hàng (ví dụ “mua ủng hộ vùng lũ” khi không có hoạt động thật).</p>`},
+ {t:'Đấu giá / chào giá trong livestream',sev:'warn',b:`<p>Nếu tổ chức đấu giá trong live, luật chơi, mức giá, người thắng phải minh bạch, không dàn dựng để đẩy giá ảo hoặc tạo cảm giác khan hiếm giả.</p>`},
+ {t:'Tương tác giả & spam',sev:'warn',b:`<p>Không dùng like/comment/follow ảo, không thuê tài khoản ảo vào bình luận dạo để tạo cảm giác đông người xem/mua hàng, không spam lặp một nội dung nhiều lần trong cùng phiên.</p>`},
+ {t:'Livestream song song (đa tài khoản/đa nền tảng)',sev:'warn',b:`<p>Không dùng nhiều tài khoản để phát cùng một nội dung livestream song song trên TikTok Shop nhằm nhân bản lượt xem/tương tác một cách giả tạo.</p>`},
+ {t:'Nội dung không nguyên bản',sev:'warn',b:`<p>Không phát lại nguyên video/livestream của người khác (kể cả video sản phẩm lấy từ nơi khác) mà không có quyền hoặc không biến đổi thành nội dung của riêng mình.</p>`},
+ {t:'Nội dung không tương tác / kém chất lượng',sev:'info',b:`<p>Tránh live chỉ chiếu màn hình tĩnh, không có người dẫn, không cập nhật nội dung trong thời gian dài — nền tảng có thể giảm hiển thị các phiên live như vậy.</p>`},
+ {t:'Quảng cáo không liên quan',sev:'info',b:`<p>Nội dung/sản phẩm giới thiệu trong live phải khớp với danh mục gian hàng đã đăng ký, không chèn quảng cáo cho sản phẩm/dịch vụ không liên quan hoặc không được phép bán trên TikTok Shop.</p>`},
+ {t:'Điều hướng lưu lượng ra ngoài sàn',sev:'bad',b:`<p>Không mời khách nhắn Zalo/Facebook/Messenger, để lại số điện thoại, quét mã QR, hoặc mua/chuyển khoản ngoài sàn để né phí sàn — khách mua ngoài sàn cũng mất quyền bảo vệ người mua của TikTok Shop.</p>
+  <ul><li>Hệ thống tự động rà soát các cụm như “inbox zalo”, “để lại số điện thoại”, “quét mã QR” ở mục “Rà soát kịch bản” và “Phòng live” (căn cứ: mục này).</li>
+  <li>Luôn hướng dẫn khách đặt hàng qua giỏ hàng/link sản phẩm ngay trên phiên live.</li></ul>`},
+ {t:'Giới hạn số lượng đăng nội dung',sev:'info',b:`<p>Tài khoản có giới hạn số video/livestream được đăng trong một khoảng thời gian để chống spam — đăng dồn quá nhiều nội dung liên tiếp có thể bị hạn chế.</p>`},
+ {t:'Quyền sở hữu trí tuệ (IP)',sev:'warn',b:`<p>Không dùng logo, nhạc, hình ảnh, nhân vật có bản quyền/nhãn hiệu của người khác khi chưa được phép, kể cả để làm nền hoặc trang trí cho phiên live.</p>`},
+ {t:'Công cụ ủy quyền nội dung (Content Authorization Tool)',sev:'info',b:`<p>Nếu dùng lại hình ảnh/video của nhà sản xuất, KOC khác hoặc đối tác, nên xin phép và dùng công cụ ủy quyền nội dung của TikTok Shop để việc dùng lại là hợp lệ, tránh bị báo cáo vi phạm bản quyền.</p>`}
+];
+function renderTTPolicy(q){
+  q=(q||'').trim().toLowerCase();
+  const sevT={bad:['Cần tránh','bad'],warn:['Lưu ý','warn'],info:['Tham khảo','ok']};
+  const items=TT_POLICY.filter(x=>!q||x.t.toLowerCase().includes(q)||x.b.toLowerCase().includes(q));
+  $('#ttPolicyBody').innerHTML=(items.length?items:[]).map(x=>`<details class="box"><summary style="cursor:pointer"><b>${esc(x.t)}</b> <span class="tag ${sevT[x.sev][1]}">${sevT[x.sev][0]}</span></summary><div class="small" style="margin-top:8px">${x.b}</div></details>`).join('')
+    ||'<div class="empty">Không tìm thấy mục nào khớp từ khóa.</div>';
+  if(items.length&&!q)$('#ttPolicyBody').insertAdjacentHTML('beforeend','<div class="find warn" style="margin-top:4px"><b>Lưu ý</b><div class="fix">Đây là bản tóm tắt do nhóm soạn để dễ đọc trong app, dựa trên tài liệu chính sách TikTok Shop được cung cấp, có thể chưa đầy đủ 100% và chính sách có thể thay đổi. Luôn đối chiếu bản chính thức mới nhất từ Trung tâm Người bán TikTok Shop trước khi áp dụng.</div></div>');
+}
+renderTTPolicy();
+$('#ttSearch')?.addEventListener('input',e=>renderTTPolicy(e.target.value));
+
 /* ===== Kiểm định độ chính xác trên bộ câu mẫu nội bộ ===== */
 /* [câu nói, nhãn đúng (ok | warn | bad), spoken=1 nếu là lời nói cần đổi chữ số]. Bộ mẫu do nhóm tự soạn và gán nhãn, dùng bộ hồ sơ mẫu (Lumi, Blendy, Nami, Kira). */
 const EVALSET=[
@@ -1466,6 +1529,12 @@ function setAi(){
 }
 (async()=>{try{sample=(await window.claude?.use?.('sample'))||null}catch(e){sample=null}if(sample)aiBackend='artifact';setAi()})();
 const aiErr=e=>({not_granted:'Bạn chưa cho phép dùng AI nên hệ thống chuyển sang mô phỏng theo luật.',rate_limited:'AI đang quá tải hoặc hết hạn mức, thử lại sau ít phút.',upstream_error:'Kết nối AI bị gián đoạn.'}[e&&e.code]||'AI chưa trả lời được lần này.');
+/* Chi tiết kỹ thuật (mã lỗi HTTP, thông báo từ ai-bridge, lỗi mạng…) để người quản trị đối chiếu với nhật ký
+   Supabase Edge Function khi cần, thay vì chỉ thấy một câu chung chung không biết bắt đầu tra ở đâu. */
+const aiErrDetail=e=>{
+  const d=e&&(e.detail||e.message);
+  return d&&!['upstream_error','not_granted','rate_limited'].includes(d)?String(d).slice(0,200):'';
+};
 function aiOffHint(base){
   return sbCfg()&&(!ME||!ME.cloud)?base+' Hoặc đăng nhập bằng tài khoản đám mây để dùng AI qua máy chủ của nhóm.':base;
 }
@@ -1483,9 +1552,14 @@ function makeEdgeBridge(cfg){
     let token;try{token=await sbToken()}catch(e){const err=new Error('not_granted');err.code='not_granted';throw err}
     let r,j=null;
     try{r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json',apikey:cfg.key,Authorization:'Bearer '+token},body:JSON.stringify(body)})}
-    catch(e){const err=new Error('upstream_error');err.code='upstream_error';throw err}
+    catch(e){const err=new Error('upstream_error');err.code='upstream_error';err.detail='Không gọi được máy chủ AI: '+((e&&e.message)||'lỗi mạng/CORS không rõ');throw err}
     try{j=await r.json()}catch(e){}
-    if(!r.ok){const err=new Error((j&&j.error)||'upstream_error');err.code=r.status===401||r.status===403?'not_granted':r.status===429?'rate_limited':'upstream_error';throw err}
+    if(!r.ok){
+      const err=new Error((j&&j.error)||'upstream_error');
+      err.code=r.status===401||r.status===403?'not_granted':r.status===429?'rate_limited':'upstream_error';
+      err.detail=(j&&j.error)?`HTTP ${r.status}: ${j.error}`:`HTTP ${r.status} từ ai-bridge (không có nội dung lỗi trả về)`;
+      throw err;
+    }
     return j;
   }
   const fn=async(turns,opts={})=>{
@@ -1498,7 +1572,7 @@ function makeEdgeBridge(cfg){
     let images=null;
     if(opts.images){const files=Array.isArray(opts.images)?opts.images:[opts.images];images=await Promise.all(files.map(fileToB64))}
     const j=await callEdge({mode:'json',prompt,images,modelTier:opts.modelTier});
-    if(!j||j.data===undefined){const err=new Error('upstream_error');err.code='upstream_error';throw err}
+    if(!j||j.data===undefined){const err=new Error('upstream_error');err.code='upstream_error';err.detail='ai-bridge trả về JSON nhưng thiếu trường "data" như hợp đồng mong đợi.';throw err}
     return j.data;
   };
   fn.limits=async()=>({images:true,text:true});
@@ -1650,7 +1724,7 @@ async function readCmtImage(file){
     if(!list.length){note.textContent='AI không thấy bình luận nào trong ảnh. Thử ảnh rõ hơn hoặc dán chữ.';return}
     $('#realTxt').value=list.map(x=>x.u+': '+x.text).join('\n');
     note.textContent=`AI đọc được ${list.length} bình luận. Kiểm tra lại nội dung rồi bấm “Thêm vào danh sách”.`;
-  }catch(e){note.textContent=e&&e.code==='images_unavailable'?'Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI.':aiErr(e)}
+  }catch(e){const d=aiErrDetail(e);note.textContent=(e&&e.code==='images_unavailable'?'Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI.':aiErr(e))+(d?` (Chi tiết: ${d})`:'')}
   finally{$('#realImgL').removeAttribute('aria-busy')}
 }
 $('#realImg').onchange=e=>{const f=e.target.files[0];e.target.value='';readCmtImage(f)};
@@ -1721,7 +1795,8 @@ async function autoCapTick(){
     $('#autoCapNote').textContent=`Đã kiểm tra lúc ${nowT()}${added?` — thêm ${added} bình luận mới`:' — chưa có bình luận mới'}.`;
   }catch(e){
     autoCap.fails++;
-    $('#autoCapNote').textContent=e&&e.code==='images_unavailable'?'Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI.':aiErr(e);
+    const d=aiErrDetail(e);
+    $('#autoCapNote').textContent=(e&&e.code==='images_unavailable'?'Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI.':aiErr(e))+(d?` (Chi tiết: ${d})`:'');
     if(autoCap.fails>=3)autoCapStop('Nhận diện tự động gặp lỗi liên tiếp nên đã dừng. Bạn có thể bắt đầu lại, hoặc dùng cách dán/tải ảnh thủ công bên dưới.');
   }finally{autoCap.busy=false}
 }
@@ -2297,7 +2372,8 @@ $('#coachBtn').onclick=async()=>{
     const c=await sample.json(prompt,{modelTier:'default'});
     $('#coach').innerHTML=coachHTML(c,'Nhận xét bởi AI dựa trên dữ liệu phiên.');
   }catch(e){
-    $('#coach').insertAdjacentHTML('afterbegin',`<div class="find bad" style="margin-bottom:10px"><b>${esc(aiErr(e))}</b></div>`);
+    const d=aiErrDetail(e);
+    $('#coach').insertAdjacentHTML('afterbegin',`<div class="find bad" style="margin-bottom:10px"><b>${esc(aiErr(e))}</b>${d?`<div class="fix">Chi tiết kỹ thuật (để đối chiếu với nhật ký Supabase Edge Function “ai-bridge”): ${esc(d)}</div>`:''}</div>`);
   }
   btn.disabled=false;btn.textContent='Nhờ AI Coach nhận xét';
 };
