@@ -1109,7 +1109,7 @@ const RULES=[
   fix:'Nói đúng chất liệu ghi trên nhãn, ví dụ “vải cotton pha” thay vì “100% cotton” nếu chưa chắc chắn.'},
  {id:'tt-uv',ind:['thoitrang'],negGuard:1,re:/chống (?:nắng|tia uv)\s*(?:100%|tuyệt đối)|chặn (?:hoàn toàn|100%)\s*(?:tia )?uv/giu,sev:'bad',title:'Cam kết khả năng chống nắng tuyệt đối',ref:'nhan',
   fix:'Không nói chống nắng “100%/tuyệt đối”. Chỉ nói đúng chỉ số công bố, ví dụ “UPF 50+ theo công bố của nhà sản xuất”.'},
- {id:'gd-ben',ind:['giadung'],re:/không (?:bao giờ |dễ )?hỏng|bền vĩnh viễn|bảo hành trọn đời|xay được mọi thứ|dùng được mọi|tiết kiệm điện 100%|không tốn điện/giu,sev:'warn',title:'Hứa độ bền hoặc công năng tuyệt đối',ref:'tmdt',
+ {id:'gd-ben',ind:['giadung'],re:/không (?:bao giờ |dễ )?hỏng|bền vĩnh viễn|bảo hành trọn đời|xay được mọi thứ|dùng được mọi|tiết kiệm điện 100%|không tốn điện|tuyệt đối(?:\s+\S+){0,3}?\s+không(?:\s+\S+){0,2}?\s+bám dính|không\s+bao\s+giờ(?:\s+\S+){0,2}?\s+bám dính|vĩnh viễn(?:\s+\S+){0,3}?\s+tróc|bền(?:\s+\S+){0,2}?\s+(?:theo thời gian|vĩnh viễn|mãi mãi)/giu,sev:'warn',title:'Hứa độ bền hoặc công năng tuyệt đối',ref:'tmdt',
   fix:'Nói đúng thông số và thời hạn bảo hành trong hồ sơ, ví dụ “bảo hành 12 tháng”.'}
 ];
 const CHECKS=[
@@ -1149,6 +1149,18 @@ function negBefore(text,pos){
   return NEGWORD.test(text.slice(s+1,pos));
 }
 const SHIPCUE=/phí ship|tiền ship|phí vận chuyển|freeship|quà tặng|tặng kèm|mua kèm|đặt cọc|tiền cọc|mã giảm giá|voucher/iu;
+/* Cụm bị cấm khai trong hồ sơ sản phẩm không khớp 100% lời nói thật (giọng nói/gõ tay hay có từ đệm chen giữa,
+   ví dụ “tuyệt đối là không bao giờ bám dính” thay vì đúng y “tuyệt đối không bám dính”), nên so khớp có nới
+   lỏng tối đa 2 từ đệm giữa mỗi từ khóa của cụm, thay vì chỉ tìm nguyên văn. */
+const bannedReCache=new Map();
+function fuzzyBannedRe(phrase){
+  if(bannedReCache.has(phrase))return bannedReCache.get(phrase);
+  const words=phrase.trim().split(/\s+/).filter(Boolean);
+  const esc=w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const re=new RegExp(words.map(esc).join('(?:\\s+\\S+){0,2}?\\s+'),'giu');
+  bannedReCache.set(phrase,re);
+  return re;
+}
 function analyze(text,opts={}){
   const findings=[];const low=text.toLowerCase();
   const add=f=>{if(!findings.some(x=>x.start===f.start&&x.end===f.end&&(x.title===f.title||x.sev===f.sev)))findings.push(f)};
@@ -1169,14 +1181,16 @@ function analyze(text,opts={}){
     add({sev:r.sev,title:r.title,fix:r.fix,ref:refFor(r,ind),start:m.index,end:m.index+m[0].length,phrase:m[0],rule:r.id});
   }});
   products.forEach(p=>{
-    (p.banned||'').split('\n').map(s=>s.trim().toLowerCase()).filter(Boolean).forEach(ph=>{
-      let i=-1;while((i=low.indexOf(ph,i+1))>=0){
+    (p.banned||'').split('\n').map(s=>s.trim()).filter(Boolean).forEach(ph=>{
+      const re=fuzzyBannedRe(ph);re.lastIndex=0;let m;
+      while((m=re.exec(text))){
+        const i=m.index,end=i+m[0].length;
         if(negBefore(text,i))continue;
         const cp=ctxAt(i).p;if(cp&&cp!==p)continue;
-        const ex=findings.findIndex(x=>x.start===i&&x.end===i+ph.length);
+        const ex=findings.findIndex(x=>x.start===i&&x.end===end);
         let keepRef=null;
         if(ex>=0){if(findings[ex].sev==='bad')continue;keepRef=findings[ex].ref;findings.splice(ex,1)}
-        add({sev:'bad',title:`Cụm bị cấm trong hồ sơ “${p.name}”`,fix:'Xem mục “Công dụng được phép nói” của sản phẩm để chọn cách diễn đạt an toàn.',start:i,end:i+ph.length,phrase:text.slice(i,i+ph.length),ref:keepRef||REF.tmdt});
+        add({sev:'bad',title:`Cụm bị cấm trong hồ sơ “${p.name}”`,fix:'Xem mục “Công dụng được phép nói” của sản phẩm để chọn cách diễn đạt an toàn.',start:i,end,phrase:text.slice(i,end),ref:keepRef||REF.tmdt});
       }
     });
   });
@@ -2793,6 +2807,10 @@ $('#liveToggle').onclick=()=>{
     }
     $('#liveNote').textContent='';
     liveSess={id:rid(),kolId:k?k.id:null,kolName:k?k.name:'',start:Date.now(),ms:0,t0:null,speeches:0,bad:0,warn:0,priceErr:0,cmtSeen:0,cmtAns:0,viol:{},tl:[]};
+    /* Mặc định coi (các) sản phẩm vừa chọn ở "Sản phẩm đang live" là sản phẩm đang nói tới ngay từ câu đầu,
+       để đối chiếu giá và quy tắc theo ngành hàng vẫn chạy đúng dù streamer chỉ nói "nồi này/sản phẩm này"
+       thay vì nhắc lại đúng tên/từ khóa sản phẩm. */
+    if(liveProdSel&&liveProdSel[0])spokenP=getP(liveProdSel[0])||spokenP;
     clockTimer=setInterval(tickClock,1000);tpReset();onb('live');
   }
   liveSess.t0=Date.now();
