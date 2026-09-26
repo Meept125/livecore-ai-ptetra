@@ -752,12 +752,14 @@ const SAMPLE_PRODUCTS=()=>[
   origin:'Lắp ráp tại Việt Nam',
   benefits:'Dung tích 350ml, xay sinh tố và đá viên nhỏ\nSạc USB-C, khoảng 12–15 lần xay mỗi lần sạc\nThân nhựa Tritan không chứa BPA',
   banned:'không bao giờ hỏng\nxay được mọi thứ\nbền vĩnh viễn\nrẻ nhất',
+  specs:'Dung tích|350ml\nChất liệu|Nhựa Tritan',
   policy:'Bảo hành 12 tháng; 1 đổi 1 trong 7 ngày nếu lỗi kỹ thuật.',
   faq:'Xay được đá không|Xay được đá viên nhỏ, nên thêm chút nước. Không xay đá cây lớn.\nRửa thế nào|Tháo cụm lưỡi rửa nước. Không ngâm phần đế có mạch điện.\nPin dùng được bao lâu|Khoảng 12–15 lần xay mỗi lần sạc theo thử nghiệm của nhà sản xuất.'},
  {id:'p3',industry:'thoitrang',name:'Áo khoác chống nắng UV Nami',keys:'nami, áo khoác',price:249000,promo:199000,promoUntil:isoDay(-1),
   origin:'May tại Việt Nam',
   benefits:'Vải thoáng, chỉ số UPF 50+ theo công bố của nhà sản xuất\nCó mũ trùm và lỗ xỏ ngón tay\nSize S đến XXL',
   banned:'chống nắng 100%\nchặn hoàn toàn tia UV\nkhông bao giờ đen da',
+  specs:'Chất liệu|Vải dù chống nước pha lưới thoáng khí',
   policy:'Đổi size trong 7 ngày, còn nguyên tem mác; shop chịu phí ship lần đổi đầu tiên.',
   faq:'Cao 1m65 nặng 65kg mặc size nào|Thường vừa size L hoặc XL. Bạn nhắn chiều cao, cân nặng để shop tư vấn kỹ hơn.\nGiặt máy được không|Giặt máy chế độ nhẹ, không dùng nước tẩy.'},
  {id:'p4',industry:'tpcn',name:'Viên uống Collagen Kira 60 viên',keys:'kira, collagen',price:590000,promo:490000,promoUntil:isoDay(12),
@@ -776,12 +778,14 @@ const SAMPLE_PRODUCTS=()=>[
   origin:'Lắp ráp tại Việt Nam, linh kiện nhập khẩu',
   benefits:'Dung tích 4L phù hợp gia đình 3–4 người\nMâm nhiệt đối lưu giúp chín đều, tiết kiệm dầu ăn\nHẹn giờ tối đa 60 phút, tự ngắt khi xong',
   banned:'không bao giờ hỏng\nbền vĩnh viễn\nkhông tốn điện\ngiòn hơn chiên dầu tuyệt đối',
+  specs:'Dung tích|4 lít',
   policy:'Bảo hành 18 tháng; 1 đổi 1 trong 7 ngày nếu lỗi kỹ thuật từ nhà sản xuất.',
   faq:'Có cần thêm dầu ăn không|Có thể phết một chút dầu tùy món để giòn hơn, không bắt buộc.\nRửa mâm chiên thế nào|Mâm chiên tháo rời, rửa bằng nước rửa chén, không dùng vật cứng nhọn cạy lớp chống dính.\nHẹn giờ tối đa bao lâu|Tối đa 60 phút mỗi lần, hết giờ nồi tự ngắt.'},
  {id:'p7',industry:'thoitrang',name:'Giày sneaker thể thao Vantic',keys:'vantic, giày sneaker',price:459000,promo:379000,promoUntil:isoDay(5),
   origin:'Sản xuất tại Việt Nam',
   benefits:'Đế cao su chống trượt, đệm êm hỗ trợ đi bộ và chạy nhẹ\nForm giày ôm chân vừa phải, có size 36–43\nCó thể đổi size trong 7 ngày nếu chưa mang ra ngoài',
   banned:'êm nhất thị trường\nkhông bao giờ mòn đế\nchống trượt tuyệt đối\nsize nào cũng vừa',
+  specs:'Chất liệu|Đế cao su, thân vải lưới thoáng khí',
   policy:'Đổi size trong 7 ngày nếu còn nguyên hộp, chưa mang ra ngoài; shop chịu phí ship lần đổi đầu tiên.',
   faq:'Chân bè có mang vừa không|Form giày ôm vừa phải, chân bè nên chọn tăng nửa size, bạn nhắn số đo bàn chân để shop tư vấn.\nGiặt máy được không|Nên giặt tay, phơi nơi thoáng gió, tránh nắng gắt làm bong keo đế.\nĐi mưa được không|Đế chống trượt cơ bản, không phải giày chuyên đi mưa, hạn chế ngâm nước lâu.'},
  {id:'p8',industry:'tpcn',name:'Viên uống lợi khuẩn tiêu hoá Bioflora',keys:'bioflora, lợi khuẩn',price:320000,promo:269000,promoUntil:isoDay(8),
@@ -794,18 +798,21 @@ const SAMPLE_PRODUCTS=()=>[
   origin:'',
   benefits:'Dung tích nồi 3L, lòng nồi 1,2L, nấu được khoảng 12 bát cơm, phù hợp gia đình 2–4 người\nLòng nồi 6 lớp hợp kim nhôm, tráng men sứ chống dính chất lượng cao, hạn chế bong tróc tối đa\nCông suất 600W, màn hình cảm ứng với 8 chức năng: nấu cơm, nấu cháo, hầm, hấp, làm bánh, giữ ấm, hẹn giờ tới 24 tiếng\nKèm môi xới cơm, cốc đong gạo, xửng hấp',
   banned:'không bao giờ hỏng\ntuyệt đối không bám dính\nvĩnh viễn không tróc\ntốt nhất thị trường\nrẻ nhất Việt Nam\nchính hãng Bear',
+  specs:'Dung tích|3 lít\nCông suất|600W',
   policy:'Bảo hành 18 tháng, hỗ trợ đổi trả theo đúng quy định sàn trong 10 ngày đầu nếu lỗi nhà sản xuất. Lưu ý: chỉ nói "chính hãng Bear" khi gian hàng đã liên kết ủy quyền thương hiệu (Brand Authorization) trên sàn.',
   faq:'Nồi cơm Bear giá bao nhiêu|Nồi cơm điện Bear SB-NC30B giá niêm yết 1.390.000đ.\nNồi Bear nấu được mấy bát cơm|Lòng nồi 1,2L, nấu được khoảng 12 bát cơm thành phẩm, phù hợp gia đình 2–4 người.\nNồi cơm Bear có phải hàng chính hãng không|Shop chỉ xác nhận chính hãng khi gian hàng đã liên kết ủy quyền thương hiệu trên sàn, bạn có thể kiểm tra ở trang gian hàng.\nNồi cơm Bear bảo hành bao lâu|Bảo hành 18 tháng, hỗ trợ đổi trả theo đúng quy định sàn trong 10 ngày đầu nếu lỗi nhà sản xuất.'},
  {id:'p10',industry:'giadung',name:'Nồi áp suất điện Kendon 4L KD-AS04L',keys:'kendon, nồi áp suất, kd-as04l',price:2490000,promo:1890000,promoUntil:isoDay(14),
   origin:'',
   benefits:'Dung tích nồi 4L, lòng nồi 2L, phù hợp gia đình 2–6 người\nMàn hình cảm ứng tiếng Việt có màu, 10 chức năng: hầm, kho, nấu cháo, nấu cơm, chiên xào, ăn lẩu, mở nắp nấu, làm sữa chua...\nCông suất 1300W, hỗ trợ hầm kho nhanh hơn, tiết kiệm thời gian\nKèm 2 lòng nồi inox 304 (kho thịt, hầm xương) và lòng nồi chống dính (chiên xào, nấu cơm mở nắp)\nHệ thống xả hơi an toàn, tự xả khi áp suất quá cao, không mở được khi áp suất trong nồi chưa an toàn\nKèm 2 nắp: nắp áp suất và nắp kính',
   banned:'tuyệt đối an toàn\n100% an toàn\nkhông bao giờ hỏng\ntốt nhất thị trường\nrẻ nhất Việt Nam',
+  specs:'Dung tích|4 lít\nCông suất|1300W',
   policy:'Bảo hành 18 tháng. Lưu ý khi demo: không xả hơi bằng tay trực tiếp hướng về phía camera — hơi nước nóng phả gần ống kính có thể bị hệ thống nhận nhầm là khói cháy nổ. Không cắm dây điện lòng thòng hay dùng ổ cắm quá tải trên bàn live.',
   faq:'Nồi áp suất Kendon giá bao nhiêu|Giá niêm yết 2.490.000đ, hiện đang có ưu đãi.\nNồi áp suất Kendon nấu cho mấy người ăn|Lòng nồi 2L, phù hợp gia đình 2–6 người.\nNồi áp suất Kendon xả hơi có an toàn không|Nồi có hệ thống xả hơi an toàn, tự xả khi áp suất quá cao và không mở được khi áp suất trong nồi chưa an toàn.\nNồi áp suất Kendon bảo hành bao lâu|Bảo hành 18 tháng.'},
  {id:'p11',industry:'giadung',name:'Nồi chiên không dầu Kendon 6L KD-NK06L',keys:'kendon, nồi chiên không dầu, kd-nk06l',price:2490000,promo:1790000,promoUntil:isoDay(11),
   origin:'',
   benefits:'Dung tích 6L, nướng vừa một con gà nguyên con khoảng 1,8–1,9kg đã làm sạch, phù hợp gia đình 2–6 người\nCông suất 1800W, làm nóng nhanh, tiết kiệm thời gian\nCông nghệ chiên đối lưu 360 độ kết hợp 2 thanh truyền nhiệt trên và dưới, không cần lật trở vẫn chín đều 2 mặt, hỗ trợ giảm lượng dầu mỡ thừa\nMàn hình cảm ứng kết hợp núm xoay, 12 chức năng: nướng rau củ, thịt cá, nướng gà, nướng tôm, hâm nóng, rã đông, tùy chỉnh nhiệt độ\nChế độ phun sương tự động giúp thực phẩm mềm bên trong, giòn bên ngoài\nCửa kính cường lực trong suốt kèm đèn khoang nướng, dễ quan sát mà không cần kéo khay ra\nKhay chiên chống dính, dễ vệ sinh',
   banned:'giảm 85% mỡ thừa\ntốt nhất thị trường\nrẻ nhất Việt Nam\nkhông bao giờ hỏng\nvàng giòn tuyệt đối',
+  specs:'Dung tích|6 lít\nCông suất|1800W',
   policy:'Bảo hành 18 tháng. Khi demo cắt/thái đồ ăn, tránh để lưỡi dao sắc nhọn chĩa về camera hoặc quay cận cảnh thao tác chặt.',
   faq:'Nồi chiên Kendon giá bao nhiêu|Giá niêm yết 2.490.000đ, hiện đang có giá ưu đãi.\nNồi chiên Kendon nướng được nguyên con gà không|Dung tích 6L, nướng vừa một con gà nguyên con khoảng 1,8–1,9kg đã làm sạch.\nNồi chiên Kendon có tốn điện không|Công suất 1800W, làm nóng nhanh nên tiết kiệm thời gian sử dụng.\nNồi chiên Kendon giảm dầu mỡ được nhiều không|Công nghệ chiên đối lưu 360 độ hỗ trợ giảm lượng dầu mỡ thừa so với chiên ngập dầu thông thường.'}
 ];
@@ -898,6 +905,7 @@ function renderProfile(){
     <div class="stack" style="gap:6px"><b class="small">Ảnh giấy tờ đính kèm (phiếu công bố, kiểm nghiệm, nhãn)</b><div id="docBox"></div></div>
     <label class="f">Công dụng được phép nói (mỗi dòng một ý)<textarea id="f-benefits">${esc(p.benefits)}</textarea></label>
     <label class="f">Cụm từ bị cấm riêng cho sản phẩm này (mỗi dòng một cụm)<textarea id="f-banned">${esc(p.banned)}</textarea></label>
+    <label class="f">Thông số &amp; chất liệu chuẩn (mỗi dòng: nhãn|giá trị đúng, ví dụ “Dung tích|3 lít”) — hệ thống sẽ cảnh báo và nhắc lại giá trị đúng nếu streamer nói sai khi nhắc đến đúng nhãn này<textarea id="f-specs" rows="3">${esc(p.specs||'')}</textarea></label>
     <label class="f">Chính sách đổi trả / bảo hành<textarea id="f-policy">${esc(p.policy)}</textarea></label>
     <label class="f">Hỏi đáp thường gặp (mỗi dòng: câu hỏi|câu trả lời chuẩn)<textarea id="f-faq" rows="6">${esc(p.faq)}</textarea></label>
     <details><summary style="cursor:pointer"><b>Lịch sử giá</b> <span class="muted small">(${Math.max(0,(p.hist||[]).length-1)} lần thay đổi)</span></summary><div style="margin-top:8px">${histPriceHTML(p)}</div></details>
@@ -912,7 +920,7 @@ function renderProfile(){
   const num=v=>Number(String(v).replace(/[^\d]/g,''))||0;
   bind('f-name','name');bind('f-ind','industry');bind('f-keys','keys');bind('f-price','price',num);bind('f-promo','promo',num);
   bind('f-until','promoUntil');bind('f-origin','origin');bind('f-benefits','benefits');
-  bind('f-banned','banned');bind('f-policy','policy');bind('f-faq','faq');
+  bind('f-banned','banned');bind('f-specs','specs');bind('f-policy','policy');bind('f-faq','faq');
   bind('f-cert','certNo');$('#f-cert').addEventListener('change',()=>{refreshAlerts()});
   $('#f-name').addEventListener('change',renderProfile);
   $('#f-ind').addEventListener('change',renderProfile);
@@ -925,7 +933,7 @@ $('#addP').onclick=()=>{
   if(ME&&products.length>=PLANS[ME.plan].products){$('#addNote').textContent=`Gói ${PLANS[ME.plan].name} tối đa ${PLANS[ME.plan].products} sản phẩm. Vào tab Tài khoản để đổi gói.`;return}
   $('#addNote').textContent='';
   const id='p'+Date.now();
-  products.push({id,industry:'khac',name:'Sản phẩm mới',keys:'',price:100000,promo:0,promoUntil:'',origin:'',benefits:'',banned:'',policy:'',faq:''});
+  products.push({id,industry:'khac',name:'Sản phẩm mới',keys:'',price:100000,promo:0,promoUntil:'',origin:'',benefits:'',banned:'',specs:'',policy:'',faq:''});
   curP=id;saveProducts();renderProfile();
 };
 /* ===== Product Master mở rộng: giấy tờ, lịch sử giá, nhắc KM, CSV ===== */
@@ -1013,8 +1021,8 @@ function wireDocs(p){
   };
 }
 /* --- CSV --- */
-const CSV_COLS=[['name','Tên sản phẩm'],['industry','Ngành hàng'],['keys','Từ khóa'],['price','Giá niêm yết'],['promo','Giá khuyến mãi'],['promoUntil','KM đến hết ngày'],['origin','Xuất xứ'],['benefits','Công dụng được phép nói'],['banned','Cụm từ bị cấm'],['policy','Chính sách đổi trả'],['faq','Hỏi đáp'],['certNo','Số công bố']];
-const CSV_ALIAS={name:['ten san pham','ten','name','san pham'],industry:['nganh hang','nganh','industry'],keys:['tu khoa','keys','keywords'],price:['gia niem yet','gia','price'],promo:['gia khuyen mai','khuyen mai','promo'],promoUntil:['km den het ngay','han km','han khuyen mai','promo until','promountil'],origin:['xuat xu','origin'],benefits:['cong dung duoc phep noi','cong dung','benefits'],banned:['cum tu bi cam','tu cam','banned'],policy:['chinh sach doi tra','chinh sach','policy'],faq:['hoi dap','faq'],certNo:['so cong bo','cert','certno','so giay to']};
+const CSV_COLS=[['name','Tên sản phẩm'],['industry','Ngành hàng'],['keys','Từ khóa'],['price','Giá niêm yết'],['promo','Giá khuyến mãi'],['promoUntil','KM đến hết ngày'],['origin','Xuất xứ'],['benefits','Công dụng được phép nói'],['banned','Cụm từ bị cấm'],['specs','Thông số & chất liệu chuẩn'],['policy','Chính sách đổi trả'],['faq','Hỏi đáp'],['certNo','Số công bố']];
+const CSV_ALIAS={name:['ten san pham','ten','name','san pham'],industry:['nganh hang','nganh','industry'],keys:['tu khoa','keys','keywords'],price:['gia niem yet','gia','price'],promo:['gia khuyen mai','khuyen mai','promo'],promoUntil:['km den het ngay','han km','han khuyen mai','promo until','promountil'],origin:['xuat xu','origin'],benefits:['cong dung duoc phep noi','cong dung','benefits'],banned:['cum tu bi cam','tu cam','banned'],specs:['thong so','thong so & chat lieu chuan','chat lieu','specs'],policy:['chinh sach doi tra','chinh sach','policy'],faq:['hoi dap','faq'],certNo:['so cong bo','cert','certno','so giay to']};
 const noAccent=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().replace(/\s+/g,' ').trim();
 function csvBuild(){
   const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
@@ -1065,7 +1073,7 @@ function csvPlan(text){
 function csvApply(plan){
   plan.upd.forEach(({ex,data})=>{const snap={t:null,price:ex.price,promo:ex.promo||0,until:ex.promoUntil||''};Object.assign(ex,data);pushHist(ex,snap)});
   plan.add.forEach(({name,data})=>{
-    const p={id:'p'+Date.now()+Math.floor(Math.random()*1e4),industry:'khac',name,keys:'',price:0,promo:0,promoUntil:'',origin:'',benefits:'',banned:'',policy:'',faq:'',...data};
+    const p={id:'p'+Date.now()+Math.floor(Math.random()*1e4),industry:'khac',name,keys:'',price:0,promo:0,promoUntil:'',origin:'',benefits:'',banned:'',specs:'',policy:'',faq:'',...data};
     if(!data.industry)p.industry=guessIndustry(p);
     products.push(p);
   });
@@ -1174,6 +1182,40 @@ function fuzzyBannedRe(phrase){
   bannedReCache.set(phrase,re);
   return re;
 }
+/* ===== Đối chiếu “xuất xứ” nói trên sóng với hồ sơ (tương tự cách đối chiếu giá ở trên) =====
+   Chỉ bắt khi có từ khóa dẫn (“xuất xứ/sản xuất/lắp ráp/...”) đứng trước tên một quốc gia/vùng cụ thể,
+   để tránh báo nhầm khi tên nước xuất hiện ở chỗ khác trong câu không liên quan tới xuất xứ. */
+const ORIGIN_GROUPS=[['việt nam'],['trung quốc','china'],['nhật bản','nhật'],['hàn quốc','hàn'],['mỹ','hoa kỳ'],['đức'],['pháp'],['anh'],['ý','italy'],['thái lan'],['malaysia'],['indonesia'],['ấn độ'],['đài loan'],['singapore'],['châu âu','eu']];
+const originFamily=s=>{s=(s||'').toLowerCase();for(let i=0;i<ORIGIN_GROUPS.length;i++)if(ORIGIN_GROUPS[i].some(a=>s.includes(a)))return i;return -1};
+const originFamilies=s=>{s=(s||'').toLowerCase();const out=[];ORIGIN_GROUPS.forEach((g,i)=>{if(g.some(a=>s.includes(a)))out.push(i)});return out};
+const escRe=w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+const ORIGIN_RE=new RegExp(`(?:xuất xứ|sản xuất|lắp ráp|gia công|nhập khẩu|made in)\\s*(?:tại|từ|ở|:)?\\s*(${ORIGIN_GROUPS.flat().sort((a,b)=>b.length-a.length).map(escRe).join('|')})`,'giu');
+/* ===== Đối chiếu thông số/chất liệu nói trên sóng với hồ sơ (trường “Thông số & chất liệu chuẩn”) =====
+   Chỉ so khi câu có nhắc đúng tên nhãn (ví dụ “dung tích”), để không đoán bừa số nào ứng với thông số nào. */
+const MATERIAL_WORDS=['cotton','polyester','len','lụa','da thật','da pu','nhựa tritan','nhựa','thép','nhôm','gốm','sứ','tre','gỗ','silicon','thủy tinh','inox','titan','cao su','vải dù','vải lưới','denim','kaki','ren','nylon','spandex'].sort((a,b)=>b.length-a.length);
+const SPEC_NUM_RE=/(\d+(?:[.,]\d+)?)\s*(lít|l|ml|kw|w|kg|g|cm|mm|inch|watt)\b/iu;
+const normUnit=u=>{u=u.toLowerCase();return u==='lít'?'l':u==='watt'?'w':u};
+function specNumMatch(text){
+  const m=SPEC_NUM_RE.exec(text);
+  return m?{n:Number(m[1].replace(',','.')),u:normUnit(m[2]),index:m.index,length:m[0].length}:null;
+}
+function specMaterialMatch(text){
+  const low=text.toLowerCase();
+  for(const w of MATERIAL_WORDS){const i=low.indexOf(w);if(i>=0)return{w,index:i,length:w.length}}
+  return null;
+}
+const specCache=new WeakMap();
+function parseSpecs(p){
+  if(!p.specs)return[];
+  if(specCache.has(p)&&specCache.get(p).src===p.specs)return specCache.get(p).list;
+  const list=p.specs.split('\n').map(s=>s.trim()).filter(Boolean).map(line=>{
+    const i=line.indexOf('|');if(i<0)return null;
+    const label=line.slice(0,i).trim(),val=line.slice(i+1).trim();
+    return label&&val?{label,val}:null;
+  }).filter(Boolean);
+  specCache.set(p,{src:p.specs,list});
+  return list;
+}
 function analyze(text,opts={}){
   const findings=[];const low=text.toLowerCase();
   const add=f=>{if(!findings.some(x=>x.start===f.start&&x.end===f.end&&(x.title===f.title||x.sev===f.sev)))findings.push(f)};
@@ -1224,6 +1266,48 @@ function analyze(text,opts={}){
         priceErr++;add({price:1,sev:'warn',title:'Giá không khớp sản phẩm nào',ref:REF.tmdt,start:st,end:en,phrase:m[0],fix:'Không gắn được mức giá này với sản phẩm nào trong hồ sơ. Kiểm tra lại.'});
       }
     }
+  });
+  /* đối chiếu xuất xứ */
+  sctx.forEach(({a,s,p:ctxP})=>{
+    if(!ctxP)return;
+    const fams=originFamilies(ctxP.origin);
+    if(!fams.length)return;
+    ORIGIN_RE.lastIndex=0;let m;
+    while((m=ORIGIN_RE.exec(s))){
+      const claimed=originFamily(m[1]);
+      if(claimed<0||fams.includes(claimed))continue;
+      const st=a+m.index,en=st+m[0].length;
+      priceErr++;
+      add({price:1,sev:'bad',title:'Sai xuất xứ so với hồ sơ',ref:REF.nhan,start:st,end:en,phrase:m[0],fix:`Hồ sơ “${ctxP.name}” ghi xuất xứ: “${ctxP.origin}”. Nói đúng theo hồ sơ, hoặc cập nhật lại hồ sơ nếu xuất xứ đã thay đổi.`});
+    }
+  });
+  /* đối chiếu thông số & chất liệu chuẩn */
+  sctx.forEach(({a,s,p:ctxP})=>{
+    if(!ctxP)return;
+    const specs=parseSpecs(ctxP);
+    if(!specs.length)return;
+    const sl=s.toLowerCase();
+    specs.forEach(sp=>{
+      const li=sl.indexOf(sp.label.toLowerCase());
+      if(li<0)return;
+      const seg=s.slice(li);
+      const cm=specNumMatch(seg);
+      const correctNum=specNumMatch(sp.val);
+      if(cm&&correctNum){
+        if(cm.u===correctNum.u&&Math.abs(cm.n-correctNum.n)>1e-9){
+          const st=a+li+cm.index,en=st+cm.length;
+          priceErr++;
+          add({price:1,sev:'bad',title:`Sai thông số so với hồ sơ (${sp.label})`,ref:REF.nhan,start:st,end:en,phrase:seg.slice(cm.index,cm.index+cm.length),fix:`Hồ sơ “${ctxP.name}”, ${sp.label}: ${sp.val}. Nói đúng theo hồ sơ, hoặc cập nhật lại hồ sơ nếu thông số đã thay đổi.`});
+        }
+        return;
+      }
+      const cmat=specMaterialMatch(seg);
+      if(cmat&&!sp.val.toLowerCase().includes(cmat.w)){
+        const st=a+li+cmat.index,en=st+cmat.length;
+        priceErr++;
+        add({price:1,sev:'bad',title:`Sai thông số so với hồ sơ (${sp.label})`,ref:REF.nhan,start:st,end:en,phrase:seg.slice(cmat.index,cmat.index+cmat.length),fix:`Hồ sơ “${ctxP.name}”, ${sp.label}: ${sp.val}. Nói đúng theo hồ sơ, hoặc cập nhật lại hồ sơ nếu thông số đã thay đổi.`});
+      }
+    });
   });
   /* đối chiếu hỏi đáp chuẩn: chủ đề đã có đáp án chuẩn (kèm lưu ý “hỏi bác sĩ / tùy cơ địa / không cam kết”) mà lời nói không nhắc lưu ý đó */
   const norm=t=>t.toLowerCase().replace(/có bầu|mang bầu|đang bầu|\bbầu\b|có thai/g,'mang thai');
@@ -1286,7 +1370,7 @@ function runScan(silent){
   const verdict=a.score>=80?['ok','Sẵn sàng lên sóng']:a.score>=55?['warn','Cần sửa trước khi live']:['bad','Chưa nên lên sóng'];
   $('#scanOut').innerHTML=`
     <div class="box"><div class="score">${ring(a.score)}<div><span class="tag ${verdict[0]}">${verdict[1]}</span>
-      <p class="small muted" style="margin-top:6px">${a.bad} lỗi nghiêm trọng · ${a.warn} cảnh báo · ${a.priceErr} lỗi giá</p></div></div></div>
+      <p class="small muted" style="margin-top:6px">${a.bad} lỗi nghiêm trọng · ${a.warn} cảnh báo · ${a.priceErr} lỗi giá/thông tin sản phẩm</p></div></div></div>
     <div class="box"><h3>Kịch bản đã đánh dấu</h3><div class="preview">${highlight(text,a.findings)}</div></div>
     <div class="stack">${a.findings.length?a.findings.map(findHTML).join(''):'<div class="find ok"><b>Không phát hiện vi phạm nào.</b></div>'}</div>
     <div class="box"><h3>Checklist bắt buộc</h3>${a.checklist.map(c=>`<div class="chk"><span class="dot ${c.ok?'ok':'no'}" aria-hidden="true">${c.ok?'✓':'!'}</span><span>${esc(c.label)}${c.ok?'':' <span class="muted">— chưa thấy trong kịch bản</span>'}</span></div>`).join('')}</div>`;
@@ -2853,7 +2937,7 @@ function showLiveResult(r){
   const v=[...Object.entries(r.viol||{})].sort((a,b)=>b[1]-a[1]).slice(0,3);
   const box=$('#liveResult');box.hidden=false;
   box.innerHTML=`<div class="row"><h3 style="margin-right:auto">Kết quả phiên live${r.kolName?' của '+esc(r.kolName):''}</h3>${scoreHTML(r.score)}</div>
-    <dl class="kv" style="margin:0"><dt>Thời lượng</dt><dd>${fmtDur(r.dur)}</dd><dt>Phát ngôn đã kiểm tra</dt><dd>${r.speeches}</dd><dt>Vi phạm nghiêm trọng</dt><dd>${r.bad}</dd><dt>Cảnh báo</dt><dd>${r.warn}</dd><dt>Sai giá / KM hết hạn</dt><dd>${r.priceErr}</dd><dt>Bình luận đã trả lời</dt><dd>${r.cmtAns}/${r.cmtSeen}</dd></dl>
+    <dl class="kv" style="margin:0"><dt>Thời lượng</dt><dd>${fmtDur(r.dur)}</dd><dt>Phát ngôn đã kiểm tra</dt><dd>${r.speeches}</dd><dt>Vi phạm nghiêm trọng</dt><dd>${r.bad}</dd><dt>Cảnh báo</dt><dd>${r.warn}</dd><dt>Sai giá/KM/thông tin sản phẩm</dt><dd>${r.priceErr}</dd><dt>Bình luận đã trả lời</dt><dd>${r.cmtAns}/${r.cmtSeen}</dd></dl>
     ${v.length?`<div class="small muted">Lỗi hay gặp: ${v.map(([t,n])=>esc(t)+' ×'+n).join('; ')}</div>`:''}
     ${r.score===null?'<div class="small muted">Phiên chưa có phát ngôn hoặc bình luận nào được xử lý nên chưa tính được điểm.</div>':''}
     <form class="row" id="lrForm" style="align-items:flex-end"><label class="f" style="flex:1;min-width:140px">Doanh thu phiên (đ, không bắt buộc)<input type="text" id="lr-rev" inputmode="numeric"></label><label class="f" style="flex:1;min-width:100px">Số đơn<input type="text" id="lr-ord" inputmode="numeric"></label><button class="btn" type="submit">Lưu</button><span class="tag ok" id="lr-ok" hidden>Đã lưu</span></form>
@@ -3011,7 +3095,7 @@ function seedKol(){
 }
 function csvExport(list){
   const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"',kk=Object.fromEntries(kols().map(k=>[k.id,k]));
-  const rows=[['KOC/KOL','Loại','Bắt đầu','Thời lượng (giây)','Phát ngôn','Vi phạm nghiêm trọng','Cảnh báo','Sai giá/KM','Bình luận cần trả lời','Bình luận đã trả lời','Điểm']];
+  const rows=[['KOC/KOL','Loại','Bắt đầu','Thời lượng (giây)','Phát ngôn','Vi phạm nghiêm trọng','Cảnh báo','Sai giá/KM/thông tin','Bình luận cần trả lời','Bình luận đã trả lời','Điểm']];
   list.forEach(s=>rows.push([s.kolName,(kk[s.kolId]||{}).type||'',new Date(s.start).toLocaleString('vi-VN'),s.dur,s.speeches,s.bad,s.warn,s.priceErr,s.cmtSeen,s.cmtAns,s.score??'']));
   const blob=new Blob(['﻿'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='livecore-kol-'+new Date().toISOString().slice(0,10)+'.csv';
@@ -3040,7 +3124,7 @@ function renderKol(){
     <div class="err" id="kErr" role="alert"></div>
     <div class="row"><button class="btn primary" type="submit">${ed?'Lưu thay đổi':'Thêm'}</button>${K.length||ed?'<button class="btn" type="button" id="kCancel">Hủy</button>':''}</div></form>`;
   if(!K.length){$('#kolBody').innerHTML=h+(role()==='koc'?'<div class="empty">Tài khoản này chưa được gắn với KOC/KOL nào. Nhờ chủ workspace gắn ở mục Thành viên.</div>':'<div class="empty">Chưa có KOC/KOL nào. Thêm người đầu tiên hoặc nạp dữ liệu mẫu để xem báo cáo.</div>')+(can.edit()?membersHTML():'');wireKol();return wireMembers()}
-  h+=`<div class="ktiles">${tile('KOC/KOL đang hoạt động',K.filter(k=>!k.archived).length,`${K.length} trong danh sách`)}${tile('Phiên live',tot.n,tot.n?fmtDur(tot.dur)+' tổng thời lượng':'Chưa có phiên trong kỳ')}${tile('Điểm tuân thủ trung bình',tot.avg===null?'–':tot.avg,tot.avg===null?'':scoreTag(tot.avg)[0])}${tile('Vi phạm nghiêm trọng',tot.bad,`${tot.warn} cảnh báo · ${tot.priceErr} sai giá`)}</div>`+revTiles(S);
+  h+=`<div class="ktiles">${tile('KOC/KOL đang hoạt động',K.filter(k=>!k.archived).length,`${K.length} trong danh sách`)}${tile('Phiên live',tot.n,tot.n?fmtDur(tot.dur)+' tổng thời lượng':'Chưa có phiên trong kỳ')}${tile('Điểm tuân thủ trung bình',tot.avg===null?'–':tot.avg,tot.avg===null?'':scoreTag(tot.avg)[0])}${tile('Vi phạm nghiêm trọng',tot.bad,`${tot.warn} cảnh báo · ${tot.priceErr} sai giá/thông tin`)}</div>`+revTiles(S);
   h+=`<div class="box" style="margin-top:14px;padding:0"><div style="overflow-x:auto"><table class="ktable"><caption class="sr">Thống kê theo KOC/KOL</caption>
     <thead><tr><th>KOC/KOL</th><th>Phiên</th><th>Thời lượng</th><th>Điểm TB</th><th>Xu hướng</th><th>Vi phạm</th><th>Cảnh báo</th><th>Trả lời BL</th><th>DT/giờ</th><th class="noprint"></th></tr></thead><tbody>
     ${rows.map(({k,a,total})=>`<tr ${k.id===kolSelId?'aria-selected="true"':''}><td><b>${esc(k.name)}</b> <span class="tag">${k.type}</span>${k.archived?' <span class="tag warn">Đã lưu trữ</span>':''}${k.sample?' <span class="tag">Mẫu</span>':''}${k.note?`<div class="small muted">${esc(k.note)}</div>`:''}</td>
@@ -3057,7 +3141,7 @@ function renderKol(){
       ${ls.length?`<div class="grid2"><div class="stack"><h4>Điểm từng phiên (tối đa 12 phiên gần nhất)</h4>${colChart(ls)}</div>
       <div class="stack"><h4>Lỗi lặp lại nhiều nhất</h4>${top.length?top.map(([t,n])=>`<div class="bar"><div class="h"><span>${esc(t)}</span><b class="mono">${n}</b></div><div class="t"><i style="width:${Math.round(n/mx*100)}%"></i></div></div>`).join(''):'<div class="find ok"><b>Không ghi nhận lỗi nào trong kỳ này.</b></div>'}
         <div class="small muted">Tỷ lệ trả lời bình luận cần ưu tiên: ${a.resp===null?'chưa có dữ liệu':a.resp+'%'}</div></div></div>
-      <div style="overflow-x:auto"><table class="ktable"><thead><tr><th>Thời điểm</th><th>Thời lượng</th><th>Phát ngôn</th><th>Vi phạm</th><th>Cảnh báo</th><th>Sai giá</th><th>Trả lời BL</th><th>Doanh thu</th><th>DT/giờ</th><th>Điểm</th></tr></thead><tbody>
+      <div style="overflow-x:auto"><table class="ktable"><thead><tr><th>Thời điểm</th><th>Thời lượng</th><th>Phát ngôn</th><th>Vi phạm</th><th>Cảnh báo</th><th>Sai giá/TT</th><th>Trả lời BL</th><th>Doanh thu</th><th>DT/giờ</th><th>Điểm</th></tr></thead><tbody>
       ${[...ls].reverse().map(s=>`<tr><td>${fmtWhen(s.start)}</td><td class="mono">${fmtDur(s.dur)}</td><td class="mono">${s.speeches}</td><td class="mono">${s.bad}</td><td class="mono">${s.warn}</td><td class="mono">${s.priceErr}</td><td class="mono">${s.cmtAns}/${s.cmtSeen}</td><td class="mono">${s.revenue?moneyS(s.revenue):'–'}</td><td class="mono">${s.revenue&&s.dur?moneyS(s.revenue/(s.dur/3600)):'–'}</td><td>${scoreHTML(s.score)}</td></tr>`).join('')}</tbody></table></div>`
       :'<div class="empty">Chưa có phiên live nào của người này trong kỳ đã chọn. Vào tab Phòng live, chọn tên rồi bắt đầu phiên.</div>'}</div>`;
   }
@@ -3618,7 +3702,7 @@ function histDetailHTML(s){
     <div class="row"><h3 style="margin-right:auto">${sim?'Live tập sự':'Phiên live'} · ${fmtWhen(s.start)}${!sim&&s.kolName?' · '+esc(s.kolName):''}</h3>${scoreHTML(s.score)}
       <button class="btn noprint" id="hPrint">In / lưu PDF</button><button class="btn danger noprint" data-delsess="${s.id}">Xóa phiên</button></div>
     ${sim?`<div class="small muted">${esc(s.persona||'')} · ${esc(s.prod||'')}</div>`:''}
-    <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">${tile('Thời lượng',fmtDur(s.dur))}${tile(sim?'Câu trả lời':'Phát ngôn',s.speeches,sim?`${s.good} câu đạt`:'')}${tile('Vi phạm nghiêm trọng',s.bad)}${tile('Cảnh báo',s.warn)}${tile('Sai giá / KM',s.priceErr)}${sim?'':tile('Bình luận đã trả lời',`${s.cmtAns}/${s.cmtSeen}`)}</div>
+    <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">${tile('Thời lượng',fmtDur(s.dur))}${tile(sim?'Câu trả lời':'Phát ngôn',s.speeches,sim?`${s.good} câu đạt`:'')}${tile('Vi phạm nghiêm trọng',s.bad)}${tile('Cảnh báo',s.warn)}${tile('Sai giá/KM/thông tin',s.priceErr)}${sim?'':tile('Bình luận đã trả lời',`${s.cmtAns}/${s.cmtSeen}`)}</div>
     ${!sim?`<form class="row noprint" id="hRev" style="align-items:flex-end"><label class="f" style="flex:1;min-width:150px">Doanh thu phiên (đ)<input type="text" id="hr-rev" inputmode="numeric" value="${s.revenue||''}"></label><label class="f" style="flex:1;min-width:110px">Số đơn<input type="text" id="hr-ord" inputmode="numeric" value="${s.orders||''}"></label><button class="btn" type="submit">Lưu doanh thu</button><span class="tag ok" id="hr-ok" hidden>Đã lưu</span></form>`:''}
     ${top.length?`<div class="stack"><h4>Lỗi lặp lại trong phiên</h4>${top.map(([t,n])=>`<div class="bar"><div class="h"><span>${esc(t)}</span><b class="mono">${n}</b></div><div class="t"><i style="width:${Math.round(n/mx*100)}%"></i></div></div>`).join('')}</div>`:''}
     ${s.sample?'<div class="find warn"><b>Dữ liệu mẫu</b><div class="fix">Đây là phiên mẫu để xem thử, chỉ hiển thị trích đoạn lời nói.</div></div>':''}
