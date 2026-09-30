@@ -1707,7 +1707,7 @@ const aiErr=e=>({not_granted:'Bạn chưa cho phép dùng AI nên hệ thống c
    Supabase Edge Function khi cần, thay vì chỉ thấy một câu chung chung không biết bắt đầu tra ở đâu. */
 const aiErrDetail=e=>{
   const d=e&&(e.detail||e.message);
-  return d&&!['upstream_error','not_granted','rate_limited'].includes(d)?String(d).slice(0,200):'';
+  return d&&!['upstream_error','not_granted','rate_limited'].includes(d)?String(d).slice(0,400):'';
 };
 function aiOffHint(base){
   return sbCfg()&&(!ME||!ME.cloud)?base+' Hoặc đăng nhập bằng tài khoản đám mây để dùng AI qua máy chủ của nhóm.':base;
@@ -1731,7 +1731,20 @@ function makeEdgeBridge(cfg){
     if(!r.ok){
       const err=new Error((j&&j.error)||'upstream_error');
       err.code=r.status===401||r.status===403?'not_granted':r.status===429?'rate_limited':'upstream_error';
-      err.detail=(j&&j.error)?`HTTP ${r.status}: ${j.error}`:`HTTP ${r.status} từ ai-bridge (không có nội dung lỗi trả về)`;
+      /* ai-bridge (Supabase Edge Function) tự phân loại lỗi kỹ hơn qua j.error (vd
+         "model_not_found" khi Google đổi/khai tử tên model) và kèm j.message (giải thích
+         dễ hiểu) + j.detail (nội dung gốc từ Gemini). Truoc day chi hien "HTTP xxx: <ma loi>"
+         nen khong biet duong nao ma sua; gio gop het lai de tu doc doan nay la biet huong xu ly,
+         khong phai doi vao xem nhat ky server. */
+      if(j&&j.error){
+        const extraMsg=j.message?` — ${j.message}`:'';
+        let extraDetail='';
+        if(j.detail)extraDetail=' ['+(typeof j.detail==='string'?j.detail:JSON.stringify(j.detail)).slice(0,300)+']';
+        else if(j.raw)extraDetail=' ['+String(j.raw).slice(0,300)+']';
+        err.detail=`HTTP ${r.status}: ${j.error}${extraMsg}${extraDetail}`;
+      }else{
+        err.detail=`HTTP ${r.status} từ ai-bridge (không có nội dung lỗi trả về)`;
+      }
       throw err;
     }
     return j;
