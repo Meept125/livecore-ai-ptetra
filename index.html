@@ -671,6 +671,9 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
             <button class="camIconBtn" type="button" id="micBtn" aria-pressed="false" title="Micro đang tắt — bấm để bật nhận diện giọng nói">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
             </button>
+            <button class="camIconBtn" type="button" id="micSrcBtn" aria-pressed="false" title="Nguồn giọng nói: Mic ngoài — bấm để đổi hoặc xem hướng dẫn dùng âm thanh máy tính">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+            </button>
             <button class="camIconBtn" type="button" id="ttsOn" aria-pressed="false" title="Đọc cảnh báo nghiêm trọng bằng giọng nói (chỉ nên bật khi đeo tai nghe, kẻo cảnh báo bị phát lên sóng)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5.5a9 9 0 0 1 0 13"/></svg>
             </button>
@@ -2402,11 +2405,31 @@ function startMic(){
     micOn=false;$('#micBtn').setAttribute('aria-pressed','false');
     micStat(e.error==='not-allowed'||e.error==='service-not-allowed'?MIC_BLOCK:'Lỗi nhận diện: '+e.error,'bad');
   };
-  rec.onend=()=>{if(micOn)try{rec.start()}catch(e){}};
+  /* Trình duyệt (Chrome) tự dừng nhận diện liên tục sau một khoảng im lặng hoặc sau
+     một thời gian, dù đã bật continuous=true — đây là hành vi bình thường, không phải
+     lỗi. Trước đây khi đó bị dừng, code cố gọi lại rec.start() trên CHÍNH đối tượng cũ,
+     nhưng nhiều trình duyệt không cho khởi động lại 1 phiên đã kết thúc (ném lỗi
+     "already started"/"InvalidStateError") — lỗi đó bị nuốt lặng lẽ (catch rỗng), nên
+     micro coi như đã "chết" nhưng icon vẫn hiện đang nghe, khiến người dùng nói tiếp mà
+     ô "Phát ngôn của streamer" không cập nhật gì nữa. Giờ sửa: đợi 1 chút cho trình duyệt
+     giải phóng xong phiên cũ, rồi TẠO MỚI hẳn đối tượng nhận diện (gọi lại startMic(),
+     không gọi rec.start() trên object cũ) — đây là cách khởi động lại đáng tin cậy hơn
+     nhiều cho continuous recognition. Nếu vẫn thất bại, báo lỗi rõ ràng thay vì im lặng. */
+  rec.onend=()=>{
+    if(!micOn)return;
+    setTimeout(()=>{
+      if(!micOn)return;
+      try{startMic()}
+      catch(e){
+        micOn=false;$('#micBtn').setAttribute('aria-pressed','false');
+        micStat('Micro bị trình duyệt tự dừng và không bật lại được — bấm lại để bật.','bad');
+      }
+    },300);
+  };
   rec.start();
 }
 function micGo(){
-  micOn=true;$('#micBtn').setAttribute('aria-pressed','true');micStat('Đang nghe (vi-VN) — bấm để tắt','ok');
+  micOn=true;$('#micBtn').setAttribute('aria-pressed','true');micStat(`Đang nghe (vi-VN, nguồn: ${MICSRC_INFO[micSrcMode()].label}) — bấm để tắt`,'ok');
   try{startMic()}catch(e){micOn=false;$('#micBtn').setAttribute('aria-pressed','false');micStat('Không bật được micro','bad')}
 }
 function micEnsureOn(){
@@ -2426,6 +2449,61 @@ if(!SR){
     $('#ttsOn').setAttribute('aria-pressed',on?'false':'true');
   };
 }
+
+/* ===== Nguồn giọng nói cho micro: Web Speech API KHÔNG cho gắn thẳng 1 MediaStream tuỳ
+   chọn (như luồng audio từ getDisplayMedia khi chia sẻ màn hình) vào — trình duyệt luôn
+   nghe theo đúng 1 thiết bị thu âm MẶC ĐỊNH của hệ điều hành, không có cách nào chọn nguồn
+   khác từ phía trang web. Vì vậy đây chỉ là 1 lựa chọn/ghi nhớ + hướng dẫn để người dùng tự
+   đặt "audio cable ảo" (VB-Audio Cable, Stereo Mix…) làm thiết bị mặc định ở hệ điều hành —
+   khi đó micro mặc định CHÍNH LÀ âm thanh máy tính, app tự nghe đúng mà không cần đổi gì
+   thêm trong code. */
+const MICSRC_INFO={
+  ext:{label:'Mic ngoài'},
+  system:{label:'Âm thanh máy tính'},
+};
+const micSrcMode=()=>raw.get('lc_micsrc')==='system'?'system':'ext';
+function micSrcUI(){
+  const m=micSrcMode(),b=$('#micSrcBtn');
+  if(!b)return;
+  b.setAttribute('aria-pressed',String(m==='system'));
+  b.title=`Nguồn giọng nói: ${MICSRC_INFO[m].label} — bấm để đổi hoặc xem hướng dẫn dùng âm thanh máy tính`;
+}
+function openMicSrc(){
+  const box=document.createElement('div');box.className='lb';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-labelledby','msTitle');
+  const cur=micSrcMode();
+  box.innerHTML=`<div class="box stack" style="max-width:480px;width:100%;background:var(--surface)">
+    <div class="row"><h3 id="msTitle" style="margin-right:auto">Nguồn giọng nói cho micro</h3><button class="btn" type="button" id="msClose">Đóng</button></div>
+    <p class="small muted" style="margin:0">Trình duyệt luôn nhận diện giọng nói từ <b>thiết bị thu âm mặc định của máy</b> — không thể "cắm" thẳng âm thanh từ màn hình chia sẻ vào micro được. Muốn hệ thống nghe đúng âm thanh phát ra từ máy tính (ví dụ đang live bằng phần mềm khác, hoặc âm thanh không phát qua mic ngoài), hãy đặt thiết bị thu mặc định của máy thành 1 "audio cable ảo" trước — chọn chế độ dưới đây để app ghi nhớ và nhắc đúng nguồn đang dùng.</p>
+    <div class="cycle" role="group" aria-label="Nguồn giọng nói" id="msCycle" style="align-self:flex-start">
+      <span>Nguồn:</span>
+      <button type="button" data-src="ext" aria-pressed="${cur==='ext'}">Mic ngoài</button>
+      <button type="button" data-src="system" aria-pressed="${cur==='system'}">Âm thanh máy tính</button>
+    </div>
+    <div class="find warn" style="margin:0" id="msGuide" ${cur==='system'?'':'hidden'}>
+      <b>Cách đặt "âm thanh máy tính" làm nguồn thu mặc định:</b>
+      <div class="fix">
+        Windows: cài <a href="https://vb-audio.com/Cable/" target="_blank" rel="noopener">VB-Audio Virtual Cable</a> (miễn phí) hoặc bật "Stereo Mix" trong Cài đặt âm thanh → Recording, rồi đặt nó làm thiết bị mặc định.<br>
+        macOS: cài BlackHole hoặc Loopback, đặt làm thiết bị thu âm mặc định trong System Settings → Sound.<br>
+        Đặt xong ở hệ điều hành thì quay lại đây bấm micro như bình thường — app tự nghe đúng nguồn mới, không cần chỉnh gì thêm trong LiveCore AI. Muốn quay lại nghe mic ngoài thì đổi thiết bị mặc định của hệ điều hành về mic thật, rồi chọn lại "Mic ngoài" ở đây.
+      </div>
+    </div>
+  </div>`;
+  const close=()=>{box.remove();document.removeEventListener('keydown',onKey)};
+  const onKey=e=>{if(e.key==='Escape')close()};
+  document.addEventListener('keydown',onKey);
+  document.body.appendChild(box);
+  box.querySelector('#msClose').onclick=close;
+  box.addEventListener('click',e=>{if(e.target===box)close()});
+  box.querySelectorAll('#msCycle [data-src]').forEach(btn=>btn.onclick=()=>{
+    const v=btn.dataset.src;
+    raw.set('lc_micsrc',v);
+    box.querySelectorAll('#msCycle [data-src]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.src===v)));
+    box.querySelector('#msGuide').hidden=(v!=='system');
+    micSrcUI();
+    if(micOn)micStat(`Đang nghe (vi-VN, nguồn: ${MICSRC_INFO[v].label}) — bấm để tắt`,'ok');
+  });
+}
+if($('#micSrcBtn')){$('#micSrcBtn').onclick=openMicSrc;micSrcUI()}
 
 /* ===== Tab: Live tập sự (AI đóng vai khách hàng) ===== */
 const PERSONAS=[
