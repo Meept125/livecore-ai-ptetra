@@ -168,6 +168,16 @@ th{color:var(--muted);font-weight:500;font-size:12px}
 .cycle button[aria-pressed="true"]{background:var(--vip);color:var(--vip-ink);font-weight:600}
 .cycle button:disabled{opacity:.45;cursor:not-allowed}
 .cycle button{white-space:nowrap}@media (max-width:480px){.cycle>span{display:none}.cycle{padding-left:4px}.cycle button{padding:6px 10px}}
+.chipwrap{display:flex;flex-wrap:wrap;gap:6px;max-height:118px;overflow-y:auto;padding:2px 2px 2px 0}
+.chipwrap button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:4px 10px;font-size:12.5px;font-weight:500;cursor:pointer;color:var(--ink);white-space:nowrap}
+.chipwrap button[aria-pressed="true"]{background:var(--vip);color:var(--vip-ink);border-color:var(--vip);font-weight:600}
+.chipwrap button:disabled{opacity:.45;cursor:not-allowed}
+.camIconBtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none}
+.camIconBtn[aria-pressed="true"]{background:var(--vip);color:var(--vip-ink);border-color:var(--vip)}
+.camIconBtn:disabled{opacity:.45;cursor:not-allowed}
+.camIconBtn.ok{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+.camIconBtn.warn{border-color:var(--warn);color:var(--warn);background:var(--warn-soft)}
+.camIconBtn.bad{border-color:var(--bad);color:var(--bad);background:var(--bad-soft)}
 .save{background:var(--bad-soft);color:var(--bad);border-radius:99px;padding:1px 8px;font-size:11px;font-weight:600;margin-left:6px}
 .pgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;align-items:stretch}
 @media (max-width:1000px){.pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -408,7 +418,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
 @media print{
   :root:root:root{--bg:#fff;--surface:#fff;--ink:#0B1F3A;--muted:#5B6B82;--line:#D9E3EE;--accent:#0E8FBF;--accent-soft:#E1F3FA;--ok:#12805C;--ok-soft:#DDF3EA;--warn:#9A5600;--warn-soft:#FFF0D6;--bad:#B42318;--bad-soft:#FDE4E1;--shadow:none}
   body{background:#fff!important;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  #deco,.tabs,header.top,.noprint,.btn,#liveAlerts,.confirm,.cycle,#memBox,.hud,#onb{display:none!important}
+  #deco,.tabs,header.top,.noprint,.btn,#liveAlertsRow,.confirm,.cycle,#memBox,.hud,#onb{display:none!important}
   .printonly{display:block!important;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--accent)}
   *{animation:none!important;transition:none!important;box-shadow:none!important}
   .box,.tile,.find,.tli,tr{break-inside:avoid}
@@ -578,62 +588,112 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
   <!-- 3. LIVE ROOM -->
   <section class="panel" id="tab-live" role="tabpanel" aria-labelledby="t-live" hidden>
     <p class="lead">Mô phỏng phiên live đang chạy: bình luận đổ về theo thời gian, trợ lý xếp ưu tiên và gợi ý câu trả lời lấy từ Hồ sơ sản phẩm; ô “Phát ngôn” cảnh báo ngay khi bạn nói sai giá hoặc vi phạm.</p>
-    <div class="stack" id="liveAlerts" hidden style="margin-bottom:14px"></div>
+    <div class="row" id="liveAlertsRow" hidden style="margin-bottom:14px;align-items:center;gap:8px">
+      <button class="camIconBtn" type="button" id="liveAlertsBtn" title="Cảnh báo khuyến mãi/giấy tờ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+      </button>
+      <span class="tag warn" id="liveAlertsCount" hidden></span>
+    </div>
     <div class="grid2">
       <div class="box stack">
-        <div class="row"><h3 style="margin-right:auto">Bình luận</h3><span class="livebadge" id="liveDot" hidden>LIVE</span><span class="tag" id="liveClock" hidden></span><button class="btn" id="liveToggle">Bắt đầu phiên live</button><button class="btn primary" id="liveEnd" hidden disabled>Kết thúc &amp; lưu kết quả</button></div>
-        <div class="stack" id="liveProdRow" style="gap:6px">
-          <p class="small muted" style="margin:0">Sản phẩm đang live (chọn một hoặc nhiều) — bình luận mô phỏng sẽ chỉ xoay quanh (các) sản phẩm này.</p>
-          <div class="cycle" id="liveProdWrap" role="group" aria-label="Sản phẩm đang live" style="flex-wrap:wrap;height:auto"></div>
-        </div>
-        <div id="kolRow" class="stack" style="gap:6px" hidden>
-          <div class="row" style="align-items:flex-end"><label class="f" style="flex:1;min-width:170px">KOC/KOL đang live<select id="kolSel"></select></label>
-          <input type="text" id="kolQuickName" maxlength="40" placeholder="Thêm nhanh: tên KOC/KOL mới" aria-label="Tên KOC/KOL mới" style="flex:1;min-width:150px"><button class="btn" id="kolQuickAdd">Thêm</button></div>
-          <div class="err" id="liveNote" role="alert"></div>
-        </div>
-        <div class="row" id="srcRow"><div class="cycle" role="group" aria-label="Nguồn bình luận"><span>Nguồn:</span><button data-src="sim" aria-pressed="true">Mô phỏng</button><button data-src="real" aria-pressed="false">Bình luận thật</button></div></div>
+        <div class="row"><h3 style="margin-right:auto">Bình luận</h3><span class="livebadge" id="liveDot" hidden>LIVE</span><span class="tag" id="liveClock" hidden></span><button class="btn" id="feedStatsBtn">📊 Thống kê</button><button class="btn" id="feedExportBtn">Xuất CSV</button><button class="btn" id="liveToggle">Bắt đầu phiên live</button><button class="btn primary" id="liveEnd" hidden disabled>Kết thúc &amp; lưu kết quả</button></div>
         <div class="stack" id="realBox" hidden style="border:1px dashed var(--line);border-radius:12px;padding:12px">
-          <div class="row" id="platRow"><div class="cycle" role="group" aria-label="Chọn nền tảng đang live" style="flex-wrap:wrap"><span>Nền tảng:</span><button data-plat="facebook" aria-pressed="true">Facebook</button><button data-plat="tiktok" aria-pressed="false">TikTok</button><button data-plat="youtube" aria-pressed="false">YouTube</button><button data-plat="shopee" aria-pressed="false">Shopee</button><button data-plat="khac" aria-pressed="false">Khác</button></div></div>
-          <div class="box stack" style="background:var(--bg);padding:12px">
-            <div class="row"><b style="margin-right:auto">Nhận diện bình luận tự động</b><span class="tag" id="autoCapTag" hidden></span></div>
-            <p class="small muted" style="margin:0" id="autoCapHint">Bấm bắt đầu rồi chọn đúng tab hoặc cửa sổ đang mở phiên <b id="autoCapPlatName">Facebook</b> Live của bạn khi trình duyệt hỏi chia sẻ màn hình. Hệ thống tự chụp và đọc khung bình luận mỗi vài giây, không cần bạn dán tay.</p>
-            <div class="row"><button class="btn primary" type="button" id="autoCapBtn">Bắt đầu nhận diện tự động</button><span class="small muted" id="autoCapNote" role="status"></span></div>
+          <div class="row" id="tkBridgeBox" hidden style="align-items:center;gap:8px">
+            <button class="camIconBtn" type="button" id="tkBridgeBtn" aria-pressed="false" title="Kết nối trực tiếp TikTok LIVE — nhận bình luận, quà tặng, theo dõi, chia sẻ, thích thật qua máy chủ cầu nối trên máy bạn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </button>
+            <span class="tag ok" id="tkBridgeTag" hidden>Đang nhận trực tiếp</span>
+            <span class="small muted" id="tkBridgeNote" role="status">Chưa kết nối.</span>
           </div>
-          <div class="watchGrid" id="autoCapWatch" hidden style="margin-top:4px">
-            <div class="scrwrap"><video id="autoCapVid" autoplay playsinline muted class="scrvid"></video></div>
-            <div class="stack" id="autoCapSide">
-              <div class="box stack" id="realWarn" style="background:var(--bg)">
-                <div class="row"><h3 style="margin-right:auto;font-size:15px">Cảnh báo phát ngôn</h3><span class="tag bad" id="realWarnBad" hidden>0 nghiêm trọng</span><span class="tag warn" id="realWarnWarn" hidden>0 cảnh báo</span></div>
-                <div id="realWarnBody" class="small muted">Chưa có cảnh báo nào. Khi bạn nói (qua micro hoặc ô Phát ngôn), cảnh báo mới nhất so với hồ sơ sản phẩm sẽ hiện ở đây.</div>
-              </div>
+          <div id="tkBridgePanel" class="stack" hidden>
+            <p class="small muted" style="margin:0">Trình duyệt không tự kết nối được vào TikTok LIVE, cần chạy trước một máy chủ cầu nối nhỏ trên máy bạn: mở <code>tiktok_bridge.py</code> (đi kèm tool "TikTok LIVE Comment Collector"), giữ cửa sổ đó đang chạy, rồi nhập username bên dưới — bình luận, quà tặng, theo dõi, chia sẻ, thích thật sẽ tự hiện vào danh sách, không cần xuất/tải CSV thủ công nữa.</p>
+            <div class="row" style="flex-wrap:wrap;align-items:flex-end">
+              <label class="f" style="flex:1;min-width:160px">Username TikTok đang LIVE<input type="text" id="tkBridgeUser" placeholder="vd: tenshop hoặc @tenshop"></label>
+              <label class="f" style="flex:1;min-width:170px">Địa chỉ bridge<input type="text" id="tkBridgeUrl" placeholder="ws://localhost:8765"></label>
+              <button class="btn primary" type="button" id="tkBridgeGo">Kết nối</button>
+              <button class="btn" type="button" id="tkBridgeStop" hidden>Ngắt kết nối</button>
             </div>
           </div>
-          <p class="small muted" style="margin:8px 0 0">Hoặc làm thủ công: sao chép bình luận dán vào đây, mỗi dòng một bình luận (có thể ghi “Tên: nội dung”). Hoặc dán/tải một ảnh chụp màn hình để AI đọc giúp.</p>
-          <textarea id="realTxt" rows="4" aria-label="Bình luận thật" placeholder="Ngọc Anh: Serum Lumi giá sao shop&#10;Minh Tuấn: Áo Nami còn size XL không"></textarea>
-          <div class="row"><button class="btn primary" id="realAdd">Thêm vào danh sách</button><label class="btn" for="realImg" id="realImgL" style="cursor:pointer">Đọc từ ảnh chụp</label><input type="file" id="realImg" accept="image/png,image/jpeg,image/webp" hidden><span class="small muted" id="realNote" role="status"></span></div>
+          <div class="row" id="evtShowRow" style="flex-wrap:wrap;gap:10px 14px">
+            <span class="small muted">Hiện trong danh sách:</span>
+            <label class="row small" style="gap:4px"><input type="checkbox" id="showComment"> Bình luận</label>
+            <label class="row small" style="gap:4px"><input type="checkbox" id="showGift"> Quà tặng</label>
+            <label class="row small" style="gap:4px"><input type="checkbox" id="showFollow"> Theo dõi</label>
+            <label class="row small" style="gap:4px"><input type="checkbox" id="showShare"> Chia sẻ</label>
+            <label class="row small" style="gap:4px"><input type="checkbox" id="showLike"> Thích</label>
+          </div>
+          <div class="row" style="margin-top:8px;align-items:center;gap:8px">
+            <button class="camIconBtn" type="button" id="realManualBtn" title="Nhập bình luận thủ công — dán chữ, đọc ảnh chụp, hoặc tải file CSV">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+            </button>
+            <span class="small muted">Hoặc nhập thủ công: dán bình luận, đọc ảnh chụp, hoặc tải CSV</span>
+          </div>
+          <div id="realManualPanel" class="stack" hidden>
+            <p class="small muted" style="margin:0">Sao chép bình luận dán vào đây, mỗi dòng một bình luận (có thể ghi “Tên: nội dung”). Hoặc dán/tải một ảnh chụp màn hình để AI đọc giúp, hoặc tải thẳng file CSV xuất từ tool "TikTok LIVE Comment Collector" (kèm gift/follow/share/like nếu tool bắt được).</p>
+            <textarea id="realTxt" rows="4" aria-label="Bình luận thật" placeholder="Ngọc Anh: Serum Lumi giá sao shop&#10;Minh Tuấn: Áo Nami còn size XL không"></textarea>
+            <div class="row" style="flex-wrap:wrap">
+              <button class="btn primary" id="realAdd">Thêm vào danh sách</button>
+              <label class="btn" for="realImg" id="realImgL" style="cursor:pointer">Đọc từ ảnh chụp</label><input type="file" id="realImg" accept="image/png,image/jpeg,image/webp" hidden>
+              <label class="btn" for="realCsv" id="realCsvL" style="cursor:pointer">Tải file CSV</label><input type="file" id="realCsv" accept=".csv" hidden>
+              <span class="small muted" id="realNote" role="status"></span>
+            </div>
+          </div>
         </div>
         <div class="box stack" id="liveResult" hidden style="background:var(--bg)"></div>
+        <div class="box stack" id="feedStats" hidden style="background:var(--bg)"></div>
         <div class="feed" id="feed"><div class="empty">Bấm “Bắt đầu phiên live” để bình luận bắt đầu đổ về.</div></div>
-        <div class="suggest" id="suggest" hidden></div><div id="suggestHome" hidden></div>
+        <div class="suggest" id="suggest" hidden></div>
       </div>
       <div class="stack" style="gap:16px">
-        <div class="box stack" id="camBoxLive">
-          <div class="row"><h3 style="margin-right:auto">Camera xem trước</h3><span class="tag" id="camLiveTag" hidden>Đang bật</span></div>
-          <p class="small muted" style="margin:0">Tự bật mỗi khi bạn bấm “Bắt đầu phiên live”, để bạn xem trước hình ảnh của mình như trên sóng thật. Chỉ hiện ngay trên máy bạn, không ghi hay gửi đi đâu.</p>
-          <div class="camwrap"><video id="camLiveVid" autoplay playsinline muted hidden class="camvid"></video></div>
-          <div class="row"><button class="btn" type="button" id="camLiveBtn">Bật camera</button><button class="btn" type="button" id="camLivePipBtn" disabled>Mở camera nổi</button><span class="small muted" id="camLiveNote" role="status"></span></div>
+        <div class="box stack" id="camBoxLive" style="gap:10px">
+          <div class="stack" id="liveProdRow" style="gap:6px">
+            <div class="row" style="align-items:center;gap:10px">
+              <button class="btn" type="button" id="liveProdPickBtn">Chọn sản phẩm live</button>
+              <span class="small muted" id="liveProdSummary"></span>
+            </div>
+          </div>
+          <div id="kolRow" class="stack" style="gap:6px" hidden>
+            <div class="row" style="align-items:flex-end"><label class="f" style="flex:1;min-width:170px">KOC/KOL đang live<select id="kolSel"></select></label>
+            <input type="text" id="kolQuickName" maxlength="40" placeholder="Thêm nhanh: tên KOC/KOL mới" aria-label="Tên KOC/KOL mới" style="flex:1;min-width:150px"><button class="btn" id="kolQuickAdd">Thêm</button></div>
+            <div class="err" id="liveNote" role="alert"></div>
+          </div>
+          <div class="row" id="srcRow" style="align-items:center;gap:14px;flex-wrap:wrap">
+            <div class="cycle" role="group" aria-label="Nguồn bình luận"><span>Nguồn:</span><button data-src="sim" aria-pressed="true">Mô phỏng</button><button data-src="real" aria-pressed="false">Bình luận thật</button></div>
+            <label class="row small" id="platRow" hidden style="gap:6px;align-items:center">Nền tảng:<select id="platSel" aria-label="Chọn nền tảng đang live"><option value="facebook">Facebook</option><option value="tiktok">TikTok</option><option value="youtube">YouTube</option><option value="shopee">Shopee</option><option value="khac">Khác</option></select></label>
+          </div>
+          <div class="row" style="gap:8px;align-items:center;border-top:1px dashed var(--line);padding-top:10px">
+            <button class="camIconBtn" type="button" id="camLiveBtn" aria-pressed="false" title="Bật camera xem trước — tự bật khi bắt đầu phiên live, chỉ hiện trên máy bạn, không ghi hay gửi đi đâu">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            </button>
+            <button class="camIconBtn" type="button" id="camLivePipBtn" aria-pressed="false" title="Mở camera nổi" hidden disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><rect x="12" y="12" width="8" height="6" rx="1" fill="currentColor" stroke="none"/></svg>
+            </button>
+            <button class="camIconBtn" type="button" id="micBtn" aria-pressed="false" title="Micro đang tắt — bấm để bật nhận diện giọng nói">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+            <button class="camIconBtn" type="button" id="ttsOn" aria-pressed="false" title="Đọc cảnh báo nghiêm trọng bằng giọng nói (chỉ nên bật khi đeo tai nghe, kẻo cảnh báo bị phát lên sóng)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <span class="tag" id="camLiveTag" hidden>Đang bật</span>
+            <span class="small muted" id="camLiveNote" role="status"></span>
+          </div>
+          <div class="camwrap" id="camLiveWrap" hidden><video id="camLiveVid" autoplay playsinline muted hidden class="camvid"></video></div>
+        </div>
+        <div class="box stack" id="ssLiveBox">
+          <div class="row" style="gap:8px;align-items:center">
+            <button class="camIconBtn" type="button" id="ssLiveBtn" aria-pressed="false" title="Chia sẻ màn hình đang live trên TikTok — tự bật khi bắt đầu phiên live, chỉ hiện trên máy bạn, không ghi hay gửi đi đâu">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </button>
+            <span class="tag" id="ssLiveTag" hidden>Đang chia sẻ</span>
+            <span class="small muted" id="ssLiveNote" role="status">Chia sẻ màn hình đang live trên TikTok để tự xem lại ngay trong lúc live.</span>
+          </div>
+          <div class="scrwrap" id="ssLiveWrap" hidden><video id="ssLiveVid" autoplay playsinline muted hidden class="scrvid"></video></div>
         </div>
         <div class="box stack">
           <h3>Phát ngôn của streamer</h3>
           <p class="small muted">Gõ đúng như bạn sẽ nói trên sóng. Thử: “Serum này rẻ nhất thị trường, chỉ 299k, khỏi mụn sau 3 ngày”.</p>
           <textarea id="speech" rows="4" aria-label="Phát ngôn"></textarea>
           <div class="row"><button class="btn primary" id="sendSpeech">Kiểm tra &amp; ghi nhật ký</button></div>
-          <div id="micBox" class="stack" style="border-top:1px dashed var(--line);padding-top:12px">
-            <p class="small muted" style="margin:0">Tự bật cùng lúc với camera mỗi khi bạn bấm “Bắt đầu phiên live”, để kiểm tra phát ngôn ngay khi bạn vừa nói xong.</p>
-            <div class="row"><button class="btn" id="micBtn">Bật micro nhận diện giọng nói</button><span class="tag" id="micStat">Micro đang tắt</span><span class="eq" id="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
-            <label class="row small muted" for="ttsOn" style="gap:6px;flex-wrap:nowrap;align-items:flex-start"><input type="checkbox" id="ttsOn" style="margin-top:3px;flex:none"> Đọc cảnh báo nghiêm trọng bằng giọng nói (chỉ nên bật khi đeo tai nghe, kẻo cảnh báo bị phát lên sóng)</label>
-            <div class="preview" id="interim" style="min-height:44px;max-height:120px" aria-live="polite"><span class="muted">Bật micro rồi nói thử, ví dụ: “Serum này rẻ nhất thị trường”.</span></div>
-          </div>
           <div id="speechOut"></div>
         </div>
       </div>
@@ -956,10 +1016,36 @@ function alertsHTML(withDocs){
   if(md.length)rows.push(`<div class="find warn"><b>Thiếu số công bố / giấy tờ</b>: ${md.map(p=>esc(p.name)).join('; ')}. Mỹ phẩm và thực phẩm chức năng nên có số công bố hoặc giấy xác nhận quảng cáo trước khi bán và livestream.</div>`);
   return rows.join('');
 }
+let liveAlertsHTML='';
 function refreshAlerts(){
   const a=$('#pBanner');if(a){const h=alertsHTML(true);a.innerHTML=h;a.hidden=!h}
-  const b=$('#liveAlerts');if(b){const h=alertsHTML(false);b.innerHTML=h;b.hidden=!h}
+  const row=$('#liveAlertsRow');
+  if(row){
+    const pa=promoAlerts();
+    liveAlertsHTML=alertsHTML(false);
+    row.hidden=!pa.length;
+    const cnt=$('#liveAlertsCount');
+    if(cnt){cnt.hidden=!pa.length;cnt.textContent=pa.length;cnt.className='tag '+(pa.some(x=>x.kind==='exp')?'bad':'warn')}
+    const btn=$('#liveAlertsBtn');if(btn)btn.title=pa.length?`${pa.length} cảnh báo khuyến mãi — bấm để xem`:'Cảnh báo khuyến mãi/giấy tờ';
+  }
 }
+/* Cửa sổ nổi liệt kê cảnh báo khuyến mãi (thay cho khối cảnh báo hiện sẵn trước đây, giờ thu gọn còn 1 icon bóng đèn). */
+function openLiveAlerts(){
+  if(!liveAlertsHTML)return;
+  const box=document.createElement('div');box.className='lb';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-labelledby','laTitle');
+  box.innerHTML=`<div class="box stack" style="max-width:480px;width:100%;background:var(--surface)">
+    <div class="row"><h3 id="laTitle" style="margin-right:auto">Cảnh báo khuyến mãi</h3><button class="btn" type="button" id="laClose">Đóng</button></div>
+    <div class="stack" style="max-height:60vh;overflow-y:auto">${liveAlertsHTML}</div>
+  </div>`;
+  const close=()=>{box.remove();document.removeEventListener('keydown',onKey)};
+  const onKey=e=>{if(e.key==='Escape')close()};
+  document.addEventListener('keydown',onKey);
+  document.body.appendChild(box);
+  box.querySelector('#laClose').onclick=close;
+  box.addEventListener('click',e=>{if(e.target===box)close()});
+  box.querySelector('#laClose').focus();
+}
+$('#liveAlertsBtn').onclick=openLiveAlerts;
 function pushHist(p,snap){
   p.hist=p.hist||[];
   const cur={price:p.price,promo:p.promo||0,until:p.promoUntil||''};
@@ -1024,8 +1110,12 @@ function wireDocs(p){
 const CSV_COLS=[['name','Tên sản phẩm'],['industry','Ngành hàng'],['keys','Từ khóa'],['price','Giá niêm yết'],['promo','Giá khuyến mãi'],['promoUntil','KM đến hết ngày'],['origin','Xuất xứ'],['benefits','Công dụng được phép nói'],['banned','Cụm từ bị cấm'],['specs','Thông số & chất liệu chuẩn'],['policy','Chính sách đổi trả'],['faq','Hỏi đáp'],['certNo','Số công bố']];
 const CSV_ALIAS={name:['ten san pham','ten','name','san pham'],industry:['nganh hang','nganh','industry'],keys:['tu khoa','keys','keywords'],price:['gia niem yet','gia','price'],promo:['gia khuyen mai','khuyen mai','promo'],promoUntil:['km den het ngay','han km','han khuyen mai','promo until','promountil'],origin:['xuat xu','origin'],benefits:['cong dung duoc phep noi','cong dung','benefits'],banned:['cum tu bi cam','tu cam','banned'],specs:['thong so','thong so & chat lieu chuan','chat lieu','specs'],policy:['chinh sach doi tra','chinh sach','policy'],faq:['hoi dap','faq'],certNo:['so cong bo','cert','certno','so giay to']};
 const noAccent=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().replace(/\s+/g,' ').trim();
+/* Chống "CSV injection": nếu một ô bắt đầu bằng =, +, -, @ hoặc tab, Excel/Google Sheets có thể hiểu thành
+   công thức khi mở file (kể cả khi ô đã nằm trong dấu ngoặc kép của CSV), có thể chạy lệnh hệ thống ở các
+   bản Excel cũ. Thêm dấu nháy đơn phía trước để buộc Excel hiểu là chữ, không phải công thức. */
+const csvSafe=v=>{v=String(v??'');return/^[=+\-@\t\r]/.test(v)?"'"+v:v};
 function csvBuild(){
-  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const q=v=>'"'+csvSafe(v).replace(/"/g,'""')+'"';
   return CSV_COLS.map(c=>q(c[1])).join(',')+'\r\n'+products.map(p=>CSV_COLS.map(([k])=>q(k==='industry'?INDS[industryOf(p)]:k==='promo'&&!p.promo?'':p[k])).join(',')).join('\r\n');
 }
 function csvParse(text){
@@ -1732,28 +1822,48 @@ function liveCmtPool(pids){
 const NAMES=['Ngọc Anh','Minh Tuấn','Thu Hà','Quốc Bảo','Lan Chi','Đức Huy','Mai Phương','Hoàng Nam'];
 const PRI={high:['Ưu tiên','bad'],normal:['Thường','warn'],low:['Xã giao','']};
 let liveTimer=null,feedN=0,selC=null,liveSess=null,clockTimer=null;const cm=[];
+/* cmAll: luu toan bo binh luan/gift/follow/share/like cua phien hien tai, KHONG bi gioi han 60 dong
+   nhu cm (cm chi phuc vu hien thi feed); dung rieng cho Thong ke + Xuat CSV de co so lieu day du. */
+const cmAll=[];
+let feedShow={comment:true,gift:true,follow:true,share:true,like:false};
+function feedTypeVisible(t){return feedShow[t]!==false}
 let cmtSrc='sim';
-function addComment(text,u){
+function addComment(text,u,time){
   if(!text){
     const pool=liveCmtPool(liveProdSel);
     const c=pool[Math.floor(Math.random()*pool.length)];
     text=c.text;u=NAMES[Math.floor(Math.random()*NAMES.length)];
   }
-  const r=answerFor(text);cm.unshift({id:++feedN,u:u||'Khách',text,r,done:false,fresh:true});
+  const r=answerFor(text);
+  const item={id:++feedN,u:u||'Khách',text,r,done:false,fresh:true,type:'comment',time:time||new Date().toLocaleTimeString('vi-VN')};
+  cm.unshift(item);cmAll.push(item);
   if(r.pri!=='low'){stats.cmtSeen++;if(liveSess)liveSess.cmtSeen++}
   if(cm.length>60)cm.pop();
   renderFeed();
 }
+/* Su kien gift/follow/share/like: khong can goi y tra loi (r:null), chi de hien trong feed + tinh vao thong ke */
+function addEvent(type,u,text,time){
+  const item={id:++feedN,u:u||'Khách',text,r:null,done:true,fresh:true,type,time:time||new Date().toLocaleTimeString('vi-VN')};
+  cm.unshift(item);cmAll.push(item);
+  if(cm.length>60)cm.pop();
+  renderFeed();
+}
+const EVT_LABEL={gift:'Quà tặng',follow:'Theo dõi',share:'Chia sẻ',like:'Thích'};
 function renderFeed(){
   const order={high:0,normal:1,low:2};
-  const list=[...cm].sort((a,b)=>a.done-b.done||order[a.r.pri]-order[b.r.pri]||b.id-a.id);
-  $('#feed').innerHTML=list.length?list.map(c=>`<button class="cmt${c.fresh?' new':''}" data-id="${c.id}" aria-current="${c.id===selC}" ${c.done?'style="opacity:.5"':''}><div><div class="u">${esc(c.u)}</div>${esc(c.text)}</div><span class="tag ${PRI[c.r.pri][1]} pri">${c.done?'Đã trả lời':PRI[c.r.pri][0]}</span></button>`).join(''):`<div class="empty">${cmtSrc==='real'?'Dán bình luận vào khung phía trên rồi bấm “Thêm vào danh sách”.':'Bấm “Bắt đầu phiên live” để bình luận bắt đầu đổ về.'}</div>`;
+  const visible=cm.filter(c=>feedTypeVisible(c.type||'comment'));
+  const list=[...visible].sort((a,b)=>a.done-b.done||order[a.r?a.r.pri:'low']-order[b.r?b.r.pri:'low']||b.id-a.id);
+  $('#feed').innerHTML=list.length?list.map(c=>{
+    const isCmt=(c.type||'comment')==='comment';
+    const badge=isCmt?`<span class="tag ${PRI[c.r.pri][1]} pri">${c.done?'Đã trả lời':PRI[c.r.pri][0]}</span>`:`<span class="tag pri">${EVT_LABEL[c.type]||c.type}</span>`;
+    return `<button class="cmt${c.fresh?' new':''}" data-id="${c.id}" aria-current="${c.id===selC}" ${c.done&&isCmt?'style="opacity:.5"':''}><div><div class="u">${esc(c.u)}</div>${esc(c.text)}</div>${badge}</button>`;
+  }).join(''):`<div class="empty">${cmtSrc==='real'?'Dán hoặc tải bình luận vào khung phía trên rồi bấm “Thêm vào danh sách”.':'Bấm “Bắt đầu phiên live” để bình luận bắt đầu đổ về.'}</div>`;
   cm.forEach(c=>{c.fresh=false});
   document.querySelectorAll('.cmt').forEach(b=>b.onclick=()=>{selC=+b.dataset.id;renderFeed();renderSuggest()});
 }
 function renderSuggest(){
   const c=cm.find(x=>x.id===selC),box=$('#suggest');
-  if(!c){box.hidden=true;return}
+  if(!c||!c.r){box.hidden=true;return}
   box.hidden=false;
   box.innerHTML=`<div class="row"><b>Gợi ý trả lời</b><span class="tag ${c.r.gap?'bad':''}">${esc(c.r.intent)}</span></div>
     <q style="margin:8px 0">${esc(c.r.ans)}</q><div class="small muted">Nguồn: ${esc(c.r.src)}</div>
@@ -1784,8 +1894,9 @@ function setSrc(v){
   cmtSrc=v;
   document.querySelectorAll('#srcRow [data-src]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.src===v)));
   $('#realBox').hidden=v!=='real';
-  if(v!=='real'&&typeof autoCapStop==='function')autoCapStop();
-  cm.length=0;selC=null;renderFeed();renderSuggest();
+  $('#platRow').hidden=v!=='real';
+  if(v!=='real'&&typeof tkBridgeDisconnect==='function'&&(tkBridge.connected||tkBridge.connecting))tkBridgeDisconnect(true);
+  cm.length=0;cmAll.length=0;selC=null;renderFeed();renderSuggest();
   if(liveTimer){clearInterval(liveTimer);liveTimer=null;startFeed()}
 }
 document.querySelectorAll('#srcRow [data-src]').forEach(b=>b.onclick=()=>setSrc(b.dataset.src));
@@ -1795,6 +1906,25 @@ $('#realAdd').onclick=()=>{
   list.forEach(c=>addComment(c.text,c.u));
   $('#realTxt').value='';$('#realNote').textContent=`Đã thêm ${list.length} bình luận. Bấm vào từng bình luận để xem gợi ý trả lời.`;
 };
+/* Cửa sổ nổi nhập bình luận thủ công (dán chữ / đọc ảnh / tải CSV), thay cho khối luôn hiện sẵn trước đây, giờ thu gọn còn 1 icon. */
+function openRealManual(){
+  const panel=$('#realManualPanel');
+  const box=document.createElement('div');box.className='lb';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-labelledby','rmTitle');
+  box.innerHTML=`<div class="box stack" style="max-width:520px;width:100%;background:var(--surface)">
+    <div class="row"><h3 id="rmTitle" style="margin-right:auto">Nhập bình luận thủ công</h3><button class="btn" type="button" id="rmClose">Đóng</button></div>
+  </div>`;
+  const inner=box.querySelector('.box');
+  panel.hidden=false;
+  inner.appendChild(panel);
+  const close=()=>{panel.hidden=true;$('#realBox').appendChild(panel);box.remove();document.removeEventListener('keydown',onKey)};
+  const onKey=e=>{if(e.key==='Escape')close()};
+  document.addEventListener('keydown',onKey);
+  document.body.appendChild(box);
+  box.querySelector('#rmClose').onclick=close;
+  box.addEventListener('click',e=>{if(e.target===box)close()});
+  $('#realTxt').focus();
+}
+$('#realManualBtn').onclick=openRealManual;
 async function readCmtImage(file){
   const note=$('#realNote');
   if(!file)return;
@@ -1819,90 +1949,235 @@ $('#realTxt').addEventListener('paste',e=>{
 ['dragover','drop'].forEach(ev=>$('#realBox').addEventListener(ev,e=>{
   e.preventDefault();if(ev==='dragover')return;
   const f=[...(e.dataTransfer?e.dataTransfer.files:[])].find(x=>/^image\//.test(x.type));
+  if(!document.querySelector('body>.lb'))openRealManual();
   if(f)readCmtImage(f);else{const t=e.dataTransfer&&e.dataTransfer.getData('text');if(t)$('#realTxt').value+=(($('#realTxt').value?'\n':'')+t)}
 }));
+/* --- Nhập file CSV xuất từ tool "TikTok LIVE Comment Collector" (có thể có cột Loại:
+   Bình luận/Quà tặng/Theo dõi/Chia sẻ/Thích; file CSV cũ không có cột Loại vẫn đọc được,
+   coi mọi dòng là bình luận) --- */
+function normKey(s){
+  return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+}
+function parseCsvText(text){
+  const rows=[];let row=[],field='',inQ=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(inQ){
+      if(ch==='"'){if(text[i+1]==='"'){field+='"';i++}else inQ=false}
+      else field+=ch;
+    }else{
+      if(ch==='"')inQ=true;
+      else if(ch===','){row.push(field);field=''}
+      else if(ch==='\r'){/*bỏ qua*/}
+      else if(ch==='\n'){row.push(field);rows.push(row);row=[];field=''}
+      else field+=ch;
+    }
+  }
+  if(field.length||row.length){row.push(field);rows.push(row)}
+  return rows.filter(r=>!(r.length===1&&r[0]===''));
+}
+const CSV_TYPE_MAP={binhluan:'comment',comment:'comment',quatang:'gift',gift:'gift',theodoi:'follow',follow:'follow',chiase:'share',share:'share',thich:'like',like:'like'};
+$('#realCsv').onchange=e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  const note=$('#realNote');
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const text=String(rd.result||'').replace(/^﻿/,'');
+      const rows=parseCsvText(text);
+      if(!rows.length){note.textContent='File CSV trống hoặc không đọc được.';return}
+      const header=rows[0].map(normKey);
+      const find=(...names)=>{for(const n of names){const i=header.indexOf(n);if(i>=0)return i}return -1};
+      const iTime=find('thoigian','time'),iType=find('loai','type'),iUser=find('username','user'),
+            iNick=find('nickname'),iText=find('noidung','content','comment','text');
+      if(iText<0){note.textContent='Không tìm thấy cột nội dung/comment trong file CSV.';return}
+      let n=0;
+      rows.slice(1).forEach(r=>{
+        const text=(r[iText]||'').trim();if(text.length<2)return;
+        const nick=iNick>=0?(r[iNick]||'').trim():'',uname=iUser>=0?(r[iUser]||'').trim():'';
+        const u=(nick||uname||'Khách').slice(0,26);
+        const time=iTime>=0?(r[iTime]||'').trim():'';
+        const t=iType>=0?(CSV_TYPE_MAP[normKey(r[iType]||'')]||'comment'):'comment';
+        if(t==='comment')addComment(text,u,time);else addEvent(t,u,text,time);
+        n++;
+      });
+      note.textContent=n?`Đã nhập ${n} dòng từ file CSV.`:'Không có dòng hợp lệ nào trong file CSV.';
+    }catch(err){note.textContent='Không đọc được file CSV: '+((err&&err.message)||err)}
+  };
+  rd.readAsText(f,'utf-8');
+};
+/* --- Hiện/ẩn từng loại trong feed --- */
+Object.entries({comment:'showComment',gift:'showGift',follow:'showFollow',share:'showShare',like:'showLike'}).forEach(([t,id])=>{
+  const el=$('#'+id);if(!el)return;
+  el.checked=feedShow[t];
+  el.onchange=()=>{feedShow[t]=el.checked;renderFeed()};
+});
+/* --- Thống kê phòng live: tính trên toàn bộ cmAll (không bị giới hạn 60 dòng hiển thị của feed) --- */
+function computeFeedStats(){
+  const commenters={},intentCounts={};let nComment=0,nGift=0,nFollow=0,nShare=0,nLike=0;
+  cmAll.forEach(c=>{
+    const t=c.type||'comment';
+    if(t==='comment'){
+      nComment++;commenters[c.u]=(commenters[c.u]||0)+1;
+      const lbl=c.r?c.r.intent:'Khác';intentCounts[lbl]=(intentCounts[lbl]||0)+1;
+    }else if(t==='gift')nGift++;else if(t==='follow')nFollow++;else if(t==='share')nShare++;else if(t==='like')nLike++;
+  });
+  return {nComment,nCommenters:Object.keys(commenters).length,top:Object.entries(commenters).sort((a,b)=>b[1]-a[1]).slice(0,10),intentCounts,nGift,nFollow,nShare,nLike};
+}
+function renderFeedStats(){
+  const s=computeFeedStats();
+  const kv=(k,v)=>`<div class="row" style="justify-content:space-between"><span>${esc(k)}</span><b>${v}</b></div>`;
+  const intentRows=Object.entries(s.intentCounts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>kv(k,v)).join('')||'<div class="small muted">Chưa có bình luận nào.</div>';
+  const topRows=s.top.map(([u,c])=>kv(u,c)).join('')||'<div class="small muted">—</div>';
+  $('#feedStats').innerHTML=`
+    <div class="row"><h3 style="margin-right:auto">Thống kê phòng live</h3><button class="btn" id="feedStatsClose">Đóng</button></div>
+    <div class="grid2">
+      <div class="stack"><b>Tổng quan</b>${kv('Số bình luận',s.nComment)}${kv('Số người bình luận khác nhau',s.nCommenters)}${kv('Lượt tặng quà',s.nGift)}${kv('Lượt follow',s.nFollow)}${kv('Lượt chia sẻ',s.nShare)}${kv('Lượt thích ghi nhận',s.nLike)}</div>
+      <div class="stack"><b>Nhóm ý định bình luận</b>${intentRows}</div>
+    </div>
+    <div class="stack" style="margin-top:10px"><b>Top người bình luận nhiều nhất</b>${topRows}</div>`;
+  $('#feedStatsClose').onclick=()=>{$('#feedStats').hidden=true};
+}
+$('#feedStatsBtn').onclick=()=>{
+  const box=$('#feedStats');
+  if(!box.hidden){box.hidden=true;return}
+  renderFeedStats();box.hidden=false;
+};
+function feedCsvExport(){
+  if(!cmAll.length){$('#realNote')&&($('#realNote').textContent='Chưa có dữ liệu để xuất.');return}
+  const TYPE_VI={comment:'Bình luận',gift:'Quà tặng',follow:'Theo dõi',share:'Chia sẻ',like:'Thích'};
+  const q=v=>'"'+csvSafe(v).replace(/"/g,'""')+'"';
+  const header=['Thời gian','Loại','Username/Tên','Nội dung','Ý định'];
+  const rows=cmAll.map(c=>[c.time||'',TYPE_VI[c.type]||c.type,c.u,c.text,c.r?c.r.intent:'']);
+  const blob=new Blob(['﻿'+[header,...rows].map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='livecore-phong-live-'+today()+'.csv';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+$('#feedExportBtn').onclick=feedCsvExport;
 /* --- Chọn nền tảng & nhận diện bình luận tự động qua chia sẻ màn hình --- */
 const PLATFORMS={facebook:'Facebook',tiktok:'TikTok',youtube:'YouTube',shopee:'Shopee',khac:'nền tảng bạn đang dùng'};
 let platform='facebook';
 function setPlat(v){
   platform=v;
-  document.querySelectorAll('#platRow [data-plat]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.plat===v)));
-  $('#autoCapPlatName').textContent=PLATFORMS[v];
+  $('#platSel').value=v;
+  const tb=$('#tkBridgeBox');if(tb)tb.hidden=v!=='tiktok';
 }
-document.querySelectorAll('#platRow [data-plat]').forEach(b=>b.onclick=()=>setPlat(b.dataset.plat));
-const autoCap={stream:null,video:null,canvas:null,timer:null,busy:false,seen:new Set(),ticks:0,fails:0,max:80,every:8000};
-function autoCapSetUI(on){
-  $('#autoCapBtn').textContent=on?'Dừng nhận diện':'Bắt đầu nhận diện tự động';
-  $('#autoCapTag').hidden=!on;
-  if(on)$('#autoCapTag').textContent='Đang nhận diện '+PLATFORMS[platform]+'…';
-  $('#platRow').querySelectorAll('button').forEach(b=>b.disabled=on);
+$('#platSel').onchange=e=>setPlat(e.target.value);
+/* --- Kết nối trực tiếp TikTok LIVE qua bridge cục bộ (tiktok_bridge.py) ---
+   Trình duyệt không tự nối được vào giao thức Webcast của TikTok, nên cần một
+   máy chủ WebSocket nhỏ chạy trên máy người dùng (tiktok_bridge.py, dùng thư
+   viện TikTokLive) làm cầu nối. Trang này chỉ mở kết nối WebSocket tới đó và
+   đổ thẳng sự kiện nhận được vào addComment()/addEvent() sẵn có. */
+const tkBridge={ws:null,connecting:false,connected:false};
+function tkBridgeSavedCfg(){return raw.get('lc_tkbridge')||{}}
+(function(){
+  const c=tkBridgeSavedCfg();
+  if(c.url)$('#tkBridgeUrl').value=c.url;else $('#tkBridgeUrl').value='ws://localhost:8765';
+  if(c.user)$('#tkBridgeUser').value=c.user;
+})();
+function tkBridgeNote(t){const n=$('#tkBridgeNote');if(n)n.textContent=t}
+function tkBridgeUI(){
+  const go=$('#tkBridgeGo'),stop=$('#tkBridgeStop'),tag=$('#tkBridgeTag'),btn=$('#tkBridgeBtn');
+  const busy=tkBridge.connecting||tkBridge.connected;
+  go.hidden=tkBridge.connected;go.disabled=tkBridge.connecting;
+  stop.hidden=!busy;
+  tag.hidden=!tkBridge.connected;
+  btn.setAttribute('aria-pressed',String(tkBridge.connected));
+  btn.classList.toggle('ok',tkBridge.connected);
+  btn.title=tkBridge.connected?'Đang nhận trực tiếp TikTok LIVE — bấm để mở/ngắt kết nối':'Kết nối trực tiếp TikTok LIVE — nhận bình luận, quà tặng, theo dõi, chia sẻ, thích thật qua máy chủ cầu nối trên máy bạn';
+  $('#tkBridgeUser').disabled=busy;$('#tkBridgeUrl').disabled=busy;
+  [...$('#platSel').options].forEach(o=>{if(o.value!=='tiktok')o.disabled=busy});
 }
-/* Khi đang nhận diện tự động: hiện to màn hình đang chia sẻ ngay trong trang, kèm khung gợi ý trả lời bình luận và khung cảnh báo phát ngôn bên cạnh, vì streamer nhìn thấy mặt mình và bình luận thật ngay trên màn hình đó rồi. */
-function watchLayout(on){
-  const box=$('#autoCapWatch'),side=$('#autoCapSide'),home=$('#suggestHome'),warn=$('#realWarn'),sug=$('#suggest');
-  if(!box)return;
-  box.hidden=!on;
-  if(on)side.insertBefore(sug,warn);
-  else if(home&&home.parentNode)home.parentNode.insertBefore(sug,home);
+/* Cửa sổ nổi cấu hình kết nối TikTok LIVE (username/địa chỉ bridge), thay cho khối luôn hiện sẵn trước đây, giờ thu gọn còn 1 icon. */
+function openTkBridge(){
+  const panel=$('#tkBridgePanel');
+  const box=document.createElement('div');box.className='lb';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-labelledby','tkTitle');
+  box.innerHTML=`<div class="box stack" style="max-width:480px;width:100%;background:var(--surface)">
+    <div class="row"><h3 id="tkTitle" style="margin-right:auto">Kết nối trực tiếp TikTok LIVE</h3><button class="btn" type="button" id="tkClose">Đóng</button></div>
+  </div>`;
+  const inner=box.querySelector('.box');
+  panel.hidden=false;
+  inner.appendChild(panel);
+  const close=()=>{panel.hidden=true;$('#tkBridgeBox').insertAdjacentElement('afterend',panel);box.remove();document.removeEventListener('keydown',onKey)};
+  const onKey=e=>{if(e.key==='Escape')close()};
+  document.addEventListener('keydown',onKey);
+  document.body.appendChild(box);
+  box.querySelector('#tkClose').onclick=close;
+  box.addEventListener('click',e=>{if(e.target===box)close()});
+  $('#tkBridgeUser').focus();
 }
-function autoCapStop(msg){
-  if(autoCap.timer){clearInterval(autoCap.timer);autoCap.timer=null}
-  if(autoCap.stream){autoCap.stream.getTracks().forEach(t=>t.stop());autoCap.stream=null}
-  autoCap.video=null;autoCap.busy=false;autoCap.ticks=0;autoCap.fails=0;
-  const vv=$('#autoCapVid');if(vv)vv.srcObject=null;
-  autoCapSetUI(false);watchLayout(false);
-  if(msg)$('#autoCapNote').textContent=msg;
+$('#tkBridgeBtn').onclick=openTkBridge;
+function tkBridgeRoute(msg){
+  if(!msg||typeof msg!=='object')return;
+  if(msg.type==='status'){
+    if(msg.state==='connected'){tkBridge.connecting=false;tkBridge.connected=true;tkBridgeNote(msg.message||'Đã kết nối.');tkBridgeUI()}
+    else if(msg.state==='connecting'){tkBridgeNote(msg.message||'Đang kết nối…')}
+    else if(msg.state==='disconnected'){tkBridge.connecting=false;tkBridge.connected=false;tkBridgeNote(msg.message||'Đã ngắt kết nối.');tkBridgeUI()}
+    else if(msg.state==='error'){tkBridge.connecting=false;tkBridge.connected=false;tkBridgeNote('Lỗi: '+(msg.message||'không rõ nguyên nhân.'));tkBridgeUI()}
+    return;
+  }
+  if(msg.type==='event'){
+    const u=msg.nickname||msg.username||'Khách',time=msg.time||'';
+    if(msg.kind==='comment')addComment(msg.content||'',u,time);
+    else if(['gift','follow','share','like'].includes(msg.kind))addEvent(msg.kind,u,msg.content||'',time);
+  }
 }
-async function autoCapTick(){
-  if(autoCap.busy||!autoCap.stream)return;
-  autoCap.busy=true;autoCap.ticks++;
-  try{
-    if(autoCap.ticks>autoCap.max){autoCapStop('Đã đạt giới hạn phiên nhận diện tự động (để tránh tốn hạn mức AI). Bấm bắt đầu lại nếu cần tiếp tục.');return}
-    const v=autoCap.video;
-    if(!v||!v.videoWidth){return}
-    if(!autoCap.canvas)autoCap.canvas=document.createElement('canvas');
-    const w=Math.min(1280,v.videoWidth),h=Math.round(w*v.videoHeight/v.videoWidth);
-    autoCap.canvas.width=w;autoCap.canvas.height=h;
-    autoCap.canvas.getContext('2d').drawImage(v,0,0,w,h);
-    const blob=await new Promise(res=>autoCap.canvas.toBlob(res,'image/jpeg',0.7));
-    if(!blob)return;
-    const arr=await sample.json(`Ảnh chụp là màn hình đang phát trực tiếp trên ${PLATFORMS[platform]}. Trích riêng phần bình luận (chat) của người xem trong ảnh thành mảng JSON [{"name":"tên người bình luận","text":"nội dung"}]. Bỏ qua tiêu đề, số lượt xem, nút bấm, quà tặng, thông báo hệ thống (đã thích, đã theo dõi, đã vào phòng, đã mua). Nếu không thấy khung bình luận hoặc không có bình luận nào, trả về []. Chỉ trả về JSON.`,{images:blob,modelTier:'quick'});
-    autoCap.fails=0;
-    const list=(Array.isArray(arr)?arr:[]).map(x=>({u:String((x&&x.name)||'Khách').slice(0,26),text:String((x&&x.text)||'').slice(0,300)})).filter(x=>x.text.length>=2).slice(0,40);
-    let added=0;
-    list.forEach(c=>{
-      const sig=c.u+'|'+c.text;
-      if(autoCap.seen.has(sig))return;
-      autoCap.seen.add(sig);added++;addComment(c.text,c.u);
-    });
-    if(autoCap.seen.size>400)autoCap.seen=new Set([...autoCap.seen].slice(-200));
-    $('#autoCapNote').textContent=`Đã kiểm tra lúc ${nowT()}${added?` — thêm ${added} bình luận mới`:' — chưa có bình luận mới'}.`;
-  }catch(e){
-    autoCap.fails++;
-    const d=aiErrDetail(e);
-    $('#autoCapNote').textContent=(e&&e.code==='images_unavailable'?'Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI.':aiErr(e))+(d?` (Chi tiết: ${d})`:'');
-    if(autoCap.fails>=3)autoCapStop('Nhận diện tự động gặp lỗi liên tiếp nên đã dừng. Bạn có thể bắt đầu lại, hoặc dùng cách dán/tải ảnh thủ công bên dưới.');
-  }finally{autoCap.busy=false}
+function tkBridgeConnect(){
+  if(tkBridge.connecting||tkBridge.connected)return;
+  const url=$('#tkBridgeUrl').value.trim()||'ws://localhost:8765',user=$('#tkBridgeUser').value.trim();
+  if(!user){tkBridgeNote('Nhập username TikTok đang LIVE trước.');return}
+  raw.set('lc_tkbridge',{url,user});
+  let ws;
+  try{ws=new WebSocket(url)}catch(e){tkBridgeNote('Địa chỉ bridge không hợp lệ: '+url);return}
+  tkBridge.ws=ws;tkBridge.connecting=true;tkBridgeNote('Đang mở kết nối tới bridge…');tkBridgeUI();
+  ws.onopen=()=>{tkBridgeNote('Đã nối bridge, đang kết nối TikTok LIVE cho '+user+'…');ws.send(JSON.stringify({cmd:'connect',username:user}))};
+  ws.onmessage=e=>{let m=null;try{m=JSON.parse(e.data)}catch(err){return}tkBridgeRoute(m)};
+  ws.onerror=()=>{tkBridgeNote('Không nối được tới bridge tại '+url+'. Kiểm tra đã chạy tiktok_bridge.py trên máy chưa.')};
+  ws.onclose=()=>{tkBridge.ws=null;tkBridge.connecting=false;tkBridge.connected=false;tkBridgeUI()};
 }
-$('#autoCapBtn').onclick=async()=>{
-  if(autoCap.stream){autoCapStop('Đã dừng nhận diện tự động.');return}
-  if(autoCap.starting)return;
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia){$('#autoCapNote').textContent='Trình duyệt này chưa hỗ trợ chia sẻ màn hình, hoặc trang chưa mở qua địa chỉ https. Hãy dán chữ hoặc tải ảnh chụp thủ công bên dưới.';return}
-  if(!sample){$('#autoCapNote').textContent=aiOffHint('Nhận diện tự động cần bật tính năng AI, hiện chưa bật ở bản này. Bạn dán chữ hoặc tải ảnh chụp thủ công bên dưới nhé.');return}
-  let lim=null;try{lim=await sample.limits()}catch(e){}
-  if(!lim||!lim.images){$('#autoCapNote').textContent='Bản xem hiện tại chưa hỗ trợ gửi ảnh cho AI. Bạn dán chữ hoặc tải ảnh chụp thủ công bên dưới nhé.';return}
-  autoCap.starting=true;$('#autoCapNote').textContent='Đang mở hộp thoại chọn màn hình để chia sẻ…';
+function tkBridgeDisconnect(silent){
+  if(tkBridge.ws){try{tkBridge.ws.send(JSON.stringify({cmd:'disconnect'}))}catch(e){}try{tkBridge.ws.close()}catch(e){}}
+  tkBridge.ws=null;tkBridge.connecting=false;tkBridge.connected=false;
+  if(!silent)tkBridgeNote('Đã ngắt kết nối.');
+  tkBridgeUI();
+}
+$('#tkBridgeGo').onclick=tkBridgeConnect;
+$('#tkBridgeStop').onclick=()=>tkBridgeDisconnect();
+/* Chia sẻ màn hình đang live trên TikTok để tự xem lại ngay trong trang — chỉ là màn hình xem trước
+   (giống camera), không tự đọc bình luận từ ảnh nữa (đã bỏ nhận diện tự động qua AI ở bản trước). */
+function makeScreenShare(vidId,btnId,noteId,tagId,opts){
+  opts=opts||{};
+  const wrap=opts.wrapId?$(opts.wrapId):null,defaultNote=opts.defaultNote||'';
+  const ON_TITLE='Dừng chia sẻ màn hình',OFF_TITLE='Chia sẻ màn hình đang live trên TikTok — tự bật khi bắt đầu phiên live, chỉ hiện trên máy bạn, không ghi hay gửi đi đâu';
   let stream=null;
-  try{stream=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false})}
-  catch(e){autoCap.starting=false;$('#autoCapNote').textContent='Bạn đã hủy chia sẻ màn hình.';return}
-  autoCap.starting=false;
-  const v=$('#autoCapVid');v.srcObject=stream;v.muted=true;await v.play().catch(()=>{});
-  autoCap.stream=stream;autoCap.video=v;autoCap.ticks=0;autoCap.fails=0;autoCap.seen=new Set();
-  stream.getVideoTracks()[0].onended=()=>autoCapStop('Bạn đã dừng chia sẻ màn hình.');
-  autoCapSetUI(true);watchLayout(true);
-  $('#autoCapNote').textContent=`Đang chọn đúng tab/cửa sổ ${PLATFORMS[platform]} bạn vừa chia sẻ… lần đọc đầu tiên sau vài giây.`;
-  autoCapTick();autoCap.timer=setInterval(autoCapTick,autoCap.every);
-};
+  const v=$(vidId),btn=$(btnId),note=$(noteId),tag=$(tagId);
+  function stop(msg){
+    if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+    v.srcObject=null;v.hidden=true;
+    if(wrap)wrap.hidden=true;
+    btn.setAttribute('aria-pressed','false');btn.title=OFF_TITLE;btn.disabled=false;
+    tag.hidden=true;
+    note.textContent=msg||defaultNote;
+  }
+  async function startInternal(){
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia){note.textContent='Trình duyệt này chưa hỗ trợ chia sẻ màn hình, hoặc trang chưa mở qua địa chỉ https.';return}
+    btn.disabled=true;note.textContent='Đang mở hộp thoại chọn màn hình để chia sẻ…';
+    let s=null;
+    try{s=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false})}
+    catch(e){btn.disabled=false;note.textContent='Bạn đã hủy chia sẻ màn hình.';return}
+    stream=s;v.srcObject=stream;v.hidden=false;v.muted=true;await v.play().catch(()=>{});
+    if(wrap)wrap.hidden=false;
+    stream.getVideoTracks()[0].onended=()=>stop('Bạn đã dừng chia sẻ màn hình.');
+    btn.disabled=false;
+    btn.setAttribute('aria-pressed','true');btn.title=ON_TITLE;
+    tag.hidden=false;note.textContent='Đang chia sẻ màn hình livestream TikTok.';
+  }
+  function toggle(){if(stream)return stop();return startInternal()}
+  function ensureOn(){if(stream)return;return startInternal()}
+  btn.onclick=toggle;
+  return{stop,ensureOn,get on(){return!!stream}};
+}
+const screenShareLive=makeScreenShare('#ssLiveVid','#ssLiveBtn','#ssLiveNote','#ssLiveTag',{wrapId:'#ssLiveWrap',defaultNote:'Chia sẻ màn hình đang live trên TikTok để tự xem lại ngay trong lúc live.'});
 /* ===== Kịch bản dẫn (teleprompter), checklist tự tích, bảng cảnh báo nổi, âm báo ===== */
 const tp={sents:[],cur:0,done:new Set(),spoken:'',src:null};
 function tpSplit(text){return sentences(text).map(([a,b])=>text.slice(a,b).trim()).filter(x=>x.length>3)}
@@ -1984,14 +2259,23 @@ $('#pipBtn').onclick=async()=>{
   }catch(e){$('#pipNote').textContent='Trình duyệt không cho mở cửa sổ nổi riêng ở đây, bảng cảnh báo vẫn hiện ngay trên trang.'}
 };
 /* --- Camera xem trước (Phòng live & Live tập sự) --- */
-function makeCam(vidId,btnId,pipBtnId,noteId,tagId){
+function makeCam(vidId,btnId,pipBtnId,noteId,tagId,opts){
+  opts=opts||{};
+  const icon=!!opts.icon,wrap=opts.wrapId?$(opts.wrapId):null;
+  const ON_TITLE='Tắt camera',OFF_TITLE='Bật camera xem trước — chỉ hiện trên máy bạn, không ghi hay gửi đi đâu';
   let stream=null,pipWin=null;
   const v=$(vidId),btn=$(btnId),pipBtn=$(pipBtnId),note=$(noteId),tag=$(tagId);
   function stop(msg){
     if(pipWin){try{pipWin.close()}catch(e){}pipWin=null}
     if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
     v.srcObject=null;v.hidden=true;v.classList.remove('pip');
-    btn.textContent='Bật camera';btn.disabled=false;pipBtn.disabled=true;pipBtn.textContent='Mở camera nổi';
+    if(wrap)wrap.hidden=true;
+    if(icon){
+      btn.setAttribute('aria-pressed','false');btn.title=OFF_TITLE;btn.disabled=false;
+      pipBtn.hidden=true;pipBtn.disabled=true;pipBtn.setAttribute('aria-pressed','false');pipBtn.title='Mở camera nổi';
+    }else{
+      btn.textContent='Bật camera';btn.disabled=false;pipBtn.disabled=true;pipBtn.textContent='Mở camera nổi';
+    }
     tag.hidden=true;
     if(msg)note.textContent=msg;
   }
@@ -2005,8 +2289,12 @@ function makeCam(vidId,btnId,pipBtnId,noteId,tagId){
       return;
     }
     v.srcObject=stream;v.hidden=false;
+    if(wrap)wrap.hidden=false;
     stream.getVideoTracks()[0].onended=()=>stop('Camera đã bị tắt hoặc ngắt kết nối.');
-    btn.disabled=false;btn.textContent='Tắt camera';pipBtn.disabled=!(document.pictureInPictureEnabled&&v.requestPictureInPicture);
+    btn.disabled=false;
+    const canPip=document.pictureInPictureEnabled&&v.requestPictureInPicture;
+    if(icon){btn.setAttribute('aria-pressed','true');btn.title=ON_TITLE;pipBtn.hidden=!canPip;pipBtn.disabled=!canPip}
+    else{btn.textContent='Tắt camera';pipBtn.disabled=!canPip}
     tag.hidden=false;note.textContent='';
   }
   function toggle(){if(stream)return stop();return startInternal()}
@@ -2017,13 +2305,13 @@ function makeCam(vidId,btnId,pipBtnId,noteId,tagId){
     try{
       if(document.pictureInPictureElement===v){await document.exitPictureInPicture();return}
       pipWin=await v.requestPictureInPicture();
-      pipBtn.textContent='Đang nổi…';
-      v.addEventListener('leavepictureinpicture',()=>{pipWin=null;pipBtn.textContent='Mở camera nổi'},{once:true});
+      if(icon){pipBtn.setAttribute('aria-pressed','true');pipBtn.title='Đang nổi… (bấm để tắt)'}else pipBtn.textContent='Đang nổi…';
+      v.addEventListener('leavepictureinpicture',()=>{pipWin=null;if(icon){pipBtn.setAttribute('aria-pressed','false');pipBtn.title='Mở camera nổi'}else pipBtn.textContent='Mở camera nổi'},{once:true});
     }catch(e){note.textContent='Trình duyệt không cho mở camera nổi ở đây.'}
   };
   return{stop,ensureOn,get on(){return!!stream}};
 }
-const camLive=makeCam('#camLiveVid','#camLiveBtn','#camLivePipBtn','#camLiveNote','#camLiveTag');
+const camLive=makeCam('#camLiveVid','#camLiveBtn','#camLivePipBtn','#camLiveNote','#camLiveTag',{icon:true,wrapId:'#camLiveWrap'});
 const camSim=makeCam('#camSimVid','#camSimBtn','#camSimPipBtn','#camSimNote','#camSimTag');
 /* --- Âm báo --- */
 let actx=null;
@@ -2069,10 +2357,11 @@ const FILE_NOTE=location.protocol==='file:'?'Bạn đang mở file trực tiếp
 const framed=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const MIC_BLOCK=framed?'Micro bị chặn vì trang đang chạy trong khung nhúng nên trình duyệt không hỏi quyền được. Hãy tải bản .html về và mở bằng Chrome hoặc Edge trên máy tính.':'Micro bị chặn: bấm biểu tượng ổ khóa cạnh thanh địa chỉ, cho phép micro rồi thử lại.';
 let rec=null,micOn=false,micPaused=false,lastSpoke=0;
-const micStat=(t,c='')=>{const s=$('#micStat');s.className='tag '+c;s.textContent=t;$('#eq').classList.toggle('on',c==='ok')};
+const micStat=(t,c='')=>{const b=$('#micBtn');b.title=t;b.classList.remove('ok','warn','bad');if(c)b.classList.add(c)};
+const ttsIsOn=()=>$('#ttsOn').getAttribute('aria-pressed')==='true';
 function speakWarn(a){
   const f=a.findings.find(x=>x.sev==='bad');
-  if(!f||!$('#ttsOn').checked||!window.speechSynthesis||Date.now()-lastSpoke<4000)return;
+  if(!f||!ttsIsOn()||!window.speechSynthesis||Date.now()-lastSpoke<4000)return;
   lastSpoke=Date.now();
   const u=new SpeechSynthesisUtterance(`Cảnh báo. ${f.title}. ${f.fix}`);
   u.lang='vi-VN';u.rate=1.05;
@@ -2085,32 +2374,27 @@ function startMic(){
   rec=new SR();rec.lang='vi-VN';rec.continuous=true;rec.interimResults=true;
   rec.onresult=e=>{
     if(micPaused)return;
-    let interim='',hadFinal=false;
     for(let i=e.resultIndex;i<e.results.length;i++){
-      const r=e.results[i],txt=r[0].transcript;
+      const r=e.results[i];
       if(r.isFinal){
-        hadFinal=true;
-        const nt=viNumbers(txt);
+        const nt=viNumbers(r[0].transcript);
         const a=handleSpeech(nt);
         $('#speech').value=nt.trim();
         if(a)speakWarn(a);
-      }else interim+=txt;
+      }
     }
-    if(interim)$('#interim').innerHTML=`<span class="muted">Đang nghe: </span>${esc(interim)}`;
-    else if(hadFinal)$('#interim').innerHTML='<span class="muted">Đã ghi nhận câu vừa nói. Nói tiếp để kiểm tra câu kế tiếp.</span>';
   };
   rec.onerror=e=>{
     if(e.error==='no-speech'||e.error==='aborted')return;
-    micOn=false;$('#micBtn').textContent='Bật micro nhận diện giọng nói';
-    micStat(e.error==='not-allowed'||e.error==='service-not-allowed'?'Micro bị chặn':'Lỗi nhận diện: '+e.error,'bad');
-    if(e.error==='not-allowed'||e.error==='service-not-allowed')$('#interim').innerHTML='<span class="muted">'+esc(MIC_BLOCK)+'</span>';
+    micOn=false;$('#micBtn').setAttribute('aria-pressed','false');
+    micStat(e.error==='not-allowed'||e.error==='service-not-allowed'?MIC_BLOCK:'Lỗi nhận diện: '+e.error,'bad');
   };
   rec.onend=()=>{if(micOn)try{rec.start()}catch(e){}};
   rec.start();
 }
 function micGo(){
-  micOn=true;$('#micBtn').textContent='Tắt micro';micStat('Đang nghe (vi-VN)','ok');
-  try{startMic()}catch(e){micOn=false;micStat('Không bật được micro','bad');$('#micBtn').textContent='Bật micro nhận diện giọng nói'}
+  micOn=true;$('#micBtn').setAttribute('aria-pressed','true');micStat('Đang nghe (vi-VN) — bấm để tắt','ok');
+  try{startMic()}catch(e){micOn=false;$('#micBtn').setAttribute('aria-pressed','false');micStat('Không bật được micro','bad')}
 }
 function micEnsureOn(){
   if(!SR||micOn)return;
@@ -2121,8 +2405,12 @@ if(!SR){
   micStat('Trình duyệt chưa hỗ trợ nhận diện giọng nói','warn');
 }else{
   $('#micBtn').onclick=()=>{
-    if(micOn){micOn=false;try{rec.stop()}catch(e){}$('#micBtn').textContent='Bật micro nhận diện giọng nói';micStat('Micro đang tắt');return}
+    if(micOn){micOn=false;try{rec.stop()}catch(e){}$('#micBtn').setAttribute('aria-pressed','false');micStat('Micro đang tắt — bấm để bật nhận diện giọng nói');return}
     micOk()?micGo():askMic(micGo);
+  };
+  $('#ttsOn').onclick=()=>{
+    const on=ttsIsOn();
+    $('#ttsOn').setAttribute('aria-pressed',on?'false':'true');
   };
 }
 
@@ -2195,21 +2483,53 @@ function fillSimProducts(){
 }
 fillSimProducts();
 let liveProdSel=[];
+function liveProdSummaryText(){
+  const names=liveProdSel.map(id=>getP(id)).filter(Boolean).map(p=>p.name);
+  if(!names.length)return 'Chưa chọn sản phẩm nào.';
+  if(names.length<=2)return 'Đang live: '+names.join(', ');
+  return `Đang live: ${names.slice(0,2).join(', ')} và ${names.length-2} sản phẩm khác`;
+}
 function fillLiveProducts(){
   const kept=liveProdSel.filter(id=>getP(id));
   liveProdSel=kept.length?kept:(products[0]?[products[0].id]:[]);
-  $('#liveProdWrap').innerHTML=products.map(p=>`<button type="button" data-pid="${p.id}" aria-pressed="${liveProdSel.includes(p.id)}">${esc(p.name)}</button>`).join('');
-  $('#liveProdWrap').querySelectorAll('[data-pid]').forEach(b=>{
-    b.disabled=!!liveSess;
-    b.onclick=()=>{
-      const id=b.dataset.pid;
-      if(liveProdSel.includes(id)){
-        if(liveProdSel.length>1){liveProdSel=liveProdSel.filter(x=>x!==id);b.setAttribute('aria-pressed','false')}
-      }else{liveProdSel=[...liveProdSel,id];b.setAttribute('aria-pressed','true')}
-    };
-  });
+  const s=$('#liveProdSummary');if(s)s.textContent=liveProdSummaryText();
+  const btn=$('#liveProdPickBtn');if(btn)btn.disabled=!!liveSess;
 }
 fillLiveProducts();
+/* Cửa sổ nổi chọn sản phẩm đang live: chọn nhiều bằng checkbox, bấm "Xong" (hoặc click ra ngoài / Esc) để áp dụng. */
+function openLiveProdPicker(){
+  if(liveSess||$('#liveProdPickBtn').disabled)return;
+  let sel=[...liveProdSel];
+  const box=document.createElement('div');box.className='lb';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-labelledby','lpTitle');
+  box.innerHTML=`<div class="box stack" style="max-width:440px;width:100%;background:var(--surface)">
+    <h3 id="lpTitle" style="margin:0">Chọn sản phẩm đang live</h3>
+    <p class="small muted" style="margin:0">Chọn một hoặc nhiều — bình luận mô phỏng sẽ chỉ xoay quanh (các) sản phẩm này.</p>
+    <div id="lpBody" class="stack" style="gap:2px;max-height:320px;overflow-y:auto"></div>
+    <div class="row"><button class="btn primary" type="button" id="lpOk" style="margin-left:auto">Xong</button></div>
+  </div>`;
+  const body=box.querySelector('#lpBody');
+  function render(){
+    body.innerHTML=products.map(p=>`<label class="row" style="gap:8px;align-items:center;padding:6px 4px;border-radius:8px;cursor:pointer" data-pid="${p.id}"><input type="checkbox" ${sel.includes(p.id)?'checked':''}><span>${esc(p.name)}</span></label>`).join('');
+    body.querySelectorAll('[data-pid]').forEach(row=>{
+      row.querySelector('input').onchange=e=>{
+        const id=row.dataset.pid;
+        if(e.target.checked){if(!sel.includes(id))sel=[...sel,id]}
+        else if(sel.length>1)sel=sel.filter(x=>x!==id);
+        else e.target.checked=true; // luôn giữ lại ít nhất 1 sản phẩm
+      };
+    });
+  }
+  render();
+  const apply=()=>{liveProdSel=sel.length?sel:(products[0]?[products[0].id]:[]);fillLiveProducts();close()};
+  const close=()=>{box.remove();document.removeEventListener('keydown',onKey)};
+  const onKey=e=>{if(e.key==='Escape')apply()};
+  document.addEventListener('keydown',onKey);
+  document.body.appendChild(box);
+  box.querySelector('#lpOk').onclick=apply;
+  box.addEventListener('click',e=>{if(e.target===box)apply()});
+  box.querySelector('#lpOk').focus();
+}
+$('#liveProdPickBtn').onclick=openLiveProdPicker;
 const sim={on:false,turns:[],n:0,ai:false,persona:null,prod:null,busy:false,qOrder:null};
 function bubble(cls,html){
   const d=document.createElement('div');d.className=cls;d.innerHTML=html;
@@ -2461,7 +2781,7 @@ $('#coachBtn').onclick=async()=>{
   }
   btn.disabled=false;btn.textContent='Nhờ AI Coach nhận xét';
 };
-if(FILE_NOTE)$('#interim').insertAdjacentHTML('beforeend','<div class="small muted" style="margin-top:6px">'+esc(FILE_NOTE)+'</div>');
+if(FILE_NOTE)$('#micBtn').title+=' — '+FILE_NOTE;
 runScan(true);
 
 /* ===== Tài khoản: đăng ký, đăng nhập, gói dịch vụ =====
@@ -2542,13 +2862,14 @@ $('#fillDemo').onclick=()=>{$('#lg-email').value='demo@livecore.vn';$('#lg-pw').
 
 function resetSession(){
   stopVoice();
+  if(tkBridge.connected||tkBridge.connecting)tkBridgeDisconnect(true);
   if(camLive.on)camLive.stop();
   if(camSim.on)camSim.stop();
   if(liveTimer){clearInterval(liveTimer);liveTimer=null}
   $('#liveToggle').textContent='Bắt đầu phiên live';
   liveSess=null;if(clockTimer){clearInterval(clockTimer);clockTimer=null}
   $('#liveResult').hidden=true;$('#liveNote').textContent='';setLive(false);
-  cm.length=0;selC=null;lastMentioned=null;renderFeed();renderSuggest();
+  cm.length=0;cmAll.length=0;selC=null;lastMentioned=null;renderFeed();renderSuggest();
   events.length=0;Object.assign(stats,{priceErr:0,bad:0,warn:0,ckDone:0,ckTotal:0,simAns:0,simGood:0,cmtSeen:0,cmtAns:0,scans:0});
   lastScan=null;updateBadge();
   sim.on=false;sim.turns=[];sim.n=0;
@@ -2567,6 +2888,10 @@ function updateHeader(){
   const t=$('#planTag');t.textContent=`${ME.name} · ${PLANS[ME.plan].name}`;t.title=ME.email;fillViewAs();
 }
 function startSession(u,remember){
+  if(!PLANS[u.plan]){
+    u.plan='pro';
+    if(!u.cloud){const all=users(),i=all.findIndex(x=>x.id===u.id);if(i>-1){all[i]=u;saveUsers(all)}}
+  }
   UID=u.id;ME=u;
   raw.del('lc_session');
   if(!u.cloud)raw.set('lc_session',{uid:u.id},remember?'local':'session');
@@ -2583,11 +2908,15 @@ function logout(){
 }
 $('#logoutBtn').onclick=logout;
 
-let fails=0,lockUntil=0;
+/* Đếm số lần đăng nhập sai và thời điểm tạm khóa được LƯU VÀO localStorage (thay vì biến JS thường),
+   để không bị vô hiệu chỉ bằng cách tải lại trang — tải lại trang trước đây khiến bộ đếm về 0 ngay. */
+const loginGuard=()=>{try{const g=raw.get('lc_loginfails');return g&&typeof g.fails==='number'?g:{fails:0,lockUntil:0}}catch(e){return{fails:0,lockUntil:0}}};
+const setLoginGuard=g=>raw.set('lc_loginfails',g);
 $('#loginForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const err=m=>{$('#lg-err').textContent=m};
-  if(Date.now()<lockUntil)return err(`Nhập sai nhiều lần. Thử lại sau ${Math.ceil((lockUntil-Date.now())/1000)} giây.`);
+  const g=loginGuard();
+  if(Date.now()<g.lockUntil)return err(`Nhập sai nhiều lần. Thử lại sau ${Math.ceil((g.lockUntil-Date.now())/1000)} giây.`);
   const email=$('#lg-email').value.trim().toLowerCase(),pw=$('#lg-pw').value;
   if(!email||!pw)return err('Nhập email và mật khẩu.');
   const btn=$('#lg-submit');btn.disabled=true;
@@ -2596,22 +2925,27 @@ $('#loginForm').addEventListener('submit',async e=>{
     if(!u&&sbCfg()){
       try{
         const ss=await sbSignIn(email,pw);
-        fails=0;err('');$('#lg-pw').value='';
+        setLoginGuard({fails:0,lockUntil:0});err('');$('#lg-pw').value='';
         await cloudStart(ss,$('#lg-remember').checked);
       }catch(x){
         sbSess=null;raw.del('lc_sbsess');if(ME&&ME.cloud){UID=null;ME=null}
-        if(x&&x.code==='http'&&x.status===400){fails++;if(fails>=5){lockUntil=Date.now()+30000;fails=0;return err('Nhập sai 5 lần. Đăng nhập tạm khóa 30 giây.')}}
+        if(x&&x.code==='http'&&x.status===400){
+          const n=g.fails+1;
+          if(n>=5){setLoginGuard({fails:0,lockUntil:Date.now()+30000});return err('Nhập sai 5 lần. Đăng nhập tạm khóa 30 giây.')}
+          setLoginGuard({fails:n,lockUntil:0});
+        }
         err(sbMsg(x));
       }
       return;
     }
     const h=await hashPw(pw,u?u.salt:newSalt());
     if(!u||!safeEq(h,u.hash)){
-      fails++;
-      if(fails>=5){lockUntil=Date.now()+30000;fails=0;return err('Nhập sai 5 lần. Đăng nhập tạm khóa 30 giây.')}
+      const n=g.fails+1;
+      if(n>=5){setLoginGuard({fails:0,lockUntil:Date.now()+30000});return err('Nhập sai 5 lần. Đăng nhập tạm khóa 30 giây.')}
+      setLoginGuard({fails:n,lockUntil:0});
       return err('Email hoặc mật khẩu chưa đúng.');
     }
-    fails=0;err('');$('#lg-pw').value='';
+    setLoginGuard({fails:0,lockUntil:0});err('');$('#lg-pw').value='';
     startSession(u,$('#lg-remember').checked);
   }finally{btn.disabled=false}
 });
@@ -2903,7 +3237,7 @@ function tickClock(){if(liveSess){$('#liveClock').textContent=(liveSess.kolName|
 function liveUI(){
   const biz=isBiz();
   $('#kolRow').hidden=!biz;$('#liveEnd').hidden=false;$('#liveClock').hidden=!liveSess;
-  document.querySelectorAll('#liveProdWrap [data-pid]').forEach(b=>b.disabled=!!liveSess);
+  const lpBtn=$('#liveProdPickBtn');if(lpBtn)lpBtn.disabled=!!liveSess;
   ['#kolSel','#kolQuickName','#kolQuickAdd'].forEach(x=>$(x).disabled=!!liveSess||(x==='#kolSel'&&role()==='koc'));
   ['#kolQuickName','#kolQuickAdd'].forEach(x=>$(x).hidden=!can.edit());
   $('#liveEnd').disabled=!liveSess;
@@ -2956,7 +3290,6 @@ $('#liveToggle').onclick=()=>{
   if(liveTimer){
     clearInterval(liveTimer);liveTimer=null;
     if(liveSess&&liveSess.t0){liveSess.ms+=Date.now()-liveSess.t0;liveSess.t0=null}
-    if(autoCap.stream)autoCapStop('Đã tạm dừng nhận diện tự động cùng phiên live.');
     setLive(false);$('#liveToggle').textContent='Tiếp tục phiên live';hudSync();return;
   }
   if(!liveSess){
@@ -2976,13 +3309,13 @@ $('#liveToggle').onclick=()=>{
   liveSess.t0=Date.now();
   $('#liveResult').hidden=true;setLive(true);
   $('#liveToggle').textContent='Dừng phiên live';
-  camLive.ensureOn();micEnsureOn();
+  camLive.ensureOn();micEnsureOn();screenShareLive.ensureOn();
   startFeed();
   liveUI();tickClock();hudSync();
 };
 $('#liveEnd').onclick=()=>{
   if(!liveSess)return;
-  if(autoCap.stream)autoCapStop();
+  if(screenShareLive.on)screenShareLive.stop();
   if(camLive.on)camLive.stop();
   if(liveTimer){clearInterval(liveTimer);liveTimer=null}
   if(liveSess.t0){liveSess.ms+=Date.now()-liveSess.t0;liveSess.t0=null}
@@ -2993,7 +3326,7 @@ $('#liveEnd').onclick=()=>{
   log('live','ok',`Kết thúc phiên live${r.kolName?' của '+r.kolName:''}: ${r.speeches} phát ngôn, ${r.bad} vi phạm nghiêm trọng`);
   liveSess=null;clearInterval(clockTimer);clockTimer=null;setLive(false);hudSync();
   $('#liveToggle').textContent='Bắt đầu phiên live';
-  cm.length=0;selC=null;renderFeed();renderSuggest();
+  cm.length=0;cmAll.length=0;selC=null;renderFeed();renderSuggest();
   showLiveResult(r);liveUI();
 };
 
