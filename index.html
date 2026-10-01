@@ -1,4 +1,4 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style></head><body><title>LiveCore AI</title>
+<title>LiveCore AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -1492,38 +1492,743 @@ renderRulesPanel();
    kèm ví dụ cụ thể, để ai chưa đọc bản đầy đủ vẫn tra được nhanh trước khi live. Không thay cho
    văn bản chính thức của TikTok Shop, chỉ để tham khảo trong lúc chuẩn bị/luyện live. */
 const TT_POLICY=[
- {t:'Sản phẩm bị cấm & hạn chế',sev:'bad',b:`<p>Một số ngành hàng bị cấm bán hoàn toàn (vũ khí, hàng giả/hàng nhái, chất kích thích, động vật hoang dã…) hoặc chỉ được bán có điều kiện (giới hạn theo khu vực, cần giấy phép, giới hạn tuổi người mua…).</p>
-  <ul><li>Kiểm tra ngành hàng của sản phẩm trong Trung tâm Người bán trước khi lên live, đừng chỉ dựa vào việc "vẫn đăng được".</li>
-  <li>Sản phẩm hạn chế (ví dụ: dao kéo, một số thực phẩm chức năng, mỹ phẩm chưa công bố) cần đủ giấy phép/công bố mới được livestream bán.</li></ul>`},
- {t:'Nội dung gây nhầm lẫn (công dụng, giá, khuyến mãi)',sev:'bad',b:`<p>Không nói cường điệu công dụng, không đưa giá/khuyến mãi sai thực tế, không cho sản phẩm trong video/ảnh khác với sản phẩm thực sự giao cho khách.</p>
-  <ul><li>Không dùng “nhất/duy nhất/tuyệt đối” nếu không có tài liệu chứng minh hợp pháp.</li>
-  <li>Giá, khuyến mãi nói trên live phải khớp giá thật đang áp dụng trên sàn — hệ thống này tự đối chiếu ở mục “Rà soát kịch bản” và “Phòng live”.</li>
-  <li>Ảnh/video minh họa phải là đúng sản phẩm sẽ giao, không dùng ảnh hàng cao cấp hơn để câu khách.</li></ul>`},
- {t:'Nội dung do AI tạo (AIGC)',sev:'warn',b:`<p>Nội dung có sự tham gia đáng kể của AI (giọng đọc AI, ảnh/video AI, avatar ảo…) phải được gắn nhãn rõ ràng là nội dung AI, không để người xem hiểu nhầm là người thật/quay thật.</p>
-  <ul><li>Dùng giọng AI lồng tiếng cho video sản phẩm → phải gắn nhãn AIGC theo hướng dẫn của TikTok.</li>
-  <li>Không dùng AI tạo hình ảnh bác sĩ/chuyên gia giả để tăng độ tin cậy cho sản phẩm.</li></ul>`},
- {t:'Cờ bạc & nội dung rút thăm/quay số may rủi',sev:'bad',b:`<p>Không tổ chức hoặc quảng bá cờ bạc, cá cược. Minigame rút thăm/quay số tặng quà trong live phải rõ ràng, minh bạch, không mang tính chất may rủi đổi tiền/đổi thưởng giá trị lớn kiểu cá cược.</p>
-  <ul><li>“Chốt đơn xong quay số trúng thưởng nha” dùng để giải trí, có luật chơi rõ ràng thì được; tổ chức kiểu cá cược ăn tiền thì không.</li></ul>`},
- {t:'Giảm cân & quản lý cân nặng',sev:'bad',b:`<p>Riêng nhóm quảng cáo giảm cân/quản lý cân nặng, TikTok Shop có quy tắc chặt hơn luật quảng cáo chung: không hứa kết quả tức thì/tuyệt đối, không nói “không cần ăn kiêng hay tập luyện”, không gắn hình ảnh cơ thể theo hướng so sánh phi thực tế trước/sau.</p>
-  <ul><li>Hệ thống tự động rà soát các cụm như “giảm cân cấp tốc”, “không cần ăn kiêng” ở mục “Rà soát kịch bản” và “Phòng live” (căn cứ: mục này).</li>
-  <li>Nói đúng công dụng đã công bố, luôn nhắc “kết quả tùy cơ địa, cần kết hợp ăn uống/tập luyện hợp lý”.</li></ul>`},
- {t:'Nội dung khiêu dâm / người lớn',sev:'bad',b:`<p>Không hình ảnh, lời nói, cử chỉ khiêu dâm hoặc gợi dục, kể cả dùng sản phẩm làm cái cớ (ví dụ đồ lót, mỹ phẩm vùng nhạy cảm) để câu tương tác.</p>`},
- {t:'Nội dung hướng đến trẻ em',sev:'bad',b:`<p>Không để trẻ em xuất hiện trong ngữ cảnh không phù hợp (mặc phản cảm, gắn với sản phẩm người lớn), không nhắm quảng cáo sản phẩm không phù hợp trẻ em vào đối tượng trẻ em.</p>`},
- {t:'Nội dung gây sốc, phản cảm',sev:'warn',b:`<p>Không dùng hình ảnh máu me, tai nạn, kinh dị, ghê sợ hoặc hành vi nguy hiểm/tự gây hại để câu view, dù là để bán hàng theo hướng “giật gân”.</p>`},
- {t:'Nội dung chính trị',sev:'warn',b:`<p>Livestream bán hàng không lồng ghép nội dung vận động chính trị, bầu cử, biểu tình. Giữ nội dung tập trung vào sản phẩm.</p>`},
- {t:'Sự kiện nhạy cảm',sev:'warn',b:`<p>Không lợi dụng thiên tai, dịch bệnh, tai nạn, xung đột đang diễn ra để tạo cảm xúc câu view hoặc thúc bán hàng (ví dụ “mua ủng hộ vùng lũ” khi không có hoạt động thật).</p>`},
- {t:'Đấu giá / chào giá trong livestream',sev:'warn',b:`<p>Nếu tổ chức đấu giá trong live, luật chơi, mức giá, người thắng phải minh bạch, không dàn dựng để đẩy giá ảo hoặc tạo cảm giác khan hiếm giả.</p>`},
- {t:'Tương tác giả & spam',sev:'warn',b:`<p>Không dùng like/comment/follow ảo, không thuê tài khoản ảo vào bình luận dạo để tạo cảm giác đông người xem/mua hàng, không spam lặp một nội dung nhiều lần trong cùng phiên.</p>`},
- {t:'Livestream song song (đa tài khoản/đa nền tảng)',sev:'warn',b:`<p>Không dùng nhiều tài khoản để phát cùng một nội dung livestream song song trên TikTok Shop nhằm nhân bản lượt xem/tương tác một cách giả tạo.</p>`},
- {t:'Nội dung không nguyên bản',sev:'warn',b:`<p>Không phát lại nguyên video/livestream của người khác (kể cả video sản phẩm lấy từ nơi khác) mà không có quyền hoặc không biến đổi thành nội dung của riêng mình.</p>`},
- {t:'Nội dung không tương tác / kém chất lượng',sev:'info',b:`<p>Tránh live chỉ chiếu màn hình tĩnh, không có người dẫn, không cập nhật nội dung trong thời gian dài — nền tảng có thể giảm hiển thị các phiên live như vậy.</p>`},
- {t:'Quảng cáo không liên quan',sev:'info',b:`<p>Nội dung/sản phẩm giới thiệu trong live phải khớp với danh mục gian hàng đã đăng ký, không chèn quảng cáo cho sản phẩm/dịch vụ không liên quan hoặc không được phép bán trên TikTok Shop.</p>`},
- {t:'Điều hướng lưu lượng ra ngoài sàn',sev:'bad',b:`<p>Không mời khách nhắn Zalo/Facebook/Messenger, để lại số điện thoại, quét mã QR, hoặc mua/chuyển khoản ngoài sàn để né phí sàn — khách mua ngoài sàn cũng mất quyền bảo vệ người mua của TikTok Shop.</p>
-  <ul><li>Hệ thống tự động rà soát các cụm như “inbox zalo”, “để lại số điện thoại”, “quét mã QR” ở mục “Rà soát kịch bản” và “Phòng live” (căn cứ: mục này).</li>
-  <li>Luôn hướng dẫn khách đặt hàng qua giỏ hàng/link sản phẩm ngay trên phiên live.</li></ul>`},
- {t:'Giới hạn số lượng đăng nội dung',sev:'info',b:`<p>Tài khoản có giới hạn số video/livestream được đăng trong một khoảng thời gian để chống spam — đăng dồn quá nhiều nội dung liên tiếp có thể bị hạn chế.</p>`},
- {t:'Quyền sở hữu trí tuệ (IP)',sev:'warn',b:`<p>Không dùng logo, nhạc, hình ảnh, nhân vật có bản quyền/nhãn hiệu của người khác khi chưa được phép, kể cả để làm nền hoặc trang trí cho phiên live.</p>`},
- {t:'Công cụ ủy quyền nội dung (Content Authorization Tool)',sev:'info',b:`<p>Nếu dùng lại hình ảnh/video của nhà sản xuất, KOC khác hoặc đối tác, nên xin phép và dùng công cụ ủy quyền nội dung của TikTok Shop để việc dùng lại là hợp lệ, tránh bị báo cáo vi phạm bản quyền.</p>`}
+{t:'1. Hoạt động bất hợp pháp hoặc tội phạm',sev:'bad',b:`<p>Chúng tôi cấm tất cả nội dung có chứa hoặc cổ xúy các hình thức hoạt động bất hợp pháp. Nếu nội dung của bạn vi phạm luật lệ hoặc quy định của khu vực, chúng tôi sẽ xóa nội dung đó khỏi nền tảng.</p>
+<p>Bạn không được phép đăng, tải lên, phát trực tiếp hoặc chia sẻ nội dung quảng cáo về:</p>
+<ul>
+<li>Dịch vụ đánh bạc hoặc bất kỳ nội dung nào khác có thể được coi là quảng cáo về sòng bạc, cá cược thể thao hoặc bất kỳ hoạt động đánh bạc thương mại nào khác</li>
+<li>Lừa đảo</li>
+<li>Mô hình Ponzi, tiếp thị đa cấp hoặc mô hình kim tự tháp</li>
+<li>Cơ chế đầu tư hứa hẹn đem lại lợi nhuận cao</li>
+<li>Cá cược theo tỷ lệ cố định hoặc bất kỳ hình thức lừa đảo nào khác</li>
+<li>Bóc lột con người, bao gồm buôn bán người, lao động lệ thuộc, nô lệ trong gia đình, buôn bán tình dục hoặc mại dâm</li>
+<li>Phá hoại hoặc làm hư hỏng tài sản</li>
+<li>Săn trộm hoặc buôn bán trái phép động vật hoang dã</li>
+<li>Mua, bán, trao đổi hoặc chào mua hàng hóa có được bằng hình thức bất hợp pháp hoặc là hàng giả</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể bị áp dụng hành động thực thi đối với tài khoản; vi phạm lặp lại dẫn đến hình phạt nghiêm trọng hơn. Đọc "Lý do vi phạm, Điểm vi phạm & Hành động thực thi" và "Điều khoản dịch vụ"; kháng nghị qua Ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'2. Nội dung cờ bạc',sev:'bad',b:`<p>Nhằm tuân thủ quy định của địa phương và tăng cường bảo vệ người dùng, nền tảng kiểm soát nghiêm ngặt hoạt động có tính chất trò chơi. Nghiêm cấm hành vi cờ bạc và sử dụng kỹ thuật trò chơi hóa (có yếu tố may rủi), ngay cả khi mục đích là để khuyến khích tương tác.</p>
+<div class="find warn">Lưu ý: Một số hình thức Trò chơi hóa có yếu tố may rủi có thể được thực hiện thông qua tính năng Quà tặng LIVE.</div>
+<div style="font-weight:600;margin:10px 0 4px">Cờ bạc là gì?</div>
+<p>Nghiêm cấm thực hiện và/hoặc quảng bá mọi hoạt động cờ bạc trong LIVE và Video; không được bán sản phẩm/dịch vụ/đồ dùng liên quan đến cờ bạc. Cấm các hoạt động trò chơi hóa trong đó yếu tố may rủi quyết định tặng phẩm khách nhận được (vòng quay may mắn, bốc thăm trúng thưởng, rút thăm may mắn).</p>
+<img src="policy-assets/ch02_1.jpg" alt="Ví dụ nội dung cờ bạc: tung xúc xắc đoán số, mở hàu tìm ngọc trai, chơi Blackjack LIVE kèm cá cược" loading="lazy">
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ nội dung Cờ bạc</div>
+<ul>
+<li><b>Ví dụ A:</b> bán cơ hội tung xúc xắc đoán số, đoán đúng mới nhận thưởng.</li>
+<li><b>Ví dụ B:</b> bán hàu chưa mở để khách chọn mở, không đảm bảo con nào cũng có ngọc trai.</li>
+<li><b>Ví dụ C:</b> chơi bài Blackjack trong LIVE, mời người xem mua cơ hội cá cược.</li>
+</ul>
+<img src="policy-assets/ch02_2.jpg" alt="Ví dụ trò chơi hóa có yếu tố may rủi: đào pha lê may mắn, vòng quay may mắn" loading="lazy">
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ Trò chơi hóa có yếu tố may rủi</div>
+<ul>
+<li><b>Ví dụ A:</b> bán viên pha lê may mắn với mức giá trị khác nhau.</li>
+<li><b>Ví dụ B:</b> dùng vòng quay may mắn để cho cơ hội đoạt nhiều phần thưởng miễn phí.</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Tránh những gì trong bài niêm yết?</div>
+<ul>
+<li>Bán/quảng bá cơ hội cá cược kiểu casino (roulette, máy đánh bạc, xổ số, rút thăm, lô đề...)</li>
+<li>Dùng trò chơi may rủi để bán/quảng bá sản phẩm, trao quà tặng miễn phí, hoặc xác định ưu đãi mua hàng</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể bị áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Người bán đọc "Lý do vi phạm & Hành động thực thi với người bán", kháng nghị qua Trung tâm Nhà bán hàng. Nhà sáng tạo đọc tài liệu tương ứng, kháng nghị qua ứng dụng TikTok.</div>`},
+
+{t:'3. Nội dung khiêu dâm',sev:'bad',b:`<p>Nội dung quảng cáo sản phẩm không được chứa hành động, ngôn ngữ hoặc hành vi khêu gợi tình dục. Áp dụng cho cả nội dung có người thật lẫn nhân vật/đồ vật dạng kỹ thuật số.</p>
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ về nội dung tình dục bị cấm</div>
+<ul>
+<li><b>Khung hình mang tính khiêu dâm:</b> dùng góc quay thu hút chú ý vào bộ phận nhạy cảm không nhằm minh họa sản phẩm; tư thế/trang phục khêu gợi.</li>
+<li><b>Ngụ ý khỏa thân:</b> ám chỉ trạng thái khỏa thân, kể cả khi bộ phận cơ thể được làm mờ/che đi.</li>
+<li><b>Ngôn ngữ khiêu dâm:</b> thảo luận/trò chuyện về hoạt động tình dục (kể cả hài hước/châm biếm), văn bản/emoji khiêu gợi.</li>
+<li><b>Trang phục không phù hợp:</b> chỉ mặc nội y/đồ bơi (trừ khi mặc ngoài quần áo thường, hoặc đúng bối cảnh bể bơi/bãi biển); đồ lót lộ bộ phận riêng tư; cởi/điều chỉnh trang phục theo hướng khiêu dâm.</li>
+<li><b>Tuyên bố về hiệu quả/kích thích tình dục:</b> sản phẩm kéo dài thời gian, hỗ trợ hoạt động tình dục hoặc phát triển bộ phận riêng tư.</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Phương pháp hay nhất để tránh vi phạm</div>
+<ul>
+<li>Quảng cáo trang phục/đồ lót nên tập trung mô tả chất liệu, độ vừa vặn, khả năng hỗ trợ, thiết kế — không tập trung vào bộ phận cơ thể.</li>
+<li>Trang phục trên người mẫu/ma-nơ-canh không thể hiện khiêu dâm, phù hợp thông lệ quảng cáo địa phương.</li>
+<li>Tránh quay cảnh thay/cởi đồ mang tính khiêu dâm khi quảng cáo quần áo.</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể bị chế tài; vi phạm lặp lại bị phạt nặng hơn. Đọc "Lý do vi phạm & Biện pháp thi hành với nhà sáng tạo" và "Điều khoản dịch vụ"; kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'4. Nội dung giới thiệu/nhắm tới trẻ vị thành niên',sev:'bad',b:`<p>Trẻ vị thành niên là trẻ em dưới 18 tuổi.</p>
+<div style="font-weight:600;margin:10px 0 4px">Nội dung giới thiệu trẻ vị thành niên</div>
+<p>Nếu nội dung có trẻ vị thành niên quảng cáo sản phẩm, nội dung phải liên quan trực tiếp đến sản phẩm, và <b>người lớn phải có mặt trong khung hình</b>. Ví dụ sản phẩm được phép: đồ chơi/quần áo/giày dép trẻ em, nhạc cụ trẻ em.</p>
+<p>Nghiêm cấm đưa hình ảnh trẻ vị thành niên vào nội dung về: khỏa thân hoặc khiêu dâm (đồ bơi, đồ lót); sản phẩm liên quan người lớn như rượu, thuốc lá.</p>
+<div style="font-weight:600;margin:10px 0 4px">Nội dung hướng tới trẻ vị thành niên</div>
+<p>Sản phẩm trẻ em có thể xuất hiện trong video/LIVE, nhưng nội dung không được nhắm đến trẻ vị thành niên. Không được đăng/tải lên/live/chia sẻ:</p>
+<ul>
+<li>Nội dung thuyết phục trẻ vị thành niên mua sản phẩm/dịch vụ</li>
+<li>Nội dung khuyến khích trẻ vị thành niên yêu cầu cha mẹ/người giám hộ mua sản phẩm/dịch vụ</li>
+<li>Nội dung khác có thể gây tác động tiêu cực đến trẻ vị thành niên (theo toàn quyền quyết định của nền tảng)</li>
+</ul>
+<div class="find ok" style="margin-top:8px"><b>Câu hỏi thường gặp:</b> Không bao giờ để trẻ vị thành niên xuất hiện trong nội dung khêu gợi như đồ bơi/đồ lót. "Nội dung quảng cáo có trẻ em" là nội dung trong đó trẻ xuất hiện qua lời nói nhằm quảng cáo sản phẩm — không để trẻ tự trình bày/sử dụng/giới thiệu sản phẩm. Nội dung cần thể hiện sự tôn trọng, trẻ mặc trang phục đầy đủ, không ảnh hưởng sức khỏe thể chất/tinh thần của trẻ.</div>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể bị áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'5. Nội dung giật gân hoặc gây sốc',sev:'bad',b:`<p>Không được đăng tải hoặc chia sẻ nội dung giật gân hay gây sốc khiến người dùng khó chịu, ví dụ:</p>
+<ul>
+<li>Nội dung đẫm máu, ghê rợn hoặc phản cảm (hiện trường vụ án, tai nạn, cảnh kinh dị...)</li>
+<li>Hình ảnh gây khó chịu (máu thật/trông như thật, chất thải người/động vật, chất bẩn lấy từ cống)</li>
+<li>Cận cảnh chăm sóc da/cơ thể gây khó chịu (nặn mụn, lấy ráy tai, cạo lưỡi, bóc da, tẩy lông bằng sáp, lấy máu)</li>
+<li>Tội phạm, bạo lực, tàn ác hoặc ngược đãi động vật (đánh nhau đẫm máu, chọi gà/chọi chó)</li>
+<li>Nội dung nguy hiểm/nhạy cảm được làm nổi bật để thu hút chú ý</li>
+<li>Ngôn từ bạo lực/xúc phạm: chửi thề, phát ngôn thù ghét, lời miệt thị</li>
+<li>Phân biệt đối xử dựa trên chủng tộc, giới tính, bản dạng giới, văn hóa...</li>
+<li>Phỉ báng, mô tả không công bằng hoặc xúc phạm cá nhân/đối thủ cạnh tranh</li>
+<li>Quảng bá dựa trên sự thương cảm, cố ý gây áp lực mua hàng bằng cách khơi gợi lòng thương hại/cảm giác tội lỗi (kể cả dùng nhân vật AI hoặc nội dung gây hiểu lầm do AI tạo để mô tả sai lệch sự kiện khủng hoảng)</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Chống đối xử tàn ác với động vật</div>
+<p>Nghiêm cấm nội dung cổ xúy hành vi tàn ác với động vật, động vật hoang dã và thực vật được bảo vệ: cảnh giết mổ/động vật chết không tự nhiên; tiêu thụ động vật sống (trừ hải sản như nghêu, hàu); chặt rời/cắt xẻ/đốt động vật; cảnh máu me/đối xử tàn ác; tra tấn/ngược đãi; dùng thiết bị gây hại cho động vật (bẫy mèo, bẫy keo dính, vòng cổ tĩnh điện cho chó).</p>
+<div class="find ok" style="margin-top:8px"><b>Câu hỏi thường gặp:</b> Dù sản phẩm chủ đề kinh dị cũng không nên dùng hình ảnh phản cảm/gây khó chịu — không có ngoại lệ. Tránh nội dung bạo lực/phản cảm quá mức dù muốn cho sản phẩm thú vị hơn. Sản phẩm vật liệu không thân thiện môi trường nên cung cấp thông tin sử dụng/thải bỏ có trách nhiệm thay vì hình ảnh gây sốc.</div>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể bị áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'6. Tránh đưa ra tuyên bố về quản lý cân nặng',sev:'bad',b:`<p>Khi quảng bá sản phẩm Sức khỏe và Thể chất, cần thực hiện có trách nhiệm, tuân thủ Tiêu chuẩn Cộng đồng.</p>
+<div class="find bad">🚫 <b>Không được phép:</b> quảng bá sản phẩm giảm cân/đốt mỡ (thuốc, đồ uống, miếng dán, kem, dầu); tăng cơ rủi ro cao (chất tiền anabolic, prohormone, peptide hormone tăng trưởng); đưa ra tuyên bố giảm cân/tăng cơ gây hiểu lầm hoặc phóng đại, hình ảnh trước/sau phóng đại, ngôn ngữ body-shaming. Nội dung tập trung chủ yếu vào tuyên bố giảm cân/tăng cơ có thể bị hạn chế lưu lượng truy cập.</div>
+<div class="find ok">✅ <b>Được phép:</b> quảng bá sản phẩm tăng cân không dùng cho mục đích y tế (sữa, mật ong, thực phẩm bổ sung); đề cập hiệu quả giảm cân/tăng cơ không phóng đại khi chỉ là lợi ích phụ bên cạnh lợi ích sức khỏe toàn diện (ví dụ creatine, bột protein nếu trọng tâm là sức khỏe/hiệu suất thể thao).</div>
+<p>Tuyên bố về quản lý cân nặng là bất kỳ phát biểu/gợi ý nào rằng sản phẩm hỗ trợ giảm cân, giảm mỡ hoặc tăng cơ — dưới mọi hình thức (văn bản, âm thanh, video, mô tả, hashtag).</p>
+<img src="policy-assets/ch06_1.jpg" alt="Ví dụ bị cấm: đo vòng eo để quảng bá hiệu quả giảm cân của sản phẩm" loading="lazy">
+<ul>
+<li><b>Sản phẩm bị cấm:</b> "Mua viên uống giảm cân này!", "Trà giảm cân", "Đồ uống thải độc giảm cân", "Kẹo dẻo đốt mỡ".</li>
+<li><b>Dễ dàng/nhanh chóng không thực tế:</b> "Giảm cân dễ dàng/nhanh chóng", "Đốt mỡ ngay lập tức", "Giảm cảm giác thèm ăn", "Đeo đai thắt lưng này để giảm cân".</li>
+</ul>
+<img src="policy-assets/ch06_2.jpg" alt="Ví dụ bị cấm: hình ảnh trước và sau minh họa thay đổi cân nặng/vóc dáng" loading="lazy">
+<ul>
+<li><b>Hình ảnh "trước và sau":</b> "Tôi đã giảm từ 80kg xuống 70kg!"</li>
+<li><b>Chỉ định mức giảm/số đo/thời gian:</b> "Giảm 10kg...", "Từ size XL xuống S", "Giảm 8 inch vòng eo", "Giảm mỡ trong 1 tuần".</li>
+<li><b>Hashtag kiểm soát cân nặng:</b> #WeightLossTea, #FatBurningCoffee, #Lose7kgin7Days.</li>
+</ul>
+<img src="policy-assets/ch06_3.jpg" alt="Ví dụ bị cấm: dùng cử chỉ véo mỡ bụng để ám chỉ sản phẩm giúp giảm mỡ" loading="lazy">
+<ul>
+<li><b>Cử chỉ:</b> véo mỡ bụng ám chỉ sản phẩm giúp giảm mỡ.</li>
+<li><b>Gây xấu hổ/tiêu cực:</b> "Thôi đừng béo nữa!", "Hãy làm bản thân gầy hơn và hấp dẫn hơn!"</li>
+<li><b>So sánh với dược phẩm:</b> "Ozempic thiên nhiên", "Tăng cường GLP-1".</li>
+<li><b>Khuyến khích tập/dùng sai cách, nguy hiểm:</b> "Vẫn phải chạy bộ dù đang ốm", "uống 4 viên để có kết quả nhanh hơn" dù nhãn ghi 2 viên.</li>
+<li><b>Hành vi ăn uống mất kiểm soát/nguy hiểm:</b> ăn kiêng cực đoan, nhịn ăn nghiêm trọng, "xông hơi để đổ mồ hôi giảm cân".</li>
+</ul>
+<div class="find warn">Lưu ý: Chứng nhận/giải thưởng về hiệu quả không miễn trừ sản phẩm khỏi việc tuân thủ các quy tắc này.</div>
+<div style="font-weight:600;margin:10px 0 4px">Quy tắc theo từng loại sản phẩm</div>
+<table><tr><th>Loại sản phẩm</th><th>Tránh</th><th>Được phép</th></tr>
+<tr><td>Thực phẩm chức năng</td><td>"Chứa L-arabinose giúp giảm cân dễ dàng"</td><td>"Tăng cường miễn dịch tự nhiên"</td></tr>
+<tr><td>Sản phẩm giải độc</td><td>"Trà detox đốt cháy mỡ"</td><td>"Giữ đường ruột khỏe mạnh"</td></tr>
+<tr><td>Bột protein</td><td>"Giảm cân ngay khi ngủ"</td><td>"Hỗ trợ phục hồi cơ bắp"</td></tr>
+<tr><td>TPBS thể thao</td><td>"Thúc đẩy giảm cân vượt trội"</td><td>"Cải thiện hiệu suất thể thao"</td></tr>
+<tr><td>Ít calo/đường</td><td>"Chỉ ăn chip rau củ này để giảm cân cực nhanh"</td><td>"Không calo", "ít đường", "80kcal mỗi gói"</td></tr>
+<tr><td>Quần áo định hình</td><td>"Đai nịt eo giúp giảm cân bằng cách thay đổi nội tạng"</td><td>"Sản phẩm định hình giúp váy vừa vặn hơn"</td></tr>
+<tr><td>Cân sức khỏe/thực phẩm</td><td>"Theo dõi từng gram để giảm cân nhanh"</td><td>"Đo được lượng mỡ cơ thể"</td></tr>
+</table>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> tài khoản có thể bị áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'7. Né tránh giới hạn về nội dung',sev:'bad',b:`<p>Nhà sáng tạo cần tránh giới thiệu/quảng cáo sản phẩm bị cấm hoặc không được hỗ trợ. Mọi sản phẩm hiển thị/giới thiệu phải tuân thủ pháp luật, quy định địa phương và Nguyên tắc cộng đồng, và phải có sự phê duyệt cần thiết để quảng cáo.</p>
+<p>Không nên tìm cách vượt qua chính sách niêm yết/nội dung. Khi live hoặc tạo video, nội dung phải hiển thị rõ ràng sản phẩm được giới thiệu, và phải giống với sản phẩm trong danh sách niêm yết liên kết. Không được tham gia hành vi gian lận niêm yết, ví dụ:</p>
+<ul>
+<li>Quảng cáo sản phẩm không tương ứng với danh sách niêm yết được liên kết</li>
+<li>Quảng cáo sản phẩm và danh sách niêm yết không nhất quán</li>
+<li>Quảng cáo hoặc che giấu sản phẩm bị cấm/không được hỗ trợ trong nội dung hoặc danh sách niêm yết</li>
+<li>Tham gia bất kỳ hành vi nào nhằm gian lận tính năng niêm yết sản phẩm</li>
+</ul>
+<div class="find warn">Lưu ý: Nếu phát hiện che giấu sản phẩm không khớp niêm yết, bán sản phẩm không tuân thủ, hoặc gian lận niêm yết liên quan sản phẩm có thương hiệu/quyền sở hữu trí tuệ, có thể áp dụng thêm hoặc nâng mức hành động thực thi.</div>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'8. Tránh các hoạt động Ra giá không chính thức',sev:'bad',b:`<p>Các cuộc ra giá chỉ được phép thực hiện qua tính năng <b>Ra giá LIVE chính thức</b>, hiện chỉ dành cho Tài khoản Chính thức và Tài khoản Marketing đủ điều kiện. Mọi hoạt động ra giá ngoài tính năng này đều không được phép: đặt giá thầu, chào giá hoặc mời đặt giá thầu, kể cả hướng người dùng đến hoạt động ra giá trên nền tảng khác/bên thứ ba.</p>
+<p><b>Vì sao bị cấm?</b> Vì có thể tạo rủi ro cho người mua và người bán: định giá không rõ ràng, giao dịch trái phép và hành vi gian lận tiềm ẩn.</p>
+<p><b>Ra giá là gì?</b> Sự kiện bán hàng trong đó người mua tiềm năng đặt giá thầu cạnh tranh, mặt hàng về tay người trả giá cao nhất. Bao gồm: đặt giá thầu, cung cấp tùy chọn đặt giá thầu, mời thầu.</p>
+<img src="policy-assets/ch08_1.jpg" alt="Ví dụ ra giá không chính thức: bảng đấu giá Open Bid trên màn hình LIVE, dùng đồng hồ đếm ngược để chốt giá thầu" loading="lazy">
+<ul>
+<li>Dùng đồng hồ đếm ngược cho phép đặt giá thầu trong khoảng thời gian nhất định; ai đặt giá cao nhất khi hết giờ được mua</li>
+<li>Quy định số lượng giá thầu cho một mặt hàng (ví dụ giá thầu thứ 5 thắng)</li>
+<li><b>Ví dụ A:</b> giá khởi điểm 20 USD, người mua đưa giá cao hơn để giành quyền mua</li>
+<li><b>Ví dụ B:</b> đặt đồng hồ đếm ngược 3 phút, sản phẩm về tay người trả giá cao nhất trước khi hết giờ</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Cách tránh vi phạm</div>
+<p>Nếu đủ điều kiện dùng Ra giá TikTok LIVE, chỉ được thực hiện qua tính năng chính thức. Nếu không đủ điều kiện, cần tránh:</p>
+<ul>
+<li><b>Dùng mức giá cố định:</b> không cung cấp đấu thầu/mời thầu hay chiến lược tương tự để tăng giá</li>
+<li><b>Tránh từ ngữ liên quan đấu giá:</b> không dùng "giá thầu", "đấu giá", "giá khởi điểm", "giá mở phiên" trong LIVE</li>
+<li><b>Không quảng cáo ra giá bên ngoài:</b> không chuyển hướng người dùng đến cuộc ra giá trên nền tảng bên thứ ba</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'9. Tương tác ảo, nội dung rác và hành vi tương tác không xác thực',sev:'bad',b:`<p>Còn gọi là lưu lượng truy cập gây hiểu lầm, lừa đảo và gian lận. Không cho phép bất kỳ hình thức lừa đảo/gian lận nào trong hồ sơ, nội dung, bình luận hoặc đoạn chat:</p>
+<ul>
+<li><b>Tương tác ảo:</b> thao túng lượt tương tác/thuật toán nền tảng để tăng hiệu suất, thường qua hệ thống tạo tương tác ảo</li>
+<li><b>Nội dung rác:</b> bài đăng/bình luận/tin nhắn không liên quan hoặc lặp lại được chia sẻ quá mức</li>
+<li><b>Hành vi tương tác không xác thực khác:</b> nhóm tương tác, clickbait, chiêu trò tạo tăng trưởng ảo</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ về tương tác ảo</div>
+<ul>
+<li>Thao túng cơ chế nền tảng để tạo đơn hàng, lượt xem, lượt thích, bình luận, lượt theo dõi hoặc đánh giá tích cực ảo</li>
+<li>Sử dụng nhiều tài khoản để phát cùng một buổi LIVE</li>
+<li>Tạo phần mềm độc hại hoặc chỉnh sửa mã để tăng đơn/lượt xem/lượt thích/người theo dõi ảo</li>
+<li>Bán số người theo dõi/lượt thích; hướng dẫn cách tăng tương tác ảo; hứa hẹn "đổi lượt thích lấy lượt thích" và ưu đãi giả để tương tác</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ về nội dung rác</div>
+<ul>
+<li>Giả mạo cá nhân/tổ chức khác để lừa dối công chúng</li>
+<li>Quảng cáo dịch vụ tạo lưu lượng truy cập ảo</li>
+<li>Chuyển hướng đến trang đích trái phép: trang không hợp lệ, yêu cầu thông tin cá nhân, hoặc tự động tải tệp xuống máy</li>
+<li>Đăng nội dung lặp đi lặp lại, ít giá trị: số lượng lớn video gần giống hệt nhau; video chỉ hiển thị sản phẩm/bàn tay không có khuôn mặt/giọng nói; lạm dụng giọng đọc AI chung chung; đăng video tương tự trên nhiều tài khoản</li>
+</ul>
+<img src="policy-assets/ch09_1.jpg" alt="Ví dụ nội dung lặp lại, ít giá trị: nhiều ảnh gần giống hệt sản phẩm, chỉ đổi góc chụp tối thiểu" loading="lazy">
+<p>Hành vi tương tác không xác thực còn bao gồm chiến thuật lừa đảo thao túng hành vi khách hàng: lừa dối/xúi giục khách đặt hàng/thích/bình luận; quảng cáo sản phẩm bằng cách tạo sự đồng cảm giả tạo.</p>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> nội dung/tài khoản sẽ chịu biện pháp chế tài; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'10. Phát song song và Phát trực tiếp bằng nhiều tài khoản',sev:'bad',b:`<p>Phát song song và phát trực tiếp bằng nhiều tài khoản gây cản trở trải nghiệm tốt nhất trên TikTok Shop:</p>
+<ul>
+<li><b>Kết nối kém hơn:</b> chia sự chú ý đến nhiều nền tảng khiến khó toàn tâm toàn ý, ảnh hưởng lòng tin và doanh số</li>
+<li><b>Gây nhầm lẫn cho người mua:</b> thông điệp khác nhau giữa các nền tảng khiến khách hàng bối rối</li>
+<li><b>Trải nghiệm kém hấp dẫn hơn:</b> người xem xứng đáng nhận sự chú ý trọn vẹn</li>
+</ul>
+<p>Do đó, nền tảng <b>nghiêm cấm</b> việc Phát song song và Phát trực tiếp bằng nhiều tài khoản.</p>
+<img src="policy-assets/ch10_1.jpg" alt="So sánh Phát trực tiếp đồng thời (TikTok Shop và nền tảng khác cùng lúc) và Phát trực tiếp bằng nhiều tài khoản — cả hai đều bị cấm" loading="lazy">
+<div class="find ok"><b>Vẫn có thể phát trực tiếp trên nền tảng khác chứ?</b> Chắc chắn rồi! Nhà sáng tạo được tự do phát trực tiếp trên nền tảng khác, nhưng cần tránh phát <b>song song</b> với phiên LIVE trên TikTok Shop.</div>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> nội dung/tài khoản sẽ chịu biện pháp chế tài; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'11. Các hành động bị cấm của nhà sáng tạo',sev:'bad',b:`<p>Điều khoản sử dụng đối với Nhà sáng tạo liệt kê các hành vi không được phép sau:</p>
+<div style="font-weight:600;margin:10px 0 4px">Tham gia hoạt động bất hợp pháp hoặc tội phạm</div>
+<p>Sử dụng nền tảng để thực hiện hoạt động bị pháp luật nghiêm cấm: rửa tiền, trộm cắp danh tính, lừa đảo.</p>
+<div style="font-weight:600;margin:10px 0 4px">Lạm dụng thông tin cá nhân/nhạy cảm</div>
+<p>Thu thập, chia sẻ hoặc lạm dụng thông tin cá nhân: dùng chiến thuật độc hại để thu thập thông tin nhạy cảm nhằm mục đích bất hợp pháp; chia sẻ/tải lên thông tin khi chủ sở hữu chưa đồng ý.</p>
+<div style="font-weight:600;margin:10px 0 4px">Hoạt động gian lận tài khoản</div>
+<p>Né tránh biện pháp bảo mật để tạo tài khoản giả: dùng phần mềm/bot để tạo tài khoản giả mạo; hoạt động đăng nhập bất thường; liên kết với tài khoản đã bị cấm.</p>
+<div style="font-weight:600;margin:10px 0 4px">Thực hiện đơn đặt hàng giả mạo</div>
+<p>Đơn không phải do người mua hợp pháp thực hiện, do chính nhà sáng tạo hoặc người liên quan thực hiện để tạo hiệu suất bán hàng/lưu lượng giả mạo, lợi dụng ưu đãi nền tảng, giành phần thưởng chiến dịch; hoặc đặt hàng thay mặt khách không có tài khoản TikTok Shop.</p>
+<div style="font-weight:600;margin:10px 0 4px">Thao túng lưu lượng truy cập</div>
+<p>Dùng bên thứ ba/bot để tăng lượt thích, theo dõi, chia sẻ, bình luận; dùng ưu đãi giả mạo để lôi kéo hành động nhằm tăng hiển thị/lưu lượng được đề xuất.</p>
+<div style="font-weight:600;margin:10px 0 4px">Hành vi tải xuống bất thường của bên thứ ba</div>
+<p>Không được ủy quyền cho nền tảng khác trích xuất, chuyển và đăng lại nội dung TikTok Shop lên nơi khác để quảng bá sản phẩm ở nơi khác, bao gồm: chuyển/đăng lại hàng loạt; sao chép qua kênh bán hàng khác; đăng lại với sản phẩm gây hiểu lầm/không liên quan.</p>
+<div style="font-weight:600;margin:10px 0 4px">Hành vi gây hại</div>
+<p>Sử dụng nền tảng nhằm gây tổn hại cho người dùng khác, ví dụ liên tục yêu cầu hàng dùng thử miễn phí mà không thực hiện nghĩa vụ quảng cáo.</p>
+<div class="find warn"><b>Về TikTok PayLater:</b> không được tuyên bố sai rằng mua hàng/tương tác LIVE giúp tăng cơ hội được duyệt; cần nói rõ tiêu chí đủ điều kiện khác nhau tùy người; hướng dẫn kiểm tra điều kiện tại trang chính thức; nhắc rằng PayLater không bắt buộc.</div>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể áp dụng hành động thực thi với tài khoản, kể cả cửa hàng liên kết; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'12. Hành vi tải xuống bất thường của bên thứ ba',sev:'warn',b:`<div class="find warn">Xây dựng lòng tin với khách hàng, bảo vệ nội dung của bạn!</div>
+<p>Để đảm bảo TikTok Shop luôn an toàn với người tiêu dùng, bạn không được phép ủy quyền cho nền tảng khác trích xuất, chuyển hoặc đăng lại nội dung lên các nền tảng bên ngoài nhằm mục đích quảng bá sản phẩm/dịch vụ ở nơi khác.</p>
+<img src="policy-assets/ch12_1.jpg" alt="Xây dựng lòng tin với khách hàng, bảo vệ nội dung của bạn — vì sao không được ủy quyền nền tảng khác đăng lại nội dung" loading="lazy">
+<p><b>Tại sao không cho phép?</b> ❌ Khi nội dung của bạn bị người khác đăng lại trên nền tảng khác, nội dung có thể bị sử dụng sai mục đích hoặc trình bày sai lệch, khiến người mua nhầm lẫn — dẫn đến rủi ro vi phạm bản quyền, giả mạo thương hiệu hoặc bị đánh cắp thương hiệu. ✅ Bạn có thể tự đăng lại nội dung của chính mình mà không dùng tính năng tự động của bên thứ ba, miễn nội dung vẫn chính xác và không gây hiểu lầm.</p>
+<div style="font-weight:600;margin:10px 0 4px">Nên</div>
+<ul>
+<li>Tạo nội dung nguyên bản cho khán giả trên TikTok Shop — giúp xây dựng lòng tin và cải thiện doanh số</li>
+<li>Điều chỉnh nội dung cho phù hợp với sản phẩm cụ thể đang quảng bá</li>
+<li>Liên hệ TikTok Shop nếu phát hiện nội dung của mình bị dùng lại mà không có sự cho phép</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Không nên</div>
+<ul>
+<li>Không cho phép nền tảng khác trích xuất, chuyển hoặc đăng lại nội dung của bạn trên các nền tảng bên ngoài</li>
+<li>Không dùng công cụ/dịch vụ không được cấp phép để chuyển hàng loạt nội dung — có thể dẫn đến gian lận hoặc rủi ro bảo mật</li>
+</ul>`},
+
+{t:'13. Sản phẩm có yếu tố bất ngờ và LIVE mở hộp/thẻ',sev:'warn',b:`<p><b>Sản phẩm có yếu tố bất ngờ</b> là sản phẩm mà người mua biết các mặt hàng có thể có, nhưng không biết chính xác mình sẽ nhận gì cho đến khi mở (Hộp bí ẩn, Trứng vàng, Lịch Mùa Vọng, Hộp mù, Gói thẻ trao đổi). <b>"Buổi LIVE mở hộp/thẻ"</b>: người bán/nhà sáng tạo mở sản phẩm bất ngờ niêm phong trước máy quay, rồi phân bổ và vận chuyển mặt hàng đã khui cho người mua theo quy tắc đã nêu.</p>
+<div style="font-weight:600;margin:10px 0 4px">Yêu cầu đối với Sản phẩm có yếu tố bất ngờ</div>
+<ul>
+<li>Sản phẩm phải được sản xuất trong nhà máy, <b>không</b> do thương hiệu/người bán/nhà sáng tạo tự lắp ráp — nghiêm cấm gói sản phẩm ngẫu nhiên tự lắp ráp</li>
+<li>Không được là/chứa mặt hàng bị cấm hoặc không được hỗ trợ</li>
+<li>Phải trình bày rõ trong mô tả: hình ảnh các sản phẩm có thể nhận; số lượng, danh mục, biến thể; giá trị sản phẩm</li>
+<li>Tổng giá trị toàn bộ sản phẩm phải <b>dưới 100 USD</b></li>
+<li>Phải chọn đúng ngành hàng sản phẩm</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Ngành hàng được phép cho LIVE mở thẻ/hộp</div>
+<img src="policy-assets/ch13_1.jpg" alt="Bảng ngành hàng được phép dùng cho LIVE mở thẻ/hộp mù: Sở thích & Sưu tầm > Thẻ bài sưu tầm và phụ kiện; Đồ cũ > Thẻ bài sưu tầm; Sưu tầm > Giải trí (Hộp mù)" loading="lazy">
+<div class="find warn">Lưu ý: Một số ngành hàng chưa được kích hoạt cho thị trường Việt Nam — không niêm yết/bán đến khi ngành hàng được mở. Tổ chức LIVE mở hộp/thẻ mà phân loại sai ngành hàng có thể bị chế tài.</div>
+<img src="policy-assets/ch13_2.jpg" alt="Hình thức mở hộp/thẻ được phép và hình thức bị cấm (kéo thẻ, điểm tích lũy, trò đoàn tàu, vua ngọn đồi, đấu HP...)" loading="lazy">
+<div class="find ok"><b>Được phép:</b> mở hộp/thẻ cá nhân từ mở trước camera; chọn đội/cầu thủ/nhân vật trước khi mở; người bán tự mở 1 hộp niêm phong rồi phân bổ; mở thùng (nhiều hộp) với cách phân chia rõ ràng; hộp mù quảng bá/bán rõ ràng miễn là nêu rõ yếu tố bất ngờ và các mặt hàng có thể nhận.</div>
+<div class="find bad"><b>Bị cấm:</b> mở thẻ ngẫu nhiên không do lựa chọn; thẻ/hộp có thưởng/giải thưởng bổ sung ngẫu nhiên; trò kéo thẻ (Pull Games Break); mở hộp/thẻ tích điểm (Points Program Break); trò đoàn tàu (Train Game); vua ngọn đồi (King of the Hill); đấu HP (HP Battle); bất kỳ hình thức nào liên quan cờ bạc hoặc cơ chế may rủi chưa được liệt kê.</div>
+<div style="font-weight:600;margin:10px 0 4px">Bảo vệ khách hàng</div>
+<p>Nhằm ngăn chặn mua sắm gây nghiện, áp dụng các hạn chế (triển khai từng bước): <b>Giới hạn độ tuổi</b> — người mua phải đủ 18 tuổi; <b>Giới hạn giao dịch hằng ngày</b> — dưới 25 tuổi bị giới hạn 8 giao dịch/ngày; <b>Thời gian chờ</b> — sau 20 giao dịch, phải đợi 15 phút trước giao dịch tiếp theo (cộng dồn giữa các cửa hàng).</p>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể áp dụng chế tài; vi phạm lặp lại bị phạt nặng hơn. Người bán kháng nghị qua Trung tâm Nhà bán hàng; nhà sáng tạo kháng nghị qua ứng dụng TikTok.</div>`},
+
+{t:'14. Quà tặng miễn phí và Ưu đãi khi mua hàng',sev:'warn',b:`<p>Bạn có thể trao <b>"Quà tặng miễn phí"</b> (khách có cơ hội nhận quà miễn phí bằng cách thực hiện nhiệm vụ) và <b>"Ưu đãi khi mua hàng"</b> (khách đủ điều kiện nhận quà miễn phí sau khi mua) theo nguyên tắc dưới đây.</p>
+<div class="find warn">Lưu ý: Không được dùng hình thức trò chơi hóa như vòng quay trúng thưởng cho cả hai loại này.</div>
+<div style="font-weight:600;margin:10px 0 4px">Quà tặng miễn phí (Quà tặng LIVE)</div>
+<p>Chỉ được dùng tính năng <b>Quà tặng LIVE</b> chính thức. Cần tuân thủ: không dùng cờ bạc/game hóa/lựa chọn ngẫu nhiên; nghiêm cấm quà tặng là tiền mặt, tiền ảo, thẻ quà tặng; cần nêu rõ cách tham gia, thời gian/số người trúng/chi tiết phần thưởng, quy trình chọn và cách nhận quà; bạn hoàn toàn chịu trách nhiệm, không ngụ ý liên kết với TikTok Shop. 3 loại được hỗ trợ: "Tham gia để trúng thưởng" (vào LIVE), "Bình luận để trúng thưởng", "Đặt hàng để trúng thưởng" (mua hàng).</p>
+<div style="font-weight:600;margin:10px 0 4px">5 mẹo tránh vi phạm</div>
+<img src="policy-assets/ch14_1.jpg" alt="Nên xin phê duyệt sản phẩm quà tặng trước khi LIVE, không tổ chức khi chứng nhận thương hiệu đang chờ xử lý" loading="lazy">
+<p>1. Trước khi tổ chức: đảm bảo sản phẩm quà tặng đã được phê duyệt (đặc biệt sản phẩm hạn chế).</p>
+<img src="policy-assets/ch14_2.jpg" alt="Nên nói rõ người xem cần làm gì để tham gia trúng thưởng, không mập mờ" loading="lazy">
+<p>2. Trong khi diễn ra: nêu rõ điều kiện tham gia.</p>
+<img src="policy-assets/ch14_3.jpg" alt="Nên chỉ rõ nút/khu vực bấm để tham gia trực tiếp" loading="lazy">
+<p>3. Trong khi diễn ra: giải thích cách tham gia rõ ràng.</p>
+<img src="policy-assets/ch14_4.jpg" alt="Nên thông báo rõ sản phẩm quà tặng thực tế, không mơ hồ" loading="lazy">
+<p>4. Trong khi diễn ra: nêu rõ phần thưởng sẽ trao.</p>
+<img src="policy-assets/ch14_5.jpg" alt="Nên trao quà/phần thưởng đầy đủ như đã hứa" loading="lazy">
+<p>5. Sau khi diễn ra: hoàn thành việc gửi quà như đã hứa — không hoàn thành có thể bị tước quyền dùng tính năng Quà tặng LIVE và chịu phạt thêm.</p>
+<div style="font-weight:600;margin:10px 0 4px">Ưu đãi khi mua hàng</div>
+<p>Cho phép 3 hình thức: (1) Mua một, tặng một (cùng mặt hàng); (2) Mua một, tặng một/nhiều mặt hàng khác; (3) Mua X sản phẩm, nhận bộ quà tặng Y qua Công cụ khuyến mãi chính thức (ví dụ GWP).</p>
+<p><b>Nếu KHÔNG dùng công cụ khuyến mãi chính thức</b>, cần: liệt kê quà tặng/ưu đãi trong tiêu đề/hình ảnh/mô tả sản phẩm; quà tặng nhất quán với nội dung quảng cáo; tất cả khách nhận cùng quà/mức giá/chủng loại; quà không phải tiền mặt/tiền ảo/thẻ quà tặng; trình bày rõ điều khoản áp dụng trong LIVE/video/mô tả.</p>
+<img src="policy-assets/ch14_6.jpg" alt="Ví dụ đúng: nêu rõ quà tặng miễn phí trong tiêu đề và dùng Công cụ Quà Tặng Khi Mua Hàng" loading="lazy">
+<img src="policy-assets/ch14_7.jpg" alt="Ví dụ sai cần tránh: quà tặng không nêu rõ trong tiêu đề/mô tả, không dùng Công cụ Quà Tặng Khi Mua Hàng" loading="lazy">
+<div class="find ok"><b>Câu hỏi thường gặp:</b> Nếu không thể trao phần thưởng đã hứa, thông báo ngay cho người tham gia, xin lỗi và cung cấp giải pháp thay thế. Có thể hứa hoàn tiền bằng tín dụng cửa hàng nếu trình bày rõ khoản hoàn lại sẽ ở dạng tín dụng.</div>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể bị biện pháp xử lý; vi phạm lặp lại bị phạt nặng hơn. Người bán kháng nghị qua Trung tâm Nhà bán hàng; nhà sáng tạo kháng nghị qua ứng dụng TikTok.</div>`},
+
+{t:'15. Chính sách ra giá trên LIVE',sev:'info',b:`<p><b>Ra giá trên LIVE</b> là hình thức mua sắm tương tác thời gian thực: người bán niêm yết mặt hàng ra giá và đặt giá khởi điểm ngay trong LIVE; người xem trả giá, ai trả cao nhất giành quyền mua. Phù hợp cho đồ sưu tầm, đồ xa xỉ đã qua sử dụng, giày sneaker, trang sức và hàng khan hiếm.</p>
+<div style="font-weight:600;margin:10px 0 4px">Tại sao nên sử dụng?</div>
+<ul>
+<li>🔥 <b>Tăng tương tác:</b> xây dựng tệp khách trung thành cảm thấy kết nối cá nhân</li>
+<li>⏰ <b>Khuyến khích giao dịch:</b> đồng hồ đếm ngược + hàng tồn kho có hạn thúc đẩy hành động nhanh</li>
+<li>💰 <b>Tối đa hóa chuyển đổi:</b> nhiều người trả giá cùng lúc có thể đẩy giá lên cao hơn kỳ vọng</li>
+<li>📦 <b>Đơn giản hóa hoàn thiện đơn hàng:</b> tạo bài niêm yết ra giá trong chưa đầy 2 phút</li>
+</ul>
+<p><b>Điều kiện sử dụng:</b> chỉ dành cho Nhà sáng tạo có Tài khoản chính thức/Marketing (không hỗ trợ Nhà sáng tạo liên kết), cần điểm tình trạng &gt; 150 và tài khoản không bị gắn cờ rủi ro/gian lận.</p>
+<p><b>Dịch vụ hậu mãi:</b> vì giá trúng thầu là cam kết mua hàng ràng buộc, một số ngoại lệ áp dụng — hủy đơn do người bán chỉ tự động phê duyệt trong trường hợp ngoại lệ; chính sách trả hàng/hoàn tiền ưu tiên người bán, không tự động phê duyệt; đơn ra giá không đủ điều kiện đổi hàng/giao lại.</p>
+<div style="font-weight:600;margin:10px 0 4px">Nên</div>
+<table><tr><th>Nên</th><th>Chi tiết</th></tr>
+<tr><td>Dẫn đầu nhờ ngành hàng phù hợp</td><td>Hiệu quả cao nhất với hàng hiếm, đồ sưu tầm, đồ xa xỉ đã qua sử dụng, hàng tồn ít</td></tr>
+<tr><td>Thúc đẩy môi trường ra giá công bằng</td><td>Đối xử bình đẳng mọi người tham gia, nêu rõ điều khoản từ đầu</td></tr>
+<tr><td>Tạo minh bạch trong quy trình</td><td>Truyền đạt rõ cơ chế ra giá và cách chọn người thắng</td></tr>
+<tr><td>Đặt kỳ vọng rõ ràng</td><td>Nói rõ giá khởi điểm, quy tắc, điều kiện hậu mãi ngay đầu LIVE</td></tr>
+<tr><td>Chặn người mua gây rối</td><td>Dùng tính năng chặn với tài khoản đặt giá đáng ngờ</td></tr>
+<tr><td>Gắn sản phẩm thường</td><td>Luôn gắn ít nhất 1 sản phẩm thường để duy trì trạng thái Shoppable Live</td></tr>
+</table>
+<div style="font-weight:600;margin:10px 0 4px">Không nên</div>
+<table><tr><th>Không nên</th><th>Chi tiết</th></tr>
+<tr><td>Đề nghị/mời chào giá thầu</td><td>Không thương lượng giá ngoài quy trình đấu thầu chính thức</td></tr>
+<tr><td>Chuẩn bị bài niêm yết vào phút chót</td><td>Nên chuẩn bị trước để có thời gian tương tác</td></tr>
+<tr><td>Quảng bá hàng giả</td><td>Chỉ niêm yết sản phẩm chính hãng cho ra giá</td></tr>
+<tr><td>Hủy đơn sau buổi ra giá</td><td>Không được hủy vì không hài lòng với giá cuối cùng</td></tr>
+</table>
+<p>Vẫn áp dụng nguyên tắc chung cho một buổi LIVE hiệu quả: sản phẩm khớp với bài niêm yết; không dùng cơ chế cờ bạc/game hóa; không hứa hẹn sai sự thật; tránh tuyên bố gây hiểu nhầm (đặc biệt sản phẩm chăm sóc sức khỏe/làm đẹp).</p>`},
+
+{t:'16. Tổng quan về nội dung gây hiểu lầm',sev:'warn',b:`<p>Để bảo vệ khách hàng và duy trì niềm tin, TikTok Shop nghiêm cấm mọi nội dung có thể gây hiểu lầm cho người mua trong quá trình ra quyết định mua hàng. Áp dụng cho mọi định dạng nội dung: bài đăng bán sản phẩm, video ngắn, buổi LIVE và tất cả yếu tố trên màn hình/siêu dữ liệu (ảnh bìa, tiêu đề, kịch bản, chú thích, hyperlink, hành vi, giọng nói, trang phục, biệt danh, giới thiệu cá nhân...).</p>
+<div class="find warn">Chương này là <b>tổng quan</b>. Mỗi nhóm hành vi bị cấm dưới đây có một chương chi tiết riêng (17–26) trong mục này với đầy đủ quy định, ví dụ và mức xử phạt.</div>
+<p>Nội dung được xem là gây hiểu lầm nếu trình bày thông tin sai lệch, phóng đại tuyên bố, so sánh không chính xác hoặc dùng lời hứa hẹn lừa dối. Các nhóm hành vi bị cấm gồm:</p>
+<ul>
+<li><b>Mô tả hoặc tuyên bố phóng đại</b> — không đưa tuyên bố về chức năng/kết quả chưa được chứng minh, phi khoa học, hoặc hứa hẹn kết quả trong thời gian phi thực tế; tránh hình ảnh chỉnh sửa/đánh lừa (chương 19–20, 17).</li>
+<li><b>Hiển thị thông tin sai lệch / Quảng bá sản phẩm không nhất quán</b> — video/LIVE phải phản ánh đúng sản phẩm liên kết trong bài đăng (giá, thương hiệu, chính sách trả hàng, chất liệu, nguồn gốc...) (chương 18, 26).</li>
+<li><b>Tuyên bố sai sự thật và trình bày sai sự thật</b> — không tuyên bố phần thưởng/chứng nhận/xác nhận không có thật, không ngụ ý liên kết thương hiệu khi chưa được phép, không sai lệch nguồn gốc/chất liệu/thông số (chương 21).</li>
+<li><b>Nội dung so sánh/chê bai</b> — tránh so sánh ác ý hoặc tuyên bố tiêu cực nhắm vào thương hiệu/sản phẩm/nền tảng khác; so sánh phải có căn cứ, trung lập (chương 22).</li>
+<li><b>Hứa hẹn suông về phần thưởng hoặc lợi ích</b> — không quảng cáo tặng phẩm/ưu đãi/phần thưởng trừ khi là hàng thật, có sẵn, mô tả chính xác; chỉ dùng tính năng Quà tặng LIVE chính thức (chương 14, 23).</li>
+<li><b>Gian lận trong đăng bán sản phẩm</b> — không giới thiệu sản phẩm bị cấm/không hỗ trợ; không qua mặt chính sách niêm yết/nội dung (chương 7).</li>
+<li><b>Tuyên bố về giá gây hiểu lầm / khuyến mãi đã hết hạn</b> — giá khuyến mãi phải khớp bài đăng, không thổi phồng chiết khấu hoặc quảng cáo giá đã hết hạn (chương 25).</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'17. Thông tin sai lệch về y tế',sev:'bad',b:`<p>Để bảo vệ khách hàng khỏi sản phẩm gây hại và hoạt động y tế không an toàn, chúng tôi <b>không cho phép tuyên bố y tế gây hiểu lầm</b>.</p>
+<div style="font-weight:600;margin:10px 0 4px">Thông tin sai lệch về y tế là gì?</div>
+<p>Bao gồm các tuyên bố rằng sản phẩm có tác dụng <b>chữa trị, điều trị, phòng ngừa hoặc làm thuyên giảm</b> bệnh tật. Ví dụ: "Phòng ngừa ung thư", "Giảm cholesterol cao", "Phòng ngừa huyết áp cao", "Phòng ngừa đột quỵ", "Làm thuyên giảm bệnh tiểu đường", "Đảo ngược bệnh đục thủy tinh thể".</p>
+<img src="policy-assets/ch17_1.jpg" alt="Hàng chục ví dụ tuyên bố y tế bị cấm và danh sách bệnh nghiêm trọng không được phép quảng cáo là chữa/trị" loading="lazy">
+<div style="font-weight:600;margin:10px 0 4px">Nhóm bệnh/tình trạng không được tuyên bố "chữa trị"</div>
+<p>Không cho phép tuyên bố sản phẩm có tác dụng với <b>bệnh nghiêm trọng</b>: tiểu đường, đường huyết cao, đột quỵ, tim mạch, cholesterol/mỡ máu cao, huyết áp cao, bệnh thận/sỏi thận, bệnh gan/xơ gan, sỏi mật, đục thủy tinh thể, tăng nhãn áp, viêm phổi, suy giáp, sốt xuất huyết, mụn rộp, nghiện ma túy, mất ngủ mãn tính, Alzheimer... (danh sách không đầy đủ). Cũng không được tuyên bố chữa trị/gây ra hoặc đảo ngược <b>tình trạng sức khỏe sinh sản</b> (gout, UTI, mãn kinh, kinh nguyệt, phá thai, hen suyễn, vô sinh, mang thai...) hay các tình trạng khác (hormone, thiếu máu, đau nửa đầu, cúm/covid/thủy đậu, viêm khớp, viêm xoang, chàm/vẩy nến/mụn trứng cá đỏ, trĩ, nấm, cận/lão thị...).</p>
+<div style="font-weight:600;margin:10px 0 4px">Cách tránh vi phạm</div>
+<img src="policy-assets/ch17_2.jpg" alt="Bảng so sánh Không nên / Nên: không tự đưa tuyên bố y tế hay chẩn đoán bệnh, chỉ trích dẫn tuyên bố đã in trên bao bì hoặc tài liệu phê duyệt" loading="lazy">
+<p><b>Không nên:</b> đưa tuyên bố chữa trị/phòng ngừa bệnh tật (vd "đau đầu thường xuyên có thể bạn mắc tiểu đường"); ngăn cản người xem tìm lời khuyên chuyên nghiệp (vd "không cần đi khám bác sĩ").</p>
+<p><b>Nên:</b> hỗ trợ tuyên bố bằng cách trình bày đúng nguyên văn tác dụng in trên (a) bao bì sản phẩm; (b) tài liệu phê duyệt quảng cáo của chính phủ — và phóng to để người xem đọc rõ.</p>
+<div class="find warn"><b>Ví dụ:</b> có thể nói "Sản phẩm này <b>giảm đau do viêm khớp</b>" nếu cụm từ chính xác này có trên bao bì/tài liệu phê duyệt. <b>Không thể</b> nói "Sản phẩm này <b>chữa bệnh viêm khớp</b>". <b>Lưu ý:</b> dù một số tuyên bố sức khỏe rủi ro thấp hơn nếu in trên bao bì, vẫn <b>không thể</b> dựa vào bao bì nếu liên quan <b>bệnh lý nghiêm trọng hoặc hiếm nghèo</b>.</div>
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ theo từng nhóm sản phẩm</div>
+<img src="policy-assets/ch17_3.jpg" alt="Bảng ví dụ Không nên/Nên theo từng nhóm sản phẩm: đồ uống ít đường, dầu cá, vitamin, trái cây/rau củ, canxi, sản phẩm vệ sinh, kem dưỡng ẩm..." loading="lazy">
+<table><tr><th>Sản phẩm</th><th>Không nên nói</th><th>Nên nói</th></tr>
+<tr><td>Đồ uống ít đường</td><td>"Làm thuyên giảm bệnh tiểu đường"</td><td>"Có ít đường"</td></tr>
+<tr><td>TPBS dầu cá</td><td>"Đã giảm cholesterol cao của tôi"</td><td>"Cung cấp chất béo lành mạnh"</td></tr>
+<tr><td>TPBS vitamin</td><td>"Hạ huyết áp cao"</td><td>"Có thể giúp cân bằng lưu thông máu"</td></tr>
+<tr><td>Trái cây và rau củ</td><td>"Giúp phòng ngừa bệnh tim"</td><td>"Giúp trái tim tôi luôn khỏe"</td></tr>
+<tr><td>Viên canxi</td><td>"Chữa lành gãy xương"</td><td>"Hỗ trợ phát triển xương khỏe mạnh"</td></tr>
+<tr><td>Kem dưỡng/bôi da</td><td>"Chữa bệnh trĩ"</td><td>"Làm dịu bệnh trĩ"</td></tr>
+<tr><td>Vitamin thai kỳ</td><td>"Đã giúp tôi có thai"</td><td>"Đã được dùng trong thai kỳ"</td></tr>
+<tr><td>Viên ngậm ho</td><td>"Chữa trị covid"</td><td>"Hỗ trợ giảm ho, đau họng, triệu chứng cúm"</td></tr>
+</table>
+<img src="policy-assets/ch17_4.jpg" alt="Không — ngay cả khi tuyên bố về bệnh nghiêm trọng được in trên bao bì, vẫn không được nhắc tác dụng lâu dài với bệnh nghiêm trọng" loading="lazy">
+<p><b>Có được tuyên bố y tế nào miễn là in trên bao bì không?</b> <b>Không.</b> Dù có thể trích tuyên bố sức khỏe rủi ro thấp hơn nếu in trên bao bì, vẫn <b>không cho phép tuyên bố về tác dụng lâu dài với bệnh nghiêm trọng</b>, kể cả khi in trên bao bì — ví dụ "#chữatrịungthư", "Chữa bệnh tiểu đường", "Loại bỏ khối u", "Giải pháp cho bệnh HIV".</p>
+<img src="policy-assets/ch17_5.jpg" alt="Thực thi và kháng nghị: cảnh báo chính thức, xóa sản phẩm/nội dung, gián đoạn LIVE, tính Điểm vi phạm, tạm ngưng đặc quyền" loading="lazy">
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> thông báo cảnh báo, xóa sản phẩm/nội dung, gián đoạn LIVE, tính Điểm vi phạm, có thể tạm ngưng đặc quyền; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok kèm bằng chứng (nguyên văn trên bao bì, tài liệu phê duyệt quảng cáo).</div>`},
+
+{t:'18. Hiển thị thông tin sai lệch',sev:'bad',b:`<p>Nội dung phải trình bày chính xác về sản phẩm được bán. Các loại sau được xem là "Hiển thị thông tin sai lệch":</p>
+<ul>
+<li>Giá cả, tình trạng sẵn hàng hoặc chiết khấu không khớp</li>
+<li>Hình ảnh, tên thương hiệu, mô tả, tính năng, thông tin bảo hành hoặc bảo đảm không chính xác</li>
+<li>Trình bày sai lệch về chính sách giao hàng, trả hàng, hoàn tiền hoặc dịch vụ khách hàng</li>
+</ul>
+<img src="policy-assets/ch18_1.jpg" alt="Ví dụ LIVE: nhà sáng tạo quảng cáo đôi bốt đỏ còn cỡ số 7, nhưng bài niêm yết chỉ có cỡ số 9" loading="lazy">
+<p><i>Ví dụ điển hình: nhà sáng tạo quảng cáo đôi bốt màu đỏ và cho biết còn sản phẩm cỡ số 7, nhưng bài niêm yết chỉ có cỡ số 9.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">Cách tránh</div>
+<ul>
+<li>Cung cấp thông tin chi tiết chính xác về sản phẩm: kích thước, chất liệu, nguồn gốc, tác dụng</li>
+<li>Không phóng đại hoặc đưa tuyên bố sai lệch</li>
+<li>Giải thưởng/chứng nhận/đơn vị liên kết phải khớp bao bì, có bằng chứng khi cần</li>
+<li>Không so sánh ác ý hoặc chê bai thương hiệu khác</li>
+<li>Trình bày trung thực trải nghiệm cá nhân với sản phẩm</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'19. Mô tả hoặc tuyên bố phóng đại',sev:'bad',b:`<div style="font-weight:600;margin:10px 0 4px">Tuyên bố tuyệt đối</div>
+<p>Không được chứa tuyên bố tuyệt đối về hiệu suất/hiệu quả sản phẩm. Nghiêm cấm: "Sản phẩm số 1 Châu Á"; dùng "tốt nhất…", "rẻ nhất tại…", "bán chạy nhất trong TikTok Shop" — <i>trừ khi có bằng chứng kèm theo hoặc có tuyên bố từ chối trách nhiệm rõ ràng</i>.</p>
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ 1 — tuyên bố "thương hiệu số 1"</div>
+<table><tr><th>❌ Bị cấm</th><th>✅ Được phép</th></tr>
+<tr><td>"Thương hiệu số 1 tại Singapore" — không nêu nguồn</td><td>Nguồn tuyên bố được ghi rõ (vd "No.1 Fish Oil Brand in Singapore in FY2023")</td></tr></table>
+<img src="policy-assets/ch19_1.jpg" alt="Quảng cáo No.1 Brand in Singapore không kèm nguồn tuyên bố" loading="lazy">
+<img src="policy-assets/ch19_2.jpg" alt="Cùng quảng cáo nhưng có chú thích nguồn và khuyến cáo tham khảo ý kiến bác sĩ" loading="lazy">
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ 2 — tuyên bố "số 1 trên TikTok"</div>
+<table><tr><th>❌ Bị cấm</th><th>✅ Được phép</th></tr>
+<tr><td>"Gluta-thione số 1 trên TikTok", không nguồn</td><td>Nguồn tuyên bố rõ (dữ liệu nội bộ/đánh giá người dùng, kèm "kết quả có thể không giống nhau")</td></tr></table>
+<img src="policy-assets/ch19_3.jpg" alt="The No.1 Glutathione on TikTok không có tuyên bố nguồn" loading="lazy">
+<img src="policy-assets/ch19_4.jpg" alt="Cùng quảng cáo có chú thích nguồn dữ liệu nội bộ và lưu ý kết quả khác nhau tùy người" loading="lazy">
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ 3 — tuyên bố không khớp bao bì</div>
+<table><tr><th>❌ Bị cấm</th><th>✅ Được phép</th></tr>
+<tr><td>Video "100% hữu cơ" nhưng bao bì ghi hóa chất khác</td><td>Nội dung "100% hữu cơ" khớp đúng trên bao bì</td></tr></table>
+<img src="policy-assets/ch19_5.jpg" alt="Bài đăng Scented Soap 100% Organic khoanh tròn danh sách thành phần chứa hóa chất khác" loading="lazy">
+<img src="policy-assets/ch19_6.jpg" alt="Xà phòng thật với bao bì ghi rõ 100% Organic đúng như quảng cáo" loading="lazy">
+<div style="font-weight:600;margin:10px 0 4px">Phương pháp hay nhất</div>
+<ul>
+<li>Thêm tuyên bố từ chối trách nhiệm vào nội dung để hỗ trợ cho tuyên bố</li>
+<li>Luôn đưa tuyên bố dựa trên bằng chứng, nghiên cứu vững chắc; khi nghi ngờ, tham khảo chuyên gia pháp lý/quản lý am hiểu tiêu chuẩn mỹ phẩm &amp; quảng cáo địa phương</li>
+<li>Nếu sản phẩm có thành phần đem lại lợi ích nhất định, phân biệt rõ tác dụng thẩm mỹ và tác dụng chữa bệnh — nhấn mạnh thành phần có lợi nhưng tránh tuyên bố y tế trực tiếp</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'20. Tuyên bố gây hiểu lầm (Sản phẩm làm đẹp và chăm sóc sức khỏe)',sev:'bad',b:`<p>Quảng bá sản phẩm gây hiểu lầm sẽ dẫn đến đánh giá tiêu cực và khiến người mua mất lòng tin. Do đó không cho phép tuyên bố gây hiểu lầm về chức năng/tác dụng. Các tuyên bố phải trung thực, chính xác, có bằng chứng khoa học, và tuân thủ luật địa phương khi quảng bá mỹ phẩm.</p>
+<img src="policy-assets/ch20_1.jpg" alt="Sơ đồ tuyên bố nào gây hiểu lầm về chức năng/tác dụng sản phẩm làm đẹp & chăm sóc sức khỏe" loading="lazy">
+<p>Tuyên bố sản phẩm có tác dụng <b>chữa trị, loại bỏ hoặc phòng ngừa</b> tình trạng nhạy cảm, dễ kích ứng trong một <b>khoảng thời gian cụ thể</b> bị xem là gây hiểu lầm. Ví dụ: "ngăn mụn chỉ sau một lần dùng", "xóa nếp nhăn trong 2 tháng", "làm mờ nám trong 2 tuần", "ngăn rụng tóc ngay lập tức".</p>
+<table><tr><th>Tác dụng chữa trị/loại bỏ/phòng ngừa</th><th>Tình trạng nhạy cảm</th><th>Khung thời gian cụ thể</th></tr>
+<tr><td>Đánh bay, chữa lành, chữa trị, xóa tan, tránh, loại bỏ, ngăn chặn</td><td>Mụn, nếp nhăn, rụng tóc, hói đầu, sẹo, da vô cảm, viêm rạn da...</td><td>"Ngay lập tức", "Trong vòng X ngày", "Sau một lần sử dụng"</td></tr></table>
+<p><b>Tình trạng nhạy cảm</b> bao gồm (không đầy đủ): mụn, sẹo, nếp nhăn, mụn cóc, đốm đen, lão hóa da, rạn da, nám, sần da cam, hói/rụng tóc, làm trắng răng, viêm nướu.</p>
+<div style="font-weight:600;margin:10px 0 4px">Không phóng đại hiệu quả bằng chỉnh sửa/AI</div>
+<ul>
+<li>Không dùng công cụ kỹ thuật số hoặc nội dung AI (bộ lọc, công cụ xóa, làm mờ) để phóng đại hiệu quả sản phẩm</li>
+<li>Tránh hiển thị hiệu quả trước/sau trên nhân vật AI — có thể thể hiện sai hiệu quả thực tế</li>
+</ul>
+<p><i>Ví dụ bị cấm kèm ảnh trước/sau do AI tạo: "Loại bỏ nám, tàn nhang sau một lần sử dụng"; "Xóa nếp nhăn trong 14 ngày"; "Da trắng hơn chỉ sau 7 ngày".</i></p>
+<img src="policy-assets/ch20_2.jpg" alt="Bảng ví dụ Không nên/Nên theo nhóm sản phẩm làm đẹp: sữa rửa mặt, kem bôi da, dầu gội, serum, kem chống nắng" loading="lazy">
+<table><tr><th>Sản phẩm</th><th>Không nên nói</th><th>Nên nói</th></tr>
+<tr><td>Sữa rửa mặt</td><td>"Ngăn mụn chỉ sau một lần dùng"</td><td>"Theo trải nghiệm cá nhân tôi, giúp giảm mụn sau một thời gian" (góc nhìn cá nhân + khung thời gian thực tế)</td></tr>
+<tr><td>Kem bôi/dưỡng da</td><td>"Làm trắng da vĩnh viễn trong 2 tuần"</td><td>"Giúp làm sáng đốm đen nếu dùng thường xuyên" (dùng "làm sáng" thay "loại bỏ vĩnh viễn")</td></tr>
+<tr><td>Kem dưỡng ẩm</td><td>"Xóa nếp nhăn trong 2 tháng"</td><td>"Đã giảm sự xuất hiện của nếp nhăn"</td></tr>
+<tr><td>Dầu gội</td><td>"Ngăn rụng tóc ngay lập tức"</td><td>"Hỗ trợ phòng ngừa rụng tóc nếu dùng hằng ngày" (không nêu khung thời gian)</td></tr>
+<tr><td>Serum, gel, miếng dán mụn</td><td>Cam đoan tác động vĩnh viễn, không dẫn chứng</td><td>Bổ sung dẫn chứng nghiên cứu (thời gian, số người); dùng "giảm bớt" thay "đánh bay"</td></tr>
+<tr><td>Trang điểm/mỹ phẩm</td><td>Dùng bộ lọc/chỉnh sửa gây hiểu lầm</td><td>Trình bày rõ đây là sản phẩm trang điểm che khuyết điểm</td></tr>
+<tr><td>Kem chống nắng</td><td>Dùng bộ lọc/chỉnh sửa gây hiểu lầm về tác dụng</td><td>Trình bày trải nghiệm xác thực cá nhân với thời gian cụ thể</td></tr>
+</table>
+<div style="font-weight:600;margin:10px 0 4px">Sản phẩm trang điểm — tác dụng tạm thời</div>
+<p>Được phép quảng bá tác dụng <b>tạm thời</b>, dùng từ: "che, che phủ, ẩn, làm mờ, che mờ, che khuất, giấu, tạo khối, chỉnh màu". Ví dụ: "Loại phấn này có thể che khuyết điểm sẹo"; "Ngay lập tức che nếp nhăn nhờ kem che khuyết điểm"; "Son này làm môi hồng trong vài giây".</p>
+<div style="font-weight:600;margin:10px 0 4px">Chia sẻ trải nghiệm cá nhân</div>
+<p>Dùng đại từ ngôi thứ nhất: "Tôi đã sử dụng sản phẩm", "Sản phẩm này đã giúp tôi". <b>Không</b> đưa tuyên bố/chứng thực thay người khác (vd "một khách hàng của tôi đã chữa khỏi mụn trứng cá" — không được).</p>
+<img src="policy-assets/ch20_3.jpg" alt="Bảng Không nên/Nên tránh bị gắn cờ: không dùng chữa/trị/loại bỏ/đánh bay vĩnh viễn, bổ sung tuyên bố tự chịu trách nhiệm, dùng ảnh thật không giả trước/sau" loading="lazy">
+<p><b>Không nên:</b> dùng "chữa lành", "chữa trị", "điều trị", "loại bỏ", "đánh bay", "vĩnh viễn" cho tình trạng nhạy cảm; nêu khung thời gian cụ thể ("ngay lập tức", "X ngày/tháng"); so sánh trước/sau được dàn dựng/chỉnh sửa kỹ thuật số.</p>
+<p><b>Nên:</b> dùng ngôn ngữ thực tế ("giảm", "giúp", "hỗ trợ", "cải thiện"); bổ sung "kết quả có thể khác nhau tùy cơ thể"; chỉ tuyên bố dựa trên bằng chứng — nguyên văn từ (a) bao bì; (b) tài liệu kiểm nghiệm; (c) tài liệu phê duyệt quảng cáo của chính phủ, phóng to để người xem đọc rõ; dùng ảnh thật, "Tôi/của tôi/của chúng tôi".</p>
+<img src="policy-assets/ch20_4.jpg" alt="Hướng dẫn tài liệu hỗ trợ tuyên bố: bao bì, tài liệu kiểm nghiệm, tài liệu phê duyệt quảng cáo của chính phủ" loading="lazy">
+<div class="find warn"><b>Lưu ý quan trọng:</b> chỉ được dùng <b>cụm từ chính xác</b> in trên bao bì/tài liệu. Nếu bao bì ghi "trị nếp nhăn trong vòng 3 tháng": ✅ có thể nói y hệt; ❌ không thể nói "trong vòng 3 tuần".</div>
+<img src="policy-assets/ch20_5.jpg" alt="Thực thi và kháng nghị: cảnh báo, xóa sản phẩm/nội dung, gián đoạn LIVE, tính Điểm vi phạm" loading="lazy">
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> thông báo cảnh báo, xóa sản phẩm/nội dung, gián đoạn LIVE, tính Điểm vi phạm, có thể tạm ngưng đặc quyền; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok kèm bằng chứng.</div>`},
+
+{t:'21. Tuyên bố sai sự thật',sev:'bad',b:`<p>Tất cả nội dung không được đưa ra tuyên bố sai sự thật về sản phẩm. Nghiêm cấm:</p>
+<ul>
+<li>Tuyên bố sai rằng sản phẩm đã giành giải thưởng/chứng nhận mà không cung cấp bằng chứng</li>
+<li>Tuyên bố sai về việc sản phẩm liên kết với các sản phẩm khác</li>
+<li>Phóng đại mức giá ưu đãi hoặc so sánh giá không được hỗ trợ — mọi tuyên bố về giá, kể cả giá ưu đãi, phải chính xác</li>
+<li>Tuyên bố sai về nguồn gốc sản phẩm</li>
+<li>Tuyên bố sai về chính sách bảo hành</li>
+<li>Tuyên bố sai về chính sách trả hàng/hoàn tiền</li>
+<li>Tuyên bố sai về kích thước, trọng lượng hoặc số lượng sản phẩm</li>
+<li>Tuyên bố sai về chính sách vận chuyển (ví dụ hứa miễn phí vận chuyển không đúng thực tế)</li>
+<li>Chê bai các thương hiệu khác</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'22. Nội dung chê bai và so sánh sản phẩm',sev:'bad',b:`<p>Tất cả nội dung không được chứa so sánh ác ý hoặc bình luận chê bai nhắm đến sản phẩm, thương hiệu hoặc trang web thương mại điện tử khác, ví dụ:</p>
+<ul>
+<li>Cố ý dùng từ ngữ xúc phạm để mô tả sản phẩm của thương hiệu khác (vd "Sản phẩm ABC gây hại cho sức khỏe")</li>
+<li>Thể hiện cảm xúc tiêu cực/hành vi ác ý với sản phẩm mang thương hiệu khác (vd vứt sản phẩm đối thủ vào thùng rác)</li>
+</ul>
+<img src="policy-assets/ch22_1.jpg" alt="Màn hình LIVE: nhà sáng tạo nói kem đánh răng của tôi tốt hơn Brand X vì thành phần của họ gây kích ứng nướu, kèm hình sản phẩm đối thủ nêu tên cụ thể" loading="lazy">
+<p><i>Ví dụ vi phạm điển hình: nhà sáng tạo tuyên bố sản phẩm của mình tốt hơn thương hiệu cạnh tranh vì đối thủ dùng thành phần có hại.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">Cách tránh</div>
+<ul>
+<li>Cung cấp thông tin chi tiết chính xác (kích thước, chất liệu, nguồn gốc, tác dụng)</li>
+<li>Không phóng đại/đưa tuyên bố sai lệch</li>
+<li>Giải thưởng/chứng nhận phải khớp bao bì, có bằng chứng</li>
+<li>Không so sánh ác ý/chê bai thương hiệu khác</li>
+<li>Tập trung vào điểm mạnh, tính năng, lợi ích sản phẩm của bạn; dùng dữ liệu, bằng chứng; cân nhắc tuyên bố miễn trừ "kết quả có thể khác nhau tùy từng trường hợp"</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'23. Hứa hẹn sai về phần thưởng hoặc lợi nhuận',sev:'bad',b:`<p>Nhà sáng tạo không được khiến người xem hiểu lầm bằng cách hứa hẹn sai sự thật về phần thưởng/quà tặng nhằm tăng lượt xem hoặc doanh số — bao gồm lời hứa sai về quà tặng, ưu đãi, giải thưởng và quà tặng miễn phí.</p>
+<div style="font-weight:600;margin:10px 0 4px">Yêu cầu khi hứa hẹn phần thưởng/quà tặng</div>
+<p>Phải nêu rõ trong LIVE hoặc video: số lượng chính xác người trúng thưởng; quy trình nhận phần thưởng/quà tặng; phương pháp lựa chọn người trúng thưởng. Áp dụng cùng Yêu cầu đối với Quà tặng và Ưu đãi khi mua hàng (chương 14).</p>
+<div class="find ok"><b>Câu hỏi thường gặp:</b> Nếu không thể trao phần thưởng đã hứa, thông báo ngay cho người tham gia để xin lỗi và đưa giải pháp thay thế. Có thể hứa hoàn tiền bằng tín dụng cửa hàng nếu nói rõ đó là tín dụng, không phải tiền mặt.</div>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> có thể áp dụng hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'24. Nội dung thương mại điện tử chất lượng cao',sev:'info',b:`<p>Sáng tạo nội dung hấp dẫn là điều cần thiết để thu hút khán giả, xây dựng lòng tin và thúc đẩy doanh số. 5 mẹo chính:</p>
+<img src="policy-assets/ch24_1.jpg" alt="5 mẹo: Hình ảnh/âm thanh rõ ràng, Làm nổi bật sản phẩm, Tương tác với khán giả, Chân thực, Lời kêu gọi hành động mạnh mẽ" loading="lazy">
+<div style="font-weight:600;margin:10px 0 4px">1. Hình ảnh/âm thanh rõ ràng</div>
+<img src="policy-assets/ch24_2.jpg" alt="Sản phẩm đặt phía trước, không bị che khuất, bố cục chữ/lớp phủ gọn gàng" loading="lazy">
+<p>Hình ảnh sắc nét, âm thanh rõ ràng, bối cảnh quay gọn gàng bắt mắt. Giữ hình ảnh ổn định, lấy nét rõ; âm thanh khớp hình ảnh; dùng chữ/nhãn dán vừa đủ, không làm người xem quá tải.</p>
+<div style="font-weight:600;margin:10px 0 4px">2. Làm nổi bật sản phẩm</div>
+<img src="policy-assets/ch24_3.jpg" alt="Làm nổi bật sản phẩm từ nhiều góc độ, giải thích lợi ích kèm minh họa cách sử dụng" loading="lazy">
+<p>Hiển thị sản phẩm từ nhiều góc độ; luôn hiển thị rõ ràng khi LIVE; nêu bật tính năng/lợi ích/tình huống sử dụng; minh họa sản phẩm đang hoạt động; chia sẻ về thương hiệu khi cần để xây dựng lòng tin.</p>
+<div style="font-weight:600;margin:10px 0 4px">3. Tương tác với khán giả</div>
+<img src="policy-assets/ch24_4.jpg" alt="Chủ phòng luôn xuất hiện trong khung hình, trả lời bình luận theo thời gian thực" loading="lazy">
+<p>Khuyến khích tương tác thời gian thực: chủ phòng luôn trong khung hình, nhiệt tình trả lời bình luận, hỏi — đáp để thúc đẩy tương tác.</p>
+<div style="font-weight:600;margin:10px 0 4px">4. Chân thực và là chính mình</div>
+<img src="policy-assets/ch24_5.jpg" alt="Chia sẻ trải nghiệm chân thực khi dùng sản phẩm, nhấn mạnh đây là trải nghiệm riêng" loading="lazy">
+<p>Quảng cáo trung thực, minh bạch; chia sẻ tình huống/câu chuyện thực tế. <i>Nhấn mạnh đây là trải nghiệm của riêng bạn, có thể không giống người khác — giúp giảm rủi ro tuyên bố sai lệch/gây hiểu lầm.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">5. Lời kêu gọi hành động mạnh mẽ</div>
+<img src="policy-assets/ch24_6.jpg" alt="Lời kêu gọi hành động: Mua ngay, Theo dõi để biết thêm cập nhật, nêu bật khuyến mãi" loading="lazy">
+<p>Hướng dẫn rõ ràng việc cần làm tiếp theo ("Mua ngay", "Theo dõi để biết thêm cập nhật"); nêu bật chương trình khuyến mãi/ưu đãi đặc biệt.</p>
+<div style="font-weight:600;margin:10px 0 4px">Nguyên nhân phổ biến dẫn đến nội dung chất lượng thấp</div>
+<img src="policy-assets/ch24_7.jpg" alt="Tránh từ ngữ không thích hợp, nội dung tĩnh, thiếu tương tác, trọng tâm sản phẩm và lời kêu gọi hành động chưa đủ mạnh" loading="lazy">
+<p><b>Nên tránh khi LIVE hoặc tạo video ngắn:</b> sử dụng từ ngữ tục tĩu/xúc phạm; nội dung tĩnh (ảnh chụp màn hình, quay lại màn hình); thiếu tương tác (định dạng không hấp dẫn); trọng tâm sản phẩm và lời kêu gọi hành động chưa đủ mạnh.</p>
+<p>Xem thêm chương 30 — Nội dung không tương tác và chất lượng thấp.</p>`},
+
+{t:'25. Tuyên bố về giá gây hiểu lầm và giá đã hết hạn',sev:'bad',b:`<p>Thông tin giá chính xác giúp người mua quyết định đúng đắn và xây dựng lòng tin. Nội dung không được chứa tuyên bố giá gây hiểu lầm hoặc giá đã hết hạn, gồm 3 nhóm chính:</p>
+<ul>
+<li><b>Tuyên bố giá gây hiểu lầm:</b> giá nói trong nội dung không khớp giá thực tế niêm yết</li>
+<li><b>Chiêu trò "Mồi giá - Đổi giá":</b> quảng cáo giá hấp dẫn cho một sản phẩm/gói nhưng thực tế bán giá khác hoặc gói khác</li>
+<li><b>Đặt giá đã hết hạn:</b> dùng nội dung cũ nêu giá/khuyến mãi không còn áp dụng</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Mẹo tránh vi phạm</div>
+<ul>
+<li>Đảm bảo giá nêu trong video/LIVE khớp đúng giá niêm yết trên sản phẩm</li>
+<li>Nêu rõ điều kiện áp dụng khuyến mãi (số lượng, thời gian, đối tượng)</li>
+<li>Tránh phóng đại mức giảm giá hoặc so sánh giá không có căn cứ</li>
+<li>Dùng tuyên bố miễn trừ như "Giá có thể thay đổi" khi phù hợp</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Nội dung/giá không khớp</div>
+<img src="policy-assets/ch25_1.jpg" alt="Video quảng cáo giày giá 150.000đ nhưng giá niêm yết thực tế là 200.000đ" loading="lazy">
+<p><i>Ví dụ: nhà sáng tạo nói giá giày là 150.000đ trong khi giá niêm yết thật là 200.000đ — đây là tuyên bố giá gây hiểu lầm.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">Giá theo đơn vị và giá theo gói</div>
+<img src="policy-assets/ch25_2.jpg" alt="Nêu giá 40.000đ/hộp sữa nhưng thực tế chỉ bán theo gói 6 hộp với giá 240.000đ" loading="lazy">
+<p><i>Ví dụ: nêu giá 40.000đ/hộp nhưng sản phẩm chỉ bán theo gói 6 hộp giá 240.000đ — phải nói rõ đơn vị tính giá là theo gói, không phải theo hộp lẻ.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">Giá sản phẩm liên quan/phụ kiện</div>
+<img src="policy-assets/ch25_3.jpg" alt="Giá nêu trong video chỉ áp dụng cho phụ kiện đi kèm, không áp dụng cho sản phẩm chính" loading="lazy">
+<p><i>Ví dụ: giá được nêu chỉ áp dụng cho phụ kiện đi kèm (vd dây sạc) nhưng người xem hiểu nhầm là giá của sản phẩm chính.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">Giá biến thể "ảo" không có thật để bán</div>
+<img src="policy-assets/ch25_4.jpg" alt="Niêm yết biến thể giá thấp nhưng biến thể đó không có hàng để bán, nhằm thu hút nhấp vào sản phẩm" loading="lazy">
+<p><i>Ví dụ: tạo biến thể giá rất thấp nhưng không có hàng thực tế để bán (hết hàng vĩnh viễn), chỉ nhằm thu hút sự chú ý vào gian hàng.</i></p>
+<div class="find bad"><b>Các vi phạm liên quan khác:</b> Flash Sale không sử dụng công cụ chính thức của nền tảng; voucher/mã giảm giá không chính xác; kể câu chuyện giả về mức giá thấp; tuyên bố sai về COD hoặc miễn phí vận chuyển.</div>
+<div style="font-weight:600;margin:10px 0 4px">Giá cũ không được cập nhật</div>
+<img src="policy-assets/ch25_5.jpg" alt="Video đăng tháng 9/2025 nêu giá 169.000đ, nhưng giá niêm yết đã cập nhật thành 181.000đ vào tháng 12/2025 — cần gắn nhãn hoặc xóa nội dung cũ" loading="lazy">
+<p><i>Ví dụ: video đăng từ tháng 9/2025 nêu giá 169.000đ; đến tháng 12/2025 giá niêm yết đã tăng lên 181.000đ nhưng video cũ vẫn còn hiển thị giá cũ — nhà sáng tạo cần cập nhật hoặc gỡ nội dung khi giá thay đổi.</i></p>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> nội dung/sản phẩm có thể bị gỡ, tài khoản chịu hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'26. Tránh quảng bá sản phẩm không nhất quán',sev:'bad',b:`<p><b>Quảng bá sản phẩm không nhất quán</b> là khi sản phẩm hiển thị trong video/LIVE không khớp với sản phẩm thực tế đang được đăng bán, khiến người mua hiểu sai về thứ họ sẽ nhận được.</p>
+<div class="find warn"><b>Lưu ý với nội dung AIGC:</b> sản phẩm do AI tạo ra trong video phải khớp chính xác với sản phẩm thật đang bán — không được dùng AI để hiển thị phiên bản khác hoặc đẹp hơn thực tế.</div>
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ minh họa</div>
+<img src="policy-assets/ch26_1.jpg" alt="Video hiển thị 3 chiếc áo phông khác màu nhưng sản phẩm đăng bán chỉ có 1 chiếc áo phông màu trắng" loading="lazy">
+<p><i>Video hiển thị 3 chiếc áo phông khác nhau nhưng sản phẩm thực tế đăng bán chỉ có 1 màu.</i></p>
+<img src="policy-assets/ch26_2.jpg" alt="Video quảng cáo áo hoodie có khóa kéo nhưng sản phẩm thật được bán không có khóa kéo" loading="lazy">
+<p><i>Video cho thấy áo hoodie có khóa kéo nhưng sản phẩm thật lại không có khóa kéo.</i></p>
+<img src="policy-assets/ch26_3.jpg" alt="Video quảng cáo giày da màu nâu, ghi xuất xứ Italy, nhưng sản phẩm thật màu xanh đậm, xuất xứ Trung Quốc" loading="lazy">
+<p><i>Video quảng cáo giày da màu nâu, "Made in Italy" nhưng sản phẩm thật màu xanh đậm, "Made in China".</i></p>
+<img src="policy-assets/ch26_4.jpg" alt="Video quảng cáo áo len chất liệu cashmere nhưng sản phẩm thật là chất liệu polyester" loading="lazy">
+<p><i>Video quảng cáo áo len cashmere cao cấp nhưng sản phẩm thật thực chất là chất liệu polyester.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">Các thuộc tính cần giữ nhất quán</div>
+<table><tr><th>Thuộc tính</th><th>Mô tả</th></tr>
+<tr><td>Loại sản phẩm</td><td>Danh mục/chủng loại sản phẩm</td></tr>
+<tr><td>Chất liệu</td><td>Vật liệu cấu thành sản phẩm</td></tr>
+<tr><td>Kích thước</td><td>Kích cỡ thực tế của sản phẩm</td></tr>
+<tr><td>Trọng lượng</td><td>Khối lượng/cân nặng sản phẩm</td></tr>
+<tr><td>Số lượng</td><td>Số lượng đơn vị trong một đơn hàng/gói</td></tr>
+<tr><td>Kiểu dáng</td><td>Phong cách thiết kế tổng thể</td></tr>
+<tr><td>Hình dạng</td><td>Hình thể, cấu trúc hình học sản phẩm</td></tr>
+<tr><td>Họa tiết</td><td>Hoa văn, màu sắc, chi tiết trang trí</td></tr>
+<tr><td>Nguồn gốc</td><td>Nơi sản xuất/xuất xứ</td></tr>
+</table>
+<div class="find ok"><b>Trường hợp được miễn trừ:</b> sản phẩm tùy chỉnh/cá nhân hóa theo yêu cầu; cập nhật bao bì ở quy mô nhỏ không ảnh hưởng chức năng; biến thể màu sắc đã công bố rõ; hàng mẫu/ảnh minh họa có kèm tuyên bố miễn trừ rõ ràng.</div>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> nội dung/sản phẩm có thể bị gỡ, tài khoản chịu hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'27. Nội dung do AI tạo ra (AIGC)',sev:'warn',b:`<p>Nội dung do AI tạo ra (AIGC) được phép sử dụng trên nền tảng nếu tuân thủ đầy đủ các chính sách nội dung. AIGC phải tuân theo <b>3 quy tắc vàng</b>:</p>
+<div style="font-weight:600;margin:10px 0 4px">Quy tắc #1: Không trình bày sai lệch sản phẩm</div>
+<img src="policy-assets/ch27_1.jpg" alt="Túi xách do AI tạo ra có khóa và quai xách không khớp với sản phẩm thật đang bán" loading="lazy">
+<p><i>Ví dụ: hình ảnh túi xách do AI tạo ra có khóa/quai xách khác với sản phẩm thật đang được bán.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">Quy tắc #2: Không làm giả kết quả</div>
+<img src="policy-assets/ch27_2.jpg" alt="Ảnh trước/sau do AI tạo giả về hiệu quả làm tóc, không phản ánh kết quả thực tế của sản phẩm" loading="lazy">
+<p><i>Ví dụ: ảnh so sánh trước/sau được AI tạo giả để phóng đại hiệu quả sản phẩm chăm sóc tóc.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">Quy tắc #3: Không bịa chuyện thúc đẩy doanh số</div>
+<img src="policy-assets/ch27_3.jpg" alt="Nhân vật AI kể câu chuyện giả về lũ lụt hoặc khủng hoảng để thúc đẩy người xem mua hàng" loading="lazy">
+<p><i>Ví dụ: nhân vật do AI tạo ra kể câu chuyện bịa đặt về thiên tai/khủng hoảng để tạo cảm giác cấp bách thúc đẩy mua hàng.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">Nên / Không nên khi dùng AIGC</div>
+<table><tr><th>Nên ✅</th><th>Không nên ⛔</th></tr>
+<tr><td colspan="2">Gắn nhãn rõ nội dung do AI tạo ra</td></tr>
+<tr><td colspan="2">Đảm bảo nội dung AI khớp chính xác với sản phẩm/bài đăng thật</td></tr>
+<tr><td colspan="2">Chỉ thể hiện kết quả/hiệu quả thực tế, có căn cứ</td></tr>
+<tr><td colspan="2">Kể câu chuyện chân thực, không bịa đặt</td></tr>
+<tr><td colspan="2">Không mạo danh chuyên gia/người nổi tiếng bằng AI</td></tr>
+<tr><td colspan="2">Giữ nội dung linh hoạt, sống động — không chỉ dùng ảnh tĩnh</td></tr>
+</table>
+<div style="font-weight:600;margin:10px 0 4px">Vi phạm phổ biến theo ngành hàng</div>
+<p><b>Nhà cửa & Đời sống:</b></p>
+<img src="policy-assets/ch27_4.jpg" alt="6 điểm cần lưu ý cho ngành Nhà cửa & Đời sống: gắn nhãn AI, hiện kích thước thật, giữ thuộc tính thực, không hiệu ứng bịa đặt, mô tả đúng khả năng, không lặp lại quảng cáo" loading="lazy">
+<p>Gắn nhãn nội dung AI; hiển thị kích thước thật của sản phẩm; giữ đúng thuộc tính thực tế; không tạo hiệu ứng bịa đặt (vd biến đổi không gian phi thực tế); mô tả đúng khả năng sản phẩm; không lặp lại cùng kiểu quảng cáo gây nhàm/giả tạo.</p>
+<p><b>Thực phẩm & Đồ uống:</b></p>
+<img src="policy-assets/ch27_5.jpg" alt="Lưu ý ngành Thực phẩm & Đồ uống: tương tự nhà cửa, cộng thêm không giả mạo chuyên gia hoặc quan chức y tế" loading="lazy">
+<p>Áp dụng các lưu ý tương tự, cộng thêm: không dùng AI mạo danh chuyên gia dinh dưỡng hoặc quan chức y tế để tạo uy tín giả.</p>
+<p><b>Thời trang:</b></p>
+<img src="policy-assets/ch27_6.jpg" alt="Lưu ý ngành Thời trang: tương tự các ngành trên, cộng thêm mô tả đúng chất liệu và kích thước thật" loading="lazy">
+<p>Áp dụng các lưu ý tương tự, cộng thêm: mô tả đúng chất liệu và kích thước thật của trang phục, không dùng AI chỉnh sửa để trông "đẹp hơn" phi thực tế.</p>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> nội dung/sản phẩm có thể bị gỡ, tài khoản chịu hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'28. Tổng quan về quyền sở hữu trí tuệ (IPR)',sev:'warn',b:`<p>Quyền sở hữu trí tuệ (IPR) bao gồm <b>nhãn hiệu</b>, <b>bản quyền</b>, và <b>bằng sáng chế/thiết kế</b>. Vi phạm xảy ra khi sử dụng tài liệu được bảo vệ (logo, hình ảnh, thiết kế, nội dung sáng tạo...) mà chưa được cho phép của chủ sở hữu.</p>
+<div style="font-weight:600;margin:10px 0 4px">Lời khuyên</div>
+<ul>
+<li>Luôn tôn trọng quyền sở hữu trí tuệ của người khác — thiếu kiến thức về luật IPR không phải là lý do để biện minh cho vi phạm</li>
+<li>Xin cấp quyền sử dụng hoặc tìm tư vấn pháp lý trước khi sử dụng tài liệu có khả năng được bảo vệ</li>
+<li>Ưu tiên sáng tạo nội dung nguyên bản, tránh rủi ro vi phạm bản quyền/nhãn hiệu của người khác</li>
+</ul>
+<div class="find warn"><b>Lưu ý:</b> TikTok không cung cấp tư vấn pháp lý về quyền sở hữu trí tuệ. Nếu cần xác định quyền sử dụng một tài liệu cụ thể, nên tham khảo ý kiến chuyên gia pháp lý.</div>
+<p>Khi gặp vi phạm liên quan đến IPR, xem thêm hướng dẫn "Báo cáo vi phạm quyền sở hữu trí tuệ" để biết cách xử lý. Người bị gắn cờ vi phạm có thể kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</p>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> nội dung có thể bị gỡ bỏ, tài khoản chịu hành động thực thi theo mức độ nghiêm trọng; vi phạm lặp lại bị phạt nặng hơn.</div>`},
+
+{t:'29. Nội dung không nguyên bản',sev:'bad',b:`<p><b>Nội dung không nguyên bản</b> là nội dung sao chép/tái sử dụng tài liệu của người khác mà không có góc nhìn, bình luận hoặc giá trị mới. Ví dụ các hành vi vi phạm:</p>
+<ul>
+<li>Stitch một video khác mà không thêm bình luận/góc nhìn mới</li>
+<li>Quay lại màn hình phim/video khác, có làm mờ logo để che giấu</li>
+<li>Duet/chèn lớp phủ lên nội dung khác mà không có lời bình luận, nhằm mục đích quảng cáo</li>
+<li>Chuyển đổi giữa các bản LIVE hoặc phát lại nội dung đã quay sẵn</li>
+<li>Tái tạo lại hành động/nội dung của người khác</li>
+<li>Ghép các đoạn nội dung của người khác mà không được phép</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Kỹ thuật chỉnh sửa bị cấm để che giấu nội dung sao chép</div>
+<img src="policy-assets/ch29_2.jpg" alt="Khung kẹp (Sandwich Frames): chèn hình ảnh không liên quan phía trên và dưới video chính để che giấu nội dung sao chép" loading="lazy">
+<p><b>Khung kẹp (Sandwich Frames):</b> chèn hình ảnh/video không liên quan ở phía trên và dưới nội dung chính nhằm che giấu việc sao chép.</p>
+<img src="policy-assets/ch29_3.jpg" alt="Chèn khung hình tinh vi (Subtle Frame Insertion): chèn khung hình như hình con mèo thoáng qua để đánh lạc hướng kiểm duyệt" loading="lazy">
+<p><b>Chèn khung hình tinh vi (Subtle Frame Insertion):</b> chèn thoáng qua một khung hình không liên quan (vd hình con mèo) để đánh lạc hướng việc kiểm duyệt nội dung sao chép.</p>
+<div style="font-weight:600;margin:10px 0 4px">Phương pháp hay nhất</div>
+<img src="policy-assets/ch29_1.jpg" alt="Bảng Phương pháp hay nhất nên làm và điều nên tránh để giữ nội dung nguyên bản" loading="lazy">
+<table><tr><th>Nên làm ✅</th><th>Nên tránh ⛔</th></tr>
+<tr><td>Tạo ra điều gì đó mới</td><td>Đăng lại nội dung không có góc nhìn mới</td></tr>
+<tr><td>Thể hiện chính mình</td><td>Dùng tài liệu có bản quyền của người khác</td></tr>
+<tr><td>Làm mới kịch bản</td><td>Phát nội dung quay sẵn trong LIVE</td></tr>
+<tr><td>Giữ nội dung luôn mới mẻ</td><td>Quay lại màn hình nội dung khác</td></tr>
+<tr><td>Ghi rõ nguồn tham khảo</td><td>Dùng AI thuyết minh giả trong LIVE</td></tr>
+<tr><td>Kể câu chuyện của riêng bạn</td><td>Sao chép xu hướng không liên quan đến sản phẩm</td></tr>
+<tr><td>Báo cáo nội dung sao chép của người khác</td><td>Đăng lại chính nội dung của mình nhiều lần</td></tr>
+<tr><td>Đăng nội dung cộng tác (collab) hợp lệ</td><td>Ngụy trang bằng bộ lọc (chỉ thêm hình mờ/logo không đủ để coi là nguyên bản)</td></tr>
+</table>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> nội dung/sản phẩm có thể bị gỡ, tài khoản chịu hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'30. Nội dung không tương tác - Cách tránh vi phạm',sev:'warn',b:`<p><b>Nội dung không tương tác</b> là nội dung chất lượng thấp, thiếu hoạt động màn hình có ý nghĩa hoặc thiếu tương tác lời nói thời gian thực. Bao gồm: hình ảnh tĩnh/thụ động, thiếu tương tác lời nói khi LIVE, hoặc phát trực tiếp lặp lại/tĩnh.</p>
+<div class="find warn"><b>Lưu ý:</b> video ngắn lặp lại nhiều lần không có tương tác được xem là "Spam" (xem chương 9). Ngôn ngữ/cử chỉ xúc phạm quá mức cũng được coi là nội dung chất lượng thấp.</div>
+<p>Nội dung tương tác giúp xây dựng lòng tin với khán giả và khuyến khích quyết định mua hàng — vì vậy nền tảng khuyến khích tránh các dạng nội dung không tương tác dưới đây.</p>
+<div style="font-weight:600;margin:10px 0 4px">1. Dùng nhiều ảnh tĩnh thay cho nội dung thực</div>
+<img src="policy-assets/ch30_1.jpg" alt="Livestream/video dạng trình chiếu lặp lại các ảnh tĩnh — không có hoạt động thực, bị coi là nội dung chất lượng thấp" loading="lazy">
+<p><i>Livestream/video dùng vòng lặp slideshow ảnh tĩnh, hoặc phủ văn bản/ảnh tĩnh lên cảnh không liên quan.</i></p>
+<img src="policy-assets/ch30_2.jpg" alt="Khuôn mặt người sáng tạo bị ảnh tĩnh che khuất hoàn toàn trong LIVE" loading="lazy">
+<img src="policy-assets/ch30_3.jpg" alt="Một ví dụ khác về khuôn mặt người sáng tạo bị che khuất bởi lớp phủ ảnh tĩnh" loading="lazy">
+<p><i>Khuôn mặt của người sáng tạo bị ảnh tĩnh che khuất, không còn hiện diện thực trong khung hình.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">2. Chuyển động tối thiểu, cảnh tĩnh/lặp lại</div>
+<img src="policy-assets/ch30_4.jpg" alt="Sản phẩm đặt trên bàn xoay tự động phía sau, trong khi video không liên quan chạy ở phía trước, không có tương tác thực" loading="lazy">
+<p><i>Sản phẩm trên bàn xoay tự động với video không liên quan chạy phía trước; cảnh tĩnh/lặp lại; thiếu tương tác trực tiếp với khán giả; trình diễn sản phẩm yếu.</i></p>
+<div style="font-weight:600;margin:10px 0 4px">Thực tiễn tốt nhất</div>
+<img src="policy-assets/ch30_5.jpg" alt="Trình bày và trưng bày sản phẩm rõ ràng trên camera, người sáng tạo vẫn xuất hiện cùng sản phẩm" loading="lazy">
+<p><b>Trình bày/trưng bày sản phẩm rõ ràng ✅:</b> luôn hiển thị sản phẩm rõ trên camera; có thể phóng to sản phẩm nhưng vẫn giữ một phần người sáng tạo xuất hiện; thể hiện tính năng sản phẩm ở nhiều góc độ/mức zoom khác nhau.</p>
+<p><b>Nói và tương tác thời gian thực ✅:</b> giới thiệu sản phẩm bằng lời nói; trả lời bình luận của người xem (đọc to bình luận trước khi trả lời).</p>
+<div style="font-weight:600;margin:10px 0 4px">Dùng chức năng TẠM DỪNG khi cần [chỉ áp dụng cho LIVE]</div>
+<img src="policy-assets/ch30_6.jpg" alt="Cách dùng nút Tạm dừng trực tiếp: mở menu '...' ở góc dưới phải rồi chọn Tạm dừng trực tiếp" loading="lazy">
+<ul>
+<li>Nếu đi vắng thời gian ngắn, nên tiếp tục nói chuyện/tương tác với khán giả thay vì im lặng</li>
+<li>Nếu vắng mặt hơn 2 phút, dùng nút <b>TẠM DỪNG</b> (tối đa 5 phút)</li>
+<li>Nếu cần vắng lâu hơn, hoặc đã dùng tạm dừng 3 lần trong phiên, nên kết thúc phiên LIVE</li>
+<li>Khi gặp sự cố kỹ thuật/mic, tạm dừng ngay lập tức</li>
+<li>Cách dùng: nhấn "..." ở góc dưới phải màn hình LIVE → chọn "TẠM DỪNG TRỰC TIẾP"</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> áp dụng Giới hạn đăng nội dung (xem chương 33), hành động thực thi khác tùy mức độ; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'31. Nội dung quảng cáo không liên quan',sev:'bad',b:`<p><b>Nội dung quảng cáo không liên quan</b> là nội dung không quảng bá rõ ràng sản phẩm đang được đăng bán: hiển thị sản phẩm không được nhắc đến trong bài đăng, không hiển thị/quảng bá sản phẩm rõ ràng, hoặc LIVE không có mục đích thương mại/không thảo luận về sản phẩm. Hành vi này <b>bị cấm hoàn toàn</b> trên nền tảng.</p>
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ vi phạm</div>
+<img src="policy-assets/ch31_1.jpg" alt="Ba ví dụ vi phạm: (A) quảng bá sản phẩm khác với sản phẩm đăng bán — người live cho xem giày cao gót nhưng sản phẩm đăng bán là dép lê; (B) sản phẩm không phải trọng tâm — vừa ăn pizza vừa liên kết bán xà phòng, dầu gội, kem; (C) không hiển thị sản phẩm vật lý — chỉ yêu cầu mua mà không cho xem sản phẩm thật" loading="lazy">
+<table><tr><th>Ví dụ</th><th>Vi phạm</th></tr>
+<tr><td>A — Quảng bá một sản phẩm khác</td><td>Live hiển thị đôi giày cao gót nhưng sản phẩm đăng bán thực tế là đôi dép lê; người xem không tìm thấy đôi giày cao gót được quảng bá</td></tr>
+<tr><td>B — Sản phẩm không phải trọng tâm chính</td><td>Người sáng tạo đang ăn pizza hoặc làm việc khác mà không quảng bá/hiển thị rõ các sản phẩm (xà phòng, dầu gội, kem) được liên kết trong phiên LIVE</td></tr>
+<tr><td>C — Không hiển thị sản phẩm vật lý</td><td>Chỉ đưa ảnh sản phẩm và yêu cầu khách mua nhưng không cho xem sản phẩm thực tế hoặc cung cấp bất kỳ thông tin nào về sản phẩm</td></tr>
+</table>
+<div style="font-weight:600;margin:10px 0 4px">Phương pháp hay nhất ✅</div>
+<img src="policy-assets/ch31_2.jpg" alt="Phương pháp hay nhất: biến sản phẩm thành trọng tâm bằng hình ảnh trực quan và lời nói, đảm bảo sản phẩm quảng cáo khớp sản phẩm đăng bán, sử dụng mô tả rõ ràng" loading="lazy">
+<p><b>1. Biến sản phẩm thành trọng tâm:</b></p>
+<ul>
+<li>Hiển thị hình ảnh trực quan: minh họa cách sử dụng, hiển thị từ nhiều góc quay, làm nổi bật chi tiết chính, trình bày cách tạo ra hoặc đóng gói sản phẩm</li>
+<li>Giải thích bằng lời nói: chia sẻ thông tin chi tiết (kích thước, trọng lượng, màu sắc, mùi hương, thành phần), giải thích tính năng và cách sử dụng, kể câu chuyện về thương hiệu/nguồn cảm hứng, đề cập mức giá/chiết khấu/thông tin vận chuyển, chia sẻ đánh giá hoặc trải nghiệm cá nhân</li>
+</ul>
+<p><b>2. Đảm bảo sản phẩm được quảng cáo khớp sản phẩm được đăng bán:</b></p>
+<ul>
+<li>✅ Được phép giới thiệu các sản phẩm mẫu cùng bao bì, kích thước hoặc màu sắc khác với sản phẩm đăng bán</li>
+<li>❌ Không được phép giới thiệu sản phẩm có chủng loại, mẫu mã, logo hoặc số lượng khác với sản phẩm đăng bán</li>
+<li>Với sản phẩm chăm sóc da/trang điểm, có thể trình bày về tác dụng trên làn da thay vì chỉ nói về chính sản phẩm</li>
+</ul>
+<p><b>3. Sử dụng mô tả rõ ràng:</b> bổ sung thông tin chi tiết chính xác về sản phẩm vào văn bản, tiêu đề và mô tả video/buổi LIVE.</p>
+<div style="font-weight:600;margin:10px 0 4px">Điều nên tránh ⛔</div>
+<ul>
+<li><b>Phát LIVE mà không hiển thị sản phẩm:</b> luôn hiển thị sản phẩm được quảng cáo (trừ sản phẩm trang điểm/chăm sóc da — có thể trình bày cách thoa sản phẩm lên da, miễn là thấy được hiệu quả)</li>
+<li><b>Bỏ qua các chi tiết quan trọng:</b> không bỏ qua phần giải thích sản phẩm bằng hình ảnh hoặc lời nói</li>
+<li><b>Sử dụng nội dung trực quan không liên quan:</b> không dùng cảnh quay dựng sẵn, hình ảnh động chung chung hoặc hình ảnh không phản ánh chính xác sản phẩm</li>
+</ul>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> nội dung/sản phẩm có thể bị gỡ, tài khoản chịu hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'32. Chuyển hướng lưu lượng truy cập',sev:'bad',b:`<p><b>Chuyển hướng lưu lượng truy cập</b> là việc dùng liên kết, số điện thoại, mạng xã hội, mã QR, nội dung tham chiếu hoặc lời kêu gọi hành động (CTA) để khuyến khích người xem rời khỏi TikTok Shop. Quy định này áp dụng cho <b>mọi dạng nội dung</b> (cửa sổ gian hàng, video, LIVE) và <b>mọi vị trí</b> (ảnh bìa, tiêu đề, hyperlink, phần mô tả...).</p>
+<div class="find warn"><b>Vì sao bị kiểm soát:</b> TikTok Shop không thể đảm bảo an toàn và bảo mật cho giao dịch diễn ra bên ngoài nền tảng — có rủi ro lừa đảo, gian lận hoặc thu thập thông tin trái phép.</div>
+<div style="font-weight:600;margin:10px 0 4px">Ví dụ vi phạm</div>
+<img src="policy-assets/ch32_1.jpg" alt="(A) Yêu cầu nhấp link trong bio để biết thêm thông tin; (B) Quảng cáo ưu đãi/giảm giá chỉ có trên website khác, mời truy cập website đó" loading="lazy">
+<table><tr><th>Ví dụ</th><th>Mô tả</th></tr>
+<tr><td>A</td><td>Không yêu cầu người xem nhấp vào liên kết trong tiểu sử (bio) để dẫn ra ngoài nền tảng ("Mua thêm tại đây [link]", "Nhấp vào link trong bio")</td></tr>
+<tr><td>B</td><td>Không thông báo sản phẩm được bán trên website khác hoặc ưu đãi lớn chỉ có ở website đó ("Truy cập website này để được giảm giá!", "Quét mã QR này")</td></tr>
+</table>
+<img src="policy-assets/ch32_2.jpg" alt="(C) Đề cập liên hệ qua số điện thoại/nền tảng khác để mua sỉ; (D) Mời nhấp link trong bio để xem thêm sản phẩm" loading="lazy">
+<table><tr><th>Ví dụ</th><th>Mô tả</th></tr>
+<tr><td>C</td><td>Không đề cập đến việc liên hệ qua số điện thoại hoặc nền tảng khác để biết thêm thông tin (ví dụ bán buôn/bán sỉ) ("Liên hệ tôi qua XYZ để mua sỉ", để lại số điện thoại)</td></tr>
+<tr><td>D</td><td>Không mời gọi nhấp vào link trong bio hoặc minh họa cách mua hàng từ website khác ("Nhấp vào link trong bio để xem thêm sản phẩm")</td></tr>
+</table>
+<div style="font-weight:600;margin:10px 0 4px">Cách tránh vi phạm</div>
+<ul>
+<li>Không đưa liên kết, tên người dùng, website hoặc thông tin liên hệ vào phần mô tả hoặc bình luận</li>
+<li>Không yêu cầu người xem nhấp vào liên kết nằm ngoài phạm vi video/LIVE</li>
+<li>Không chia sẻ tên người dùng, liên kết hoặc số điện thoại trong phần tiểu sử (bio)</li>
+<li>Tránh yêu cầu bất kỳ hình thức tương tác nào diễn ra ngoài TikTok Shop</li>
+<li>Tránh các liên kết ngụ ý có khuyến mãi/ưu đãi tốt hơn ở bên ngoài nền tảng</li>
+</ul>
+<div class="find ok"><b>Câu hỏi thường gặp:</b> "Tại sao tôi không thể thêm website riêng vào nội dung của mình?" — Vì TikTok Shop không thể đảm bảo tính hợp lệ hoặc bảo mật của các nền tảng khác, và ưu tiên mang đến môi trường mua sắm an toàn cho người dùng trên chính nền tảng.</div>
+<div class="small" style="margin-top:10px"><b>Nếu vi phạm:</b> nội dung/sản phẩm có thể bị gỡ, tài khoản chịu hành động thực thi; vi phạm lặp lại bị phạt nặng hơn. Kháng nghị qua ứng dụng TikTok nếu cho là nhầm lẫn.</div>`},
+
+{t:'33. Giới hạn đăng nội dung TikTok Shop',sev:'info',b:`<p><b>Giới hạn đăng nội dung (Content Posting Limit - CPL)</b> là giới hạn số lượng video/LIVE có gắn liên kết bán hàng mà một tài khoản được phép đăng trong một khoảng thời gian nhất định. Giới hạn có thể áp dụng cho video, LIVE, hoặc cả hai tùy theo loại vi phạm.</p>
+<p>Giới hạn được áp dụng khi tài khoản liên tục đăng nội dung chất lượng thấp — ví dụ nội dung không tương tác (chương 30) hoặc nội dung quảng cáo không liên quan/gây hiểu lầm (chương 31). Nếu đăng nội dung sau khi đã đạt giới hạn: video/LIVE vẫn được đăng bình thường nhưng <b>liên kết sản phẩm sẽ bị ẩn</b>. Giới hạn chỉ áp dụng cho nội dung có gắn TikTok Shop, không ảnh hưởng đến nội dung không gắn liên kết sản phẩm.</p>
+<div style="font-weight:600;margin:10px 0 4px">Khi nào giới hạn được áp dụng</div>
+<p>Nếu một tài khoản đăng từ <b>5 video trở lên</b> không tương tác hoặc gây hiểu lầm trong vòng <b>7 ngày</b> trước đó, tài khoản sẽ bị giới hạn: tối đa <b>7 video TikTok Shop</b> trong 7 ngày tiếp theo. Video gắn liên kết đăng thêm sau khi đạt giới hạn sẽ bị ẩn liên kết sản phẩm (LIVE không bị ảnh hưởng bởi giới hạn này). Giới hạn cũng áp dụng cho nội dung AIGC nếu chứa các vi phạm như quảng bá sản phẩm không nhất quán, tuyên bố chức năng/hiệu quả gây hiểu lầm, hoặc quảng bá lợi dụng sự thương cảm.</p>
+<div style="font-weight:600;margin:10px 0 4px">Cách kiểm tra vi phạm</div>
+<img src="policy-assets/ch33_1.jpg" alt="Vào mục Video > Quản lý trên ứng dụng TikTok Shop Seller để xem video" loading="lazy">
+<img src="policy-assets/ch33_2.jpg" alt="Tab Quản lý hiển thị nhãn 'Vi phạm chất lượng nội dung' trên video bị gắn cờ, và thông báo đã đạt giới hạn video có thể bán hàng trong 7 ngày" loading="lazy">
+<p>Vào <b>Video &gt; Quản lý</b> trong ứng dụng người bán/nhà sáng tạo để xem danh sách video. Video vi phạm sẽ hiển thị nhãn <b>"Vi phạm chất lượng nội dung"</b>. Khi đạt giới hạn, hệ thống sẽ thông báo "Bạn đã đạt giới hạn video có thể bán hàng — đã đăng đủ số video cho phép trong 7 ngày; có thể đăng video bán hàng tiếp khi chu kỳ mới bắt đầu."</p>
+<div style="font-weight:600;margin:10px 0 4px">Câu hỏi thường gặp</div>
+<div class="find ok"><b>Làm sao biết tài khoản đang bị giới hạn?</b> Kiểm tra mục Video &gt; Quản lý — video bị gắn cờ sẽ hiển thị nhãn vi phạm chất lượng nội dung, và hệ thống sẽ thông báo khi đạt giới hạn đăng.</div>
+<div class="find ok"><b>Làm sao để tránh bị giới hạn?</b> Đảm bảo nội dung luôn có sự tương tác thực sự (xem chương 30), quảng bá đúng sản phẩm đang bán (xem chương 31), tránh đăng lặp lại nội dung chất lượng thấp trong thời gian ngắn.</div>
+<div class="find ok"><b>Có thể khiếu nại nếu cho là bị giới hạn nhầm không?</b> Có thể kháng nghị qua ứng dụng TikTok nếu cho rằng video bị gắn cờ nhầm lẫn.</div>
+<div class="small" style="margin-top:10px"><b>Lưu ý:</b> giới hạn tự động được gỡ bỏ khi bắt đầu chu kỳ 7 ngày mới, miễn tài khoản không tiếp tục vi phạm.</div>`},
+
+{t:'34. Hướng dẫn về Công cụ Ủy quyền Nội dung',sev:'info',b:`<p>Chính sách Nội dung không nguyên bản (chương 29) giúp bảo vệ tác phẩm gốc của nhà sáng tạo. <b>Công cụ Ủy quyền Nội dung</b> cho phép:</p>
+<ul>
+<li>Yêu cầu ủy quyền để sử dụng nội dung của tài khoản khác</li>
+<li>Cấp quyền cho người khác sử dụng nội dung của bạn</li>
+<li>Phản hồi các yêu cầu ủy quyền gửi đến</li>
+<li>Xem trạng thái các yêu cầu đã gửi</li>
+<li>Yêu cầu ủy quyền trực tiếp từ một phiếu vi phạm đủ điều kiện</li>
+</ul>
+<div class="find warn"><b>Lưu ý:</b> quyền chỉ có thể được cấp từ tài khoản sở hữu nội dung gốc, xác định qua @tên người dùng TikTok. Việc chấp nhận/ủy quyền <b>không</b> miễn trừ trách nhiệm thực thi theo Chính sách Quyền sở hữu trí tuệ (IPR).</div>
+<div style="font-weight:600;margin:10px 0 4px">2 cách sử dụng công cụ</div>
+<p><b>1. Ủy quyền cấp tài khoản</b> (qua trang Điểm tình trạng nhà sáng tạo - CHR): cho phép tối đa <b>5 tài khoản</b> được ủy quyền sử dụng toàn bộ nội dung trong tối đa 1 năm.</p>
+<p><b>2. Ủy quyền cấp video</b> (qua phiếu vi phạm cụ thể): nếu được chủ sở hữu gốc chấp thuận, vi phạm liên quan có thể được gỡ bỏ.</p>
+<div style="font-weight:600;margin:10px 0 4px">3 điều cần lưu ý</div>
+<ul>
+<li>Mỗi yêu cầu cần có quyết định từ chủ sở hữu — không được tự động chấp thuận</li>
+<li>Giới hạn gửi tối thiểu 2 yêu cầu, có thể tăng theo doanh số; giới hạn hằng ngày là 3 yêu cầu cấp video + 3 yêu cầu cấp tài khoản</li>
+<li>Công bằng hệ thống: nếu cùng một chủ sở hữu từ chối 2 lần trong 30 ngày → không thể gửi lại yêu cầu đến người đó trong 30 ngày tiếp theo; nếu bị 5 chủ sở hữu khác nhau từ chối trong 30 ngày → không thể gửi yêu cầu mới trong 30 ngày</li>
+</ul>
+<div style="font-weight:600;margin:10px 0 4px">Cách yêu cầu ủy quyền từ phiếu vi phạm</div>
+<img src="policy-assets/ch34_1.jpg" alt="6 bước: mở phiếu vi phạm đủ điều kiện trong Điểm tình trạng nhà sáng tạo, chọn Yêu cầu khắc phục, nhập tên người dùng TikTok của chủ sở hữu gốc, chọn video sử dụng, thêm hình ảnh dẫn chứng (không bắt buộc), nhấn Gửi" loading="lazy">
+<ol>
+<li>Mở phiếu vi phạm đủ điều kiện trong mục "Điểm tình trạng nhà sáng tạo"</li>
+<li>Chọn "Yêu cầu khắc phục"</li>
+<li>Chọn nhà sáng tạo gốc bằng cách nhập tên người dùng TikTok của họ</li>
+<li>Xác nhận và đặt ngày hết hạn ủy quyền (tối đa 1 năm)</li>
+<li>Thêm hình ảnh dẫn chứng (tùy chọn, không bắt buộc)</li>
+<li>Nhấn "Gửi" — yêu cầu có hiệu lực trong 3 ngày; nếu chủ sở hữu không phản hồi, yêu cầu sẽ tự động bị từ chối</li>
+</ol>
+<p><b>Kết quả:</b> ✅ Được phê duyệt — vi phạm/hành động xử lý liên quan sẽ được gỡ bỏ. ❌ Bị từ chối — vi phạm vẫn còn nhưng có thể kháng nghị tùy thời hạn còn lại. ⏱ Không được xem xét trong 3 ngày — tự động bị từ chối.</p>
+<div style="font-weight:600;margin:10px 0 4px">Cách yêu cầu quyền từ trang Điểm tình trạng nhà sáng tạo (CHR)</div>
+<img src="policy-assets/ch34_2.jpg" alt="Vào Công cụ ủy quyền nội dung, chọn 'Xin phép sử dụng video', nhập tên chủ sở hữu video và chọn video áp dụng, thêm hình ảnh dẫn chứng rồi gửi yêu cầu" loading="lazy">
+<p>Vào mục "Công cụ ủy quyền nội dung" trong Thư viện chính sách → chọn "Xin phép sử dụng video" → nhập tên người dùng của chủ sở hữu video gốc → chọn video muốn sử dụng đến → thêm hình ảnh dẫn chứng (không bắt buộc) → nhấn Gửi để yêu cầu được chuyển đến chủ sở hữu video xem xét.</p>
+<div style="font-weight:600;margin:10px 0 4px">Cách cấp quyền cho người khác sử dụng nội dung của bạn</div>
+<img src="policy-assets/ch34_3.jpg" alt="Chọn 'Cho phép người khác sử dụng video của bạn', chọn nhà sáng tạo được cấp quyền và đặt ngày kết thúc ủy quyền (tối đa 5 nhà sáng tạo, tối đa 1 năm)" loading="lazy">
+<p>Trong "Công cụ ủy quyền nội dung" → chọn "Cho phép người khác sử dụng video của bạn" → chọn nhà sáng tạo muốn cấp quyền (tối đa 5 nhà sáng tạo) → đặt ngày kết thúc ủy quyền (tối đa 1 năm) → nhấn Gửi; quyền có hiệu lực sau khi được phê duyệt.</p>
+<div style="font-weight:600;margin:10px 0 4px">Cách xem xét yêu cầu đến</div>
+<img src="policy-assets/ch34_4.jpg" alt="Nhận thông báo yêu cầu sử dụng lại video qua Hộp thư TikTok Shop, xem chi tiết người yêu cầu, video và thời hạn, sau đó chọn Chấp nhận hoặc Từ chối" loading="lazy">
+<p>Yêu cầu sử dụng lại video từ người khác sẽ xuất hiện qua thông báo trong Hộp thư TikTok Shop. Mở thông báo để xem thông tin người yêu cầu, video liên quan và thời hạn sử dụng đề xuất, sau đó chọn <b>"Accept" (Chấp nhận)</b> hoặc <b>"Decline" (Từ chối)</b>.</p>
+<div style="font-weight:600;margin:10px 0 4px">Cách kiểm tra yêu cầu của bạn</div>
+<img src="policy-assets/ch34_5.jpg" alt="Vào biểu tượng Lịch sử trong Công cụ ủy quyền nội dung để xem Lịch sử ủy quyền nội dung, theo dõi trạng thái từng yêu cầu: Đã từ chối, Đã phê duyệt, Đã hết hạn" loading="lazy">
+<p>Nhấn vào biểu tượng "Lịch sử" (đồng hồ) trong "Công cụ ủy quyền nội dung" để mở "Lịch sử ủy quyền nội dung", xem danh sách các yêu cầu đã gửi và trạng thái tương ứng (Đã từ chối / Đã phê duyệt / Đã hết hạn), bấm vào từng mục để xem chi tiết.</p>
+<div style="font-weight:600;margin:10px 0 4px">Câu hỏi thường gặp</div>
+<div class="find ok"><b>Nên yêu cầu ủy quyền hay kháng nghị?</b> Yêu cầu ủy quyền khi người khác sở hữu nội dung gốc và bạn muốn có quyền đăng lại hợp pháp. Kháng nghị khi bạn chính là chủ sở hữu nội dung gốc nhưng bị xác định sai là "không nguyên bản", hoặc khi biện pháp xử lý bị áp dụng nhầm lẫn. Không thể thực hiện cả hai cùng lúc cho cùng một vi phạm.</div>
+<div class="small" style="margin-top:10px"><b>Điều quan trọng cần nhớ:</b> ủy quyền không chuyển quyền sở hữu nội dung; quyền được cấp không thể chuyển nhượng cho bên thứ ba khác; không được xóa/ẩn video khi yêu cầu đang trong quá trình xem xét; bị từ chối lặp lại có thể hạn chế khả năng gửi thêm yêu cầu; thời hạn ủy quyền tối đa là 1 năm.</div>`},
+
 ];
 function renderTTPolicy(q){
   q=(q||'').trim().toLowerCase();
@@ -4190,4 +4895,3 @@ async function ensureDemoUser(){
   ensureDemoUser().catch(()=>{});
 })();
 </script>
-</body></html>
