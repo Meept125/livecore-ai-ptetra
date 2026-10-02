@@ -1058,18 +1058,27 @@ function vidSeek(t){
 function vidRenderTranscript(){
   const box=$('#vidTranscriptList');if(!box)return;
   if(!vidSegments.length){box.innerHTML='<div class="empty">Không có nội dung.</div>';return}
-  box.innerHTML=vidSegments.map(s=>`<div class="row" style="align-items:flex-start;gap:8px;padding:4px 0"><button type="button" class="btn mono" data-seek="${s.start}" style="padding:2px 8px;font-size:12px;flex:none">${fmtSec(s.start)}</button><span>${esc(s.text)}</span></div>`).join('');
+  box.innerHTML=vidSegments.map(s=>`<div class="row" style="align-items:flex-start;gap:8px;padding:4px 0;flex-wrap:nowrap"><button type="button" class="btn mono" data-seek="${s.start}" style="padding:2px 8px;font-size:12px;flex:none">${fmtSec(s.start)}</button><span style="flex:1;min-width:0;padding-top:2px">${esc(s.text)}</span></div>`).join('');
   box.querySelectorAll('[data-seek]').forEach(b=>b.onclick=()=>vidSeek(Number(b.dataset.seek)));
 }
 function vidFillScriptAndShow(){
-  const joined=vidSegments.map(s=>s.text).join(' ').trim();
-  $('#scriptIn').value=($('#scriptIn').value.trim()?$('#scriptIn').value.trim()+'\n\n':'')+joined;
-  store.set('lc_script',$('#scriptIn').value);
+  /* THAY HẲN nội dung khung Kịch bản bằng bản chuyển (mỗi câu một dòng) — trước đây nối thêm vào
+     sau kịch bản cũ nên khung bị lẫn kịch bản mẫu + các lần chuyển trước, làm kết quả rà soát sai. */
+  const joined=vidSegments.map(s=>String(s.text||'').trim()).filter(Boolean).join('\n');
+  $('#scriptIn').value=joined;
+  store.set('lc_script',joined);
   vidRenderTranscript();
   if($('#vidResultBox'))$('#vidResultBox').hidden=false;
   if($('#vidProgressBox'))$('#vidProgressBox').hidden=true;
 }
-if($('#vidAnalyzeBtn'))$('#vidAnalyzeBtn').onclick=()=>{runScan();$('#scriptIn').scrollIntoView({behavior:'smooth',block:'center'});runVidAnalysis()};
+if($('#vidAnalyzeBtn'))$('#vidAnalyzeBtn').onclick=()=>{
+  /* Rà soát bản chuyển y như một kịch bản gõ tay: chép nguyên văn bản (người dùng có thể đã sửa
+     tay trong khung Kịch bản thì giữ bản đã sửa) rồi chạy đúng runScan() của nút "Rà soát ngay". */
+  if(!$('#scriptIn').value.trim()&&vidSegments.length)$('#scriptIn').value=vidSegments.map(s=>s.text).join('\n');
+  runScan();
+  ($('#scanOut')||$('#scriptIn')).scrollIntoView({behavior:'smooth',block:'start'});
+  runVidAnalysis();
+};
 
 /* ===== Phát hiện gộp theo từng câu: bộ luật (analyze() chạy trên TỪNG segment, nên tự có
    mốc thời gian thật) + AI đọc hiểu ngữ nghĩa (Gemini, qua sample.json() có sẵn — bắt các
