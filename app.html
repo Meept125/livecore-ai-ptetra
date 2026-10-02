@@ -1,9 +1,15 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LiveCore AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="styles.css">
-
+</head>
+<body>
 <div class="wrap" id="app" hidden>
   <div class="printonly" id="printHead"></div>
   <header class="top">
@@ -59,16 +65,46 @@
     <details class="box" id="vidBox" style="margin-bottom:14px">
       <summary style="cursor:pointer"><b>Chuyển video/audio thành văn bản để rà soát (AI)</b> <span class="muted small">(cần đăng nhập tài khoản đám mây)</span></summary>
       <div class="stack" style="margin-top:10px">
-        <p class="small muted" style="margin:0">Dùng cho video quay thử hoặc đoạn cần kiểm tra lại: AI nghe video/audio rồi chuyển lời nói thành văn bản, tự điền vào khung Kịch bản bên dưới và rà soát luôn. Chỉ tải lên hoặc dán link nội dung bạn có quyền sử dụng. Video/audio càng dài càng tốn hạn mức Gemini miễn phí dùng chung của cả nhóm, nên ưu tiên đoạn ngắn.</p>
+        <p class="small muted" style="margin:0">Dùng cho video quay thử hoặc đoạn cần kiểm tra lại. Quá trình gồm 2 bước tách biệt: (1) <b>chuyển thành văn bản có mốc thời gian</b> cho từng câu — bấm vào mốc thời gian sẽ nhảy video tới đúng đoạn đó; (2) sau khi xem lại bản chuyển, bấm “Phân tích nội dung” để rà soát — không tự rà soát ngay để bạn có thể sửa bản chuyển (nếu AI nghe sai) trước khi phân tích. File tải lên và link video <i>không phải YouTube</i> được xử lý bởi máy chủ riêng của nhóm (tách âm thanh + nhận dạng giọng nói, cho mốc thời gian chính xác); link YouTube vẫn dùng AI đọc trực tiếp như trước (mốc thời gian khi đó chỉ là ước lượng). Chỉ tải lên hoặc dán link nội dung bạn có quyền sử dụng.</p>
+        <details class="box" id="vidWorkerCfgBox" style="padding:10px 12px">
+          <summary style="cursor:pointer" class="small"><b>Cấu hình máy chủ xử lý video (transcription worker)</b></summary>
+          <div class="stack" style="margin-top:8px">
+            <p class="small muted" style="margin:0">Chỉ cần cho file tải lên và link video không phải YouTube. Người triển khai tự chạy máy chủ này (xem <code class="mono">transcription-worker/README.md</code> đi kèm) rồi dán địa chỉ vào đây — dán một lần, mọi người dùng chung bản web này đều dùng được.</p>
+            <div class="fld"><label for="vidWorkerUrl">Địa chỉ máy chủ (vd: https://ten-worker.onrender.com)</label>
+              <input type="url" id="vidWorkerUrl" placeholder="https://..." autocomplete="off" spellcheck="false">
+            </div>
+            <div class="row"><button type="button" class="btn" id="vidWorkerSave">Lưu địa chỉ</button><span class="small muted" id="vidWorkerMsg" role="status"></span></div>
+          </div>
+        </details>
         <div class="fld"><label for="vidFile">Tải file lên (tối đa 8MB, khoảng 30–60 giây)</label>
           <div class="row"><label class="btn" for="vidFile" style="cursor:pointer">Chọn file video/audio</label><input type="file" id="vidFile" accept="video/*,audio/*" hidden><span class="small muted" id="vidName"></span></div>
-          <div class="row"><button type="button" class="btn primary" id="vidTranscribeFile">Chuyển file thành văn bản &amp; rà soát</button></div>
+          <div class="row"><button type="button" class="btn primary" id="vidTranscribeFile">Chuyển file thành văn bản</button></div>
         </div>
         <div class="fld"><label for="vidUrl">Hoặc dán link video (YouTube, hoặc link video phát trực tiếp trên mạng)</label>
           <input type="url" id="vidUrl" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off" spellcheck="false">
-          <div class="row"><button type="button" class="btn primary" id="vidTranscribeUrl">Chuyển link thành văn bản &amp; rà soát</button></div>
+          <div class="row"><button type="button" class="btn primary" id="vidTranscribeUrl">Chuyển link thành văn bản</button></div>
         </div>
         <div class="small" id="vidMsg" role="status"></div>
+        <div class="stack" id="vidProgressBox" hidden>
+          <div class="bar"><div class="h"><span id="vidStageLabel">—</span><span id="vidStagePct" class="mono"></span></div><div class="t"><i id="vidBar" style="width:0%"></i></div></div>
+        </div>
+        <div class="stack" id="vidResultBox" hidden>
+          <div class="grid2">
+            <div class="stack">
+              <h4 style="margin:0">Video</h4>
+              <div id="vidPreviewWrap"></div>
+            </div>
+            <div class="stack">
+              <h4 style="margin:0">Bản chuyển văn bản (bấm mốc thời gian để nhảy video)</h4>
+              <div class="preview" id="vidTranscriptList" style="max-height:260px"></div>
+            </div>
+          </div>
+          <div class="row" style="align-items:center"><button type="button" class="btn primary" id="vidAnalyzeBtn">Phân tích nội dung</button><span class="small muted">Đã điền vào khung Kịch bản bên dưới — có thể sửa lại rồi bấm “Rà soát ngay” bất cứ lúc nào.</span></div>
+          <div class="stack" id="vidFindBox" hidden>
+            <h4 style="margin:0">Phát hiện theo từng câu <span class="muted small">(bộ luật từ khóa + AI đọc hiểu ngữ nghĩa, bấm mốc thời gian để nhảy video)</span></h4>
+            <div class="stack" id="vidFindOut"><div class="empty">Đang phân tích…</div></div>
+          </div>
+        </div>
       </div>
     </details>
     <div class="grid2">
@@ -958,29 +994,200 @@ $('#runScan').onclick=()=>runScan();
 $('#loadSample').onclick=()=>{$('#scriptIn').value=SAMPLE_SCRIPT;runScan()};
 $('#clearScript').onclick=()=>{$('#scriptIn').value='';$('#scanOut').innerHTML='<div class="empty">Bấm “Rà soát ngay” để xem kết quả.</div>'};
 
-/* ===== Chuyển video/audio thành văn bản (AI) rồi rà soát luôn ===== */
-const VID_MAX=8*1024*1024; /* ~8MB — giới hạn bản demo cho file tải lên, tránh chạm hạn mức Gemini miễn phí dùng chung */
+/* ===== Chuyển video/audio thành văn bản có mốc thời gian, TÁCH RIÊNG khỏi bước rà soát =====
+   Kiến trúc: file tải lên và link video KHÔNG phải YouTube đi qua một máy chủ Python riêng
+   (transcription worker: FFmpeg tách âm thanh + faster-whisper nhận dạng giọng nói, chạy
+   theo job nền có tiến độ thật — xem transcription-worker/README.md). Link YouTube vẫn đi
+   qua ai-bridge (Gemini đọc trực tiếp link công khai), vì tải video YouTube bằng tay nằm
+   trong vùng xám về điều khoản dịch vụ — đổi lại mốc thời gian của nhánh này chỉ là ước
+   lượng của AI, không chính xác bằng nhánh worker. Cả hai nhánh đều trả về cùng một dạng
+   {segments:[{start,end,text}]} nên phần hiển thị dưới đây dùng chung một đường xử lý. */
+const VID_MAX=8*1024*1024; /* ~8MB — khớp với giới hạn phía worker (MEDIA_RAW_CAP trong main.py) */
 const VID_PROMPT='Hãy nghe và chuyển toàn bộ lời nói trong video/audio này thành văn bản tiếng Việt đầy đủ, đúng chính tả, không thêm bình luận hay tóm tắt, không thêm nhãn người nói nếu không chắc.';
-function vidSay(t,c){const m=$('#vidMsg');if(m){m.className='small '+(c||'muted');m.textContent=t}}
-function insertTranscript(text){
-  text=(text||'').trim();
-  if(!text)return false;
-  $('#scriptIn').value=($('#scriptIn').value.trim()?$('#scriptIn').value.trim()+'\n\n':'')+text;
-  runScan();
-  return true;
+
+/* Địa chỉ máy chủ transcription worker — cấu hình riêng cho app.html (không cần ở login/register
+   nên không đặt trong shared.js). Mặc định trỏ vào http://localhost:8000: giống hệt cách
+   ws://localhost:8765 của bridge TikTok đã làm — mỗi người tự chạy worker trên MÁY CỦA MÌNH
+   (xem transcription_worker/README.md đi kèm tool TikTok LIVE Comment Collector), nên
+   "localhost" luôn đúng là máy của người đang mở trang, không cần cấu hình gì thêm. Khác với
+   SB_DEFAULT (một máy chủ Supabase DÙNG CHUNG cho cả nhóm), trường này KHÔNG khoá — mỗi người
+   có thể tự đổi sang một worker khác (vd worker dùng chung trên mạng) nếu muốn. */
+const WORKER_DEFAULT={url:'http://localhost:8000'};
+function workerCfg(){
+  const c=raw.get('lc_workercfg');
+  const url=String((c&&c.url!==undefined?c.url:WORKER_DEFAULT.url)||'').trim().replace(/\/+$/,'');
+  return /^https?:\/\//i.test(url)?{url}:null;
 }
-async function doTranscribe(opts,btn){
-  if(!sample)return vidSay(aiOffHint('Chưa có AI để chuyển video thành văn bản.'),'bad');
+if($('#vidWorkerUrl')){
+  const wc0=workerCfg();if(wc0)$('#vidWorkerUrl').value=wc0.url;
+  if($('#vidWorkerSave'))$('#vidWorkerSave').onclick=()=>{
+    const url=$('#vidWorkerUrl').value.trim().replace(/\/+$/,''),m=$('#vidWorkerMsg');
+    if(url&&!/^https?:\/\//i.test(url)){m.className='small bad';m.textContent='Địa chỉ cần bắt đầu bằng http:// hoặc https://';return}
+    raw.set('lc_workercfg',{url});
+    m.className='small '+(url?'ok':'muted');m.textContent=url?'Đã lưu địa chỉ máy chủ.':'Đã xoá địa chỉ máy chủ.';
+  };
+}
+function ytId(u){const m=String(u||'').match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);return m?m[1]:null}
+
+function vidSay(t,c){const m=$('#vidMsg');if(m){m.className='small '+(c||'muted');m.textContent=t}}
+const VID_STAGE_LABEL={queued:'Đang chờ máy chủ xử lý…',extracting_audio:'Đang tách âm thanh…',transcribing:'Đang nhận dạng giọng nói…',transcribed:'Xong'};
+function vidStage(label,pct){
+  if($('#vidProgressBox'))$('#vidProgressBox').hidden=false;
+  if($('#vidStageLabel'))$('#vidStageLabel').textContent=label;
+  if($('#vidStagePct'))$('#vidStagePct').textContent=(pct==null?'':Math.round(pct*100)+'%');
+  if($('#vidBar'))$('#vidBar').style.width=Math.round((pct||0)*100)+'%';
+}
+
+let vidSegments=[],vidObjUrl=null,vidKind=null,vidYtId=null,vidPollT=null;
+function vidResetPreview(){
+  if(vidObjUrl){URL.revokeObjectURL(vidObjUrl);vidObjUrl=null}
+  if(vidPollT){clearTimeout(vidPollT);vidPollT=null}
+  vidSegments=[];vidKind=null;vidYtId=null;
+  if($('#vidResultBox'))$('#vidResultBox').hidden=true;
+  if($('#vidProgressBox'))$('#vidProgressBox').hidden=true;
+}
+function vidSeek(t){
+  if(vidKind==='youtube'&&vidYtId){
+    const f=$('#vidYtFrame');
+    if(f)f.src=`https://www.youtube.com/embed/${vidYtId}?start=${Math.max(0,Math.floor(t))}&autoplay=1`;
+  }else{
+    const v=$('#vidPlayer');
+    if(v){v.currentTime=t;v.play().catch(()=>{})}
+  }
+}
+function vidRenderTranscript(){
+  const box=$('#vidTranscriptList');if(!box)return;
+  if(!vidSegments.length){box.innerHTML='<div class="empty">Không có nội dung.</div>';return}
+  box.innerHTML=vidSegments.map(s=>`<div class="row" style="align-items:flex-start;gap:8px;padding:4px 0"><button type="button" class="btn mono" data-seek="${s.start}" style="padding:2px 8px;font-size:12px;flex:none">${fmtSec(s.start)}</button><span>${esc(s.text)}</span></div>`).join('');
+  box.querySelectorAll('[data-seek]').forEach(b=>b.onclick=()=>vidSeek(Number(b.dataset.seek)));
+}
+function vidFillScriptAndShow(){
+  const joined=vidSegments.map(s=>s.text).join(' ').trim();
+  $('#scriptIn').value=($('#scriptIn').value.trim()?$('#scriptIn').value.trim()+'\n\n':'')+joined;
+  store.set('lc_script',$('#scriptIn').value);
+  vidRenderTranscript();
+  if($('#vidResultBox'))$('#vidResultBox').hidden=false;
+  if($('#vidProgressBox'))$('#vidProgressBox').hidden=true;
+}
+if($('#vidAnalyzeBtn'))$('#vidAnalyzeBtn').onclick=()=>{runScan();$('#scriptIn').scrollIntoView({behavior:'smooth',block:'center'});runVidAnalysis()};
+
+/* ===== Phát hiện gộp theo từng câu: bộ luật (analyze() chạy trên TỪNG segment, nên tự có
+   mốc thời gian thật) + AI đọc hiểu ngữ nghĩa (Gemini, qua sample.json() có sẵn — bắt các
+   câu nói vòng/ngụ ý mà bộ lọc từ khóa bỏ sót, vd "dùng thử một tuần là thấy khác liền"
+   ngụ ý công dụng mà không dùng từ cấm nào). Hai nguồn được gộp và sắp theo thời gian. ===== */
+const vidFindHTML=f=>`<div class="find ${f.sev}">
+    <div class="row" style="align-items:center;gap:8px;flex-wrap:wrap"><button type="button" class="btn mono" data-seek="${f.start}" style="padding:2px 8px;font-size:12px;flex:none">${f.sev==='bad'?'🔴':'🟡'} ${fmtSec(f.start)}</button><b>${esc(f.title)}</b>${f.src==='ai'?'<span class="tag" style="margin-left:auto">AI ngữ nghĩa</span>':''}</div>
+    <div class="mono small" style="margin-top:4px;color:var(--muted)">“${esc(f.phrase)}”</div>
+    <div class="fix">${esc(f.fix)}</div>
+    ${f.ref?`<div class="ref">Căn cứ: ${esc(f.ref.s)}</div>`:''}
+  </div>`;
+function renderVidFindings(list,note){
+  const box=$('#vidFindOut');if(!box)return;
+  const body=list.length?list.map(vidFindHTML).join(''):'<div class="find ok"><b>Không phát hiện vi phạm nào theo bộ luật.</b></div>';
+  box.innerHTML=body+(note?`<p class="small muted" style="margin-top:8px">${esc(note)}</p>`:'');
+  box.querySelectorAll('[data-seek]').forEach(b=>b.onclick=()=>vidSeek(Number(b.dataset.seek)));
+}
+async function runVidAnalysis(){
+  if(!vidSegments.length)return;
+  if($('#vidFindBox'))$('#vidFindBox').hidden=false;
+  if($('#vidFindOut'))$('#vidFindOut').innerHTML='<div class="empty">Đang phân tích…</div>';
+  /* 1) Bộ luật từ khóa — chạy TRÊN TỪNG CÂU (không phải cả đoạn gộp) để mỗi lỗi tự mang đúng
+     mốc thời gian của câu đó, không cần quy đổi từ vị trí ký tự sang thời gian. Đánh đổi: lỗi
+     vắt qua ranh giới 2 câu liền nhau có thể bị bỏ sót — chấp nhận được cho bản demo. */
+  const ruleFinds=[];
+  vidSegments.forEach(s=>{
+    if(!s.text||!s.text.trim())return;
+    try{
+      const a=analyze(s.text,{});
+      a.findings.forEach(f=>ruleFinds.push({sev:f.sev,title:f.title,fix:f.fix,ref:f.ref,phrase:f.phrase,start:s.start,end:s.end,src:'rule'}));
+    }catch(e){/* một câu lỗi không nên chặn các câu khác */}
+  });
+  renderVidFindings(ruleFinds.sort((a,b)=>a.start-b.start),'Đang chờ AI đọc hiểu ngữ nghĩa thêm…');
+  /* 2) AI đọc hiểu ngữ nghĩa — tái dùng sample.json() và profileText() đã có sẵn, không cần
+     sửa gì thêm ở ai-bridge. Chỉ gửi những sản phẩm thực sự được nhắc tới trong transcript
+     (dùng keysOf() giống analyze() đang làm) để prompt gọn và đúng ngữ cảnh. */
+  let aiFinds=[],note='';
+  if(sample&&sample.json){
+    try{
+      const joined=vidSegments.map(s=>s.text).join(' ').toLowerCase();
+      const mentioned=products.filter(p=>keysOf(p).some(k=>joined.includes(k)));
+      const ctx=mentioned.length?mentioned.map(profileText).join('\n\n'):'(Không khớp sản phẩm cụ thể nào trong Hồ sơ sản phẩm chủ.)';
+      const numbered=vidSegments.map((s,i)=>`[#${i}] ${s.text}`).join('\n');
+      const prompt=`Bạn là chuyên gia tuân thủ quảng cáo livestream tại Việt Nam. Dưới đây là bản chuyển lời nói của một video, chia theo câu, mỗi câu có số thứ tự [#n].\n\nTHÔNG TIN SẢN PHẨM THAM CHIẾU (hồ sơ chủ, coi là đúng):\n${ctx}\n\nBẢN CHUYỂN LỜI NÓI:\n${numbered}\n\nNhiệm vụ: tìm các câu có khả năng VI PHẠM NGẦM mà một bộ lọc từ khóa đơn giản sẽ bỏ sót — ví dụ ngụ ý công dụng y tế/giảm cân/chữa bệnh mà không dùng từ cấm rõ ràng (vd "dùng một tuần là thấy khác liền"), so sánh/chê bai gián tiếp, cam kết ngầm về kết quả, phóng đại không có căn cứ. Bỏ qua câu bình thường, không suy diễn quá mức. Trả lời DUY NHẤT một JSON hợp lệ dạng {"findings":[{"seg":số # của câu,"sev":"bad" hoặc "warn","title":"tên ngắn gọn loại vi phạm","why":"vì sao đây là vi phạm ngầm, 1 câu","suggest":"gợi ý cách nói an toàn hơn, 1 câu"}]}. Nếu không thấy câu nào đáng ngờ, trả {"findings":[]}.`;
+      const data=await sample.json(prompt,{modelTier:'default'});
+      const arr=Array.isArray(data&&data.findings)?data.findings:[];
+      arr.forEach(f=>{
+        const seg=vidSegments[Number(f.seg)];
+        if(!seg)return;
+        aiFinds.push({sev:f.sev==='bad'?'bad':'warn',title:String(f.title||'Nghi ngờ vi phạm ngầm').slice(0,120),fix:String(f.suggest||f.why||'Cân nhắc diễn đạt lại để tránh ngụ ý gây hiểu nhầm.').slice(0,260),phrase:seg.text.slice(0,140),start:seg.start,end:seg.end,src:'ai'});
+      });
+      note=aiFinds.length?'':'AI ngữ nghĩa không thấy thêm câu nào đáng ngờ ngoài bộ luật ở trên.';
+    }catch(e){note='Không gọi được AI để rà soát ngữ nghĩa sâu hơn: '+aiErr(e)+(aiErrDetail(e)?' ['+aiErrDetail(e)+']':'')+' — vẫn còn kết quả theo bộ luật từ khóa ở trên.'}
+  }else{
+    note=aiOffHint('Chưa có AI để rà soát ngữ nghĩa sâu hơn — chỉ hiện kết quả theo bộ luật từ khóa.');
+  }
+  const all=[...ruleFinds,...aiFinds].sort((a,b)=>a.start-b.start);
+  renderVidFindings(all,note);
+}
+
+/* ---- Nhánh YouTube: vẫn qua ai-bridge (Gemini đọc link YouTube công khai) ---- */
+async function vidTranscribeYouTube(url,btn){
+  if(!sample||!sample.media)return vidSay(aiOffHint('Chưa có AI để đọc link YouTube.'),'bad');
   let lim=null;try{lim=await sample.limits()}catch(e){}
-  if(!lim||!lim.media)return vidSay('AI hiện tại chưa hỗ trợ xử lý video/audio (cần đăng nhập tài khoản đám mây để dùng qua máy chủ của nhóm).','bad');
-  btn.disabled=true;vidSay('Đang chuyển thành văn bản… có thể mất 10–60 giây tuỳ độ dài.');
+  if(!lim||!lim.media)return vidSay('AI hiện tại chưa hỗ trợ đọc link YouTube (cần đăng nhập tài khoản đám mây để dùng qua máy chủ của nhóm).','bad');
+  vidResetPreview();vidKind='youtube';vidYtId=ytId(url);
+  btn.disabled=true;vidSay('Đang gửi cho AI đọc video YouTube… có thể mất 10–40 giây tuỳ độ dài.');vidStage('Đang gửi cho AI đọc video…',null);
   try{
-    const r=await sample.media({...opts,prompt:VID_PROMPT,modelTier:'default'});
-    if(!insertTranscript(r.text))vidSay('Không nhận được văn bản nào từ AI (có thể không có tiếng nói rõ, hoặc link không lấy được nội dung).','bad');
-    else vidSay('Đã chuyển xong và rà soát xong.','ok');
+    const r=await sample.media({url,prompt:VID_PROMPT,modelTier:'default'});
+    vidSegments=Array.isArray(r.segments)?r.segments:[];
+    if(!vidSegments.length){vidSay('Không nhận được văn bản nào (có thể video không có tiếng nói rõ, hoặc không đọc được link này).','bad');return}
+    if($('#vidPreviewWrap'))$('#vidPreviewWrap').innerHTML=vidYtId?`<iframe id="vidYtFrame" width="100%" height="220" style="border:0;border-radius:8px" src="https://www.youtube.com/embed/${vidYtId}" allow="autoplay" allowfullscreen title="Xem trước video YouTube"></iframe>`:'<p class="small muted">Không xem trước được link này.</p>';
+    vidSay('Đã chuyển xong. Mốc thời gian là ƯỚC LƯỢNG của AI (đọc YouTube không tách được âm thanh thật để đo chính xác), có thể lệch vài giây.','ok');
+    vidFillScriptAndShow();
   }catch(e){vidSay(aiErr(e)+(aiErrDetail(e)?' ['+aiErrDetail(e)+']':''),'bad')}
   finally{btn.disabled=false}
 }
+
+/* ---- Nhánh worker: file tải lên hoặc link video khác, theo mô hình job nền + polling ---- */
+async function vidPollJob(jobUrl,btn){
+  let token;try{token=await sbToken()}catch(e){vidSay('Phiên đăng nhập đã hết hạn, hãy đăng nhập lại rồi thử lại.','bad');btn.disabled=false;return}
+  let r,j=null;
+  try{r=await fetch(jobUrl,{headers:{Authorization:'Bearer '+token}});try{j=await r.json()}catch(e){}}
+  catch(e){vidSay('Mất kết nối tới máy chủ xử lý video khi đang theo dõi tiến độ (kiểm tra lại địa chỉ worker hoặc mạng).','bad');btn.disabled=false;return}
+  if(!r.ok){vidSay('Máy chủ xử lý video báo lỗi khi theo dõi tiến độ: '+((j&&(j.detail||j.message))||('HTTP '+r.status)),'bad');btn.disabled=false;return}
+  if(j.status==='failed'){vidSay('Lỗi xử lý video: '+(j.error||'không rõ nguyên nhân'),'bad');btn.disabled=false;return}
+  if(j.status==='transcribed'){
+    vidSegments=Array.isArray(j.segments)?j.segments:[];
+    vidStage('Xong',1);btn.disabled=false;
+    if(!vidSegments.length){vidSay('Không nhận được văn bản nào (có thể không có tiếng nói rõ trong đoạn này).','bad');return}
+    vidSay('Đã chuyển xong.','ok');vidFillScriptAndShow();return;
+  }
+  vidStage(VID_STAGE_LABEL[j.status]||j.status,j.progress);
+  vidPollT=setTimeout(()=>vidPollJob(jobUrl,btn),1500);
+}
+async function vidTranscribeViaWorker(opts,btn){
+  const wc=workerCfg();
+  if(!wc)return vidSay('Chưa cấu hình địa chỉ máy chủ xử lý video — mở phần "Cấu hình máy chủ xử lý video" phía trên và dán địa chỉ đã triển khai.','bad');
+  if(!sbCfg()||!sbSess)return vidSay('Cần đăng nhập tài khoản đám mây để dùng máy chủ xử lý video.','bad');
+  let token;try{token=await sbToken()}catch(e){return vidSay('Phiên đăng nhập đã hết hạn, hãy đăng nhập lại.','bad')}
+  vidResetPreview();vidKind=opts.file?'upload':'directurl';
+  btn.disabled=true;vidSay('Đang gửi lên máy chủ xử lý…');vidStage('Đang chờ máy chủ xử lý…',0);
+  try{
+    const fd=new FormData();
+    if(opts.file)fd.append('file',opts.file,opts.file.name||'video');else fd.append('url',opts.url);
+    const r=await fetch(wc.url+'/jobs',{method:'POST',headers:{Authorization:'Bearer '+token},body:fd});
+    let j=null;try{j=await r.json()}catch(e){}
+    if(!r.ok){vidSay('Máy chủ xử lý video từ chối: '+((j&&(j.detail||j.message))||('HTTP '+r.status)),'bad');btn.disabled=false;return}
+    if(opts.file){
+      vidObjUrl=URL.createObjectURL(opts.file);
+      if($('#vidPreviewWrap'))$('#vidPreviewWrap').innerHTML=`<video id="vidPlayer" controls style="width:100%;border-radius:8px;background:#000" src="${vidObjUrl}"></video>`;
+    }else{
+      if($('#vidPreviewWrap'))$('#vidPreviewWrap').innerHTML=`<video id="vidPlayer" controls style="width:100%;border-radius:8px;background:#000" src="${esc(opts.url)}"></video><p class="small muted" style="margin:4px 0 0">Xem trước lấy trực tiếp từ link gốc — có thể không phát được nếu trang nguồn chặn nhúng (vẫn không ảnh hưởng tới việc chuyển văn bản, worker tự tải link này riêng).</p>`;
+    }
+    vidPollJob(wc.url+'/jobs/'+j.job_id,btn);
+  }catch(e){vidSay('Không gửi được lên máy chủ xử lý video (lỗi mạng, CORS, hoặc địa chỉ worker sai): '+((e&&e.message)||''),'bad');btn.disabled=false}
+}
+
 if($('#vidFile'))$('#vidFile').onchange=()=>{
   const f=$('#vidFile').files[0];
   $('#vidName').textContent=f?`${f.name} (${(f.size/1024/1024).toFixed(1)} MB)`:'';
@@ -990,13 +1197,14 @@ if($('#vidTranscribeFile'))$('#vidTranscribeFile').onclick=()=>{
   const f=$('#vidFile').files[0];
   if(!f)return vidSay('Hãy chọn một file video hoặc audio trước.','bad');
   if(f.size>VID_MAX)return vidSay(`File ${(f.size/1024/1024).toFixed(1)}MB vượt giới hạn ${(VID_MAX/1024/1024)|0}MB của bản demo. Hãy quay đoạn ngắn hơn hoặc nén video trước.`,'bad');
-  doTranscribe({file:f},$('#vidTranscribeFile'));
+  vidTranscribeViaWorker({file:f},$('#vidTranscribeFile'));
 };
 if($('#vidTranscribeUrl'))$('#vidTranscribeUrl').onclick=()=>{
   const url=$('#vidUrl').value.trim();
   if(!url)return vidSay('Hãy dán một link video.','bad');
   if(!/^https?:\/\//i.test(url))return vidSay('Link cần bắt đầu bằng http:// hoặc https://','bad');
-  doTranscribe({url},$('#vidTranscribeUrl'));
+  if(ytId(url))vidTranscribeYouTube(url,$('#vidTranscribeUrl'));
+  else vidTranscribeViaWorker({url},$('#vidTranscribeUrl'));
 };
 
 function renderRulesPanel(){
@@ -1995,15 +2203,15 @@ function makeEdgeBridge(cfg){
     if(!j||j.data===undefined){const err=new Error('upstream_error');err.code='upstream_error';err.detail='ai-bridge trả về JSON nhưng thiếu trường "data" như hợp đồng mong đợi.';throw err}
     return j.data;
   };
-  /* Chuyển video/audio thành văn bản: dùng opts.file (một File do người dùng chọn) HOẶC
-     opts.url (link YouTube hoặc link video/audio trực tiếp trên mạng) — chỉ truyền một trong hai. */
+  /* Chuyển video thành văn bản: CHỈ còn nhận link YouTube (opts.url) — Gemini tự đọc video
+     công khai qua file_data.file_uri, không cần tải/gửi file. File tải lên và link video
+     khác giờ đi qua transcription worker riêng (FFmpeg+faster-whisper, xem app.html hàm
+     vidTranscribeViaWorker), KHÔNG còn qua đây nữa. Trả về {segments:[{start,end,text}]}
+     để cùng hợp đồng với worker — xem ai-bridge/index.ts mode "media". */
   fn.media=async(opts={})=>{
-    const body={mode:'media',prompt:opts.prompt,modelTier:opts.modelTier};
-    if(opts.file){const{data,mime}=await fileToB64(opts.file);body.media={data,mime}}
-    else if(opts.url){body.mediaUrl=opts.url}
-    else throw new Error('media_or_url_required');
-    const j=await callEdge(body);
-    return{text:(j&&j.text)||''};
+    if(!opts.url)throw new Error('url_required');
+    const j=await callEdge({mode:'media',mediaUrl:opts.url,prompt:opts.prompt,modelTier:opts.modelTier});
+    return{segments:Array.isArray(j&&j.segments)?j.segments:[]};
   };
   fn.limits=async()=>({images:true,text:true,media:true});
   return fn;
@@ -4242,3 +4450,5 @@ function renderHistory(){
   location.href='login.html';
 })();
 </script>
+</body>
+</html>

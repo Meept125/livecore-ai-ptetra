@@ -21,6 +21,12 @@
   --vip:#8B8DFF;--vip-ink:#0B0B2B;--vip-soft:#22244A;--gold:#F5B95A;--gold-soft:#33260E;--gold-line:#6B5220;--shadow:0 1px 2px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box}
+/* Ghi đè chủ ý: nhiều phần tử trong app (vd .stack) tự đặt display:flex, điều này vô tình
+   thắng mặc định [hidden]{display:none} của trình duyệt vì cùng mức độ ưu tiên (cả hai đều
+   là CSS tác giả/author một khi .stack được định nghĩa trong file này) — khiến thuộc tính/
+   thuộc tính IDL "hidden" (el.hidden=true) không còn ẩn được phần tử nữa. Quy tắc này đặt
+   lại đúng hành vi chuẩn cho MỌI phần tử có [hidden], bất kể class nào khác đi kèm. */
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font:400 14px/1.55 var(--font);padding-inline:16px;padding-block:0 40px}
 .wrap{max-width:1080px;margin:0 auto}
 h1,h2,h3,h4{margin:0;font-weight:600;text-wrap:balance}
