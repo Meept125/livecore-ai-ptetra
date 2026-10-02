@@ -56,6 +56,21 @@
   <!-- 2. SCRIPT -->
   <section class="panel" id="tab-script" role="tabpanel" aria-labelledby="t-script" hidden>
     <p class="lead">Dán kịch bản livestream. Hệ thống đối chiếu với Hồ sơ sản phẩm chủ và bộ quy tắc phát ngôn: sai giá, hết hạn khuyến mãi, từ ngữ tuyệt đối hóa, cam kết y tế, thiếu thông tin bắt buộc. Mức <b>Nghiêm trọng</b> là cảnh báo tự động vì sai rõ ràng; mức <b>Cảnh báo</b> là gợi ý xem lại, quyết định cuối vẫn ở bạn.</p>
+    <details class="box" id="vidBox" style="margin-bottom:14px">
+      <summary style="cursor:pointer"><b>Chuyển video/audio thành văn bản để rà soát (AI)</b> <span class="muted small">(cần đăng nhập tài khoản đám mây)</span></summary>
+      <div class="stack" style="margin-top:10px">
+        <p class="small muted" style="margin:0">Dùng cho video quay thử hoặc đoạn cần kiểm tra lại: AI nghe video/audio rồi chuyển lời nói thành văn bản, tự điền vào khung Kịch bản bên dưới và rà soát luôn. Chỉ tải lên hoặc dán link nội dung bạn có quyền sử dụng. Video/audio càng dài càng tốn hạn mức Gemini miễn phí dùng chung của cả nhóm, nên ưu tiên đoạn ngắn.</p>
+        <div class="fld"><label for="vidFile">Tải file lên (tối đa 8MB, khoảng 30–60 giây)</label>
+          <div class="row"><label class="btn" for="vidFile" style="cursor:pointer">Chọn file video/audio</label><input type="file" id="vidFile" accept="video/*,audio/*" hidden><span class="small muted" id="vidName"></span></div>
+          <div class="row"><button type="button" class="btn primary" id="vidTranscribeFile">Chuyển file thành văn bản &amp; rà soát</button></div>
+        </div>
+        <div class="fld"><label for="vidUrl">Hoặc dán link video (YouTube, hoặc link video phát trực tiếp trên mạng)</label>
+          <input type="url" id="vidUrl" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off" spellcheck="false">
+          <div class="row"><button type="button" class="btn primary" id="vidTranscribeUrl">Chuyển link thành văn bản &amp; rà soát</button></div>
+        </div>
+        <div class="small" id="vidMsg" role="status"></div>
+      </div>
+    </details>
     <div class="grid2">
       <div class="box stack">
         <h3>Kịch bản</h3>
@@ -942,6 +957,47 @@ function runScan(silent){
 $('#runScan').onclick=()=>runScan();
 $('#loadSample').onclick=()=>{$('#scriptIn').value=SAMPLE_SCRIPT;runScan()};
 $('#clearScript').onclick=()=>{$('#scriptIn').value='';$('#scanOut').innerHTML='<div class="empty">Bấm “Rà soát ngay” để xem kết quả.</div>'};
+
+/* ===== Chuyển video/audio thành văn bản (AI) rồi rà soát luôn ===== */
+const VID_MAX=8*1024*1024; /* ~8MB — giới hạn bản demo cho file tải lên, tránh chạm hạn mức Gemini miễn phí dùng chung */
+const VID_PROMPT='Hãy nghe và chuyển toàn bộ lời nói trong video/audio này thành văn bản tiếng Việt đầy đủ, đúng chính tả, không thêm bình luận hay tóm tắt, không thêm nhãn người nói nếu không chắc.';
+function vidSay(t,c){const m=$('#vidMsg');if(m){m.className='small '+(c||'muted');m.textContent=t}}
+function insertTranscript(text){
+  text=(text||'').trim();
+  if(!text)return false;
+  $('#scriptIn').value=($('#scriptIn').value.trim()?$('#scriptIn').value.trim()+'\n\n':'')+text;
+  runScan();
+  return true;
+}
+async function doTranscribe(opts,btn){
+  if(!sample)return vidSay(aiOffHint('Chưa có AI để chuyển video thành văn bản.'),'bad');
+  let lim=null;try{lim=await sample.limits()}catch(e){}
+  if(!lim||!lim.media)return vidSay('AI hiện tại chưa hỗ trợ xử lý video/audio (cần đăng nhập tài khoản đám mây để dùng qua máy chủ của nhóm).','bad');
+  btn.disabled=true;vidSay('Đang chuyển thành văn bản… có thể mất 10–60 giây tuỳ độ dài.');
+  try{
+    const r=await sample.media({...opts,prompt:VID_PROMPT,modelTier:'default'});
+    if(!insertTranscript(r.text))vidSay('Không nhận được văn bản nào từ AI (có thể không có tiếng nói rõ, hoặc link không lấy được nội dung).','bad');
+    else vidSay('Đã chuyển xong và rà soát xong.','ok');
+  }catch(e){vidSay(aiErr(e)+(aiErrDetail(e)?' ['+aiErrDetail(e)+']':''),'bad')}
+  finally{btn.disabled=false}
+}
+if($('#vidFile'))$('#vidFile').onchange=()=>{
+  const f=$('#vidFile').files[0];
+  $('#vidName').textContent=f?`${f.name} (${(f.size/1024/1024).toFixed(1)} MB)`:'';
+  vidSay('');
+};
+if($('#vidTranscribeFile'))$('#vidTranscribeFile').onclick=()=>{
+  const f=$('#vidFile').files[0];
+  if(!f)return vidSay('Hãy chọn một file video hoặc audio trước.','bad');
+  if(f.size>VID_MAX)return vidSay(`File ${(f.size/1024/1024).toFixed(1)}MB vượt giới hạn ${(VID_MAX/1024/1024)|0}MB của bản demo. Hãy quay đoạn ngắn hơn hoặc nén video trước.`,'bad');
+  doTranscribe({file:f},$('#vidTranscribeFile'));
+};
+if($('#vidTranscribeUrl'))$('#vidTranscribeUrl').onclick=()=>{
+  const url=$('#vidUrl').value.trim();
+  if(!url)return vidSay('Hãy dán một link video.','bad');
+  if(!/^https?:\/\//i.test(url))return vidSay('Link cần bắt đầu bằng http:// hoặc https://','bad');
+  doTranscribe({url},$('#vidTranscribeUrl'));
+};
 
 function renderRulesPanel(){
   const sevT={bad:['Nghiêm trọng','bad'],warn:['Cảnh báo','warn']};
@@ -1892,7 +1948,7 @@ function aiOffHint(base){
 function fileToB64(file){
   return new Promise((resolve,reject)=>{
     const r=new FileReader();
-    r.onload=()=>{const s=String(r.result||''),i=s.indexOf(',');resolve({data:i>=0?s.slice(i+1):s,mime:file.type||'image/jpeg'})};
+    r.onload=()=>{const s=String(r.result||''),i=s.indexOf(',');resolve({data:i>=0?s.slice(i+1):s,mime:file.type||'application/octet-stream'})};
     r.onerror=()=>reject(new Error('read_failed'));
     r.readAsDataURL(file);
   });
@@ -1939,7 +1995,17 @@ function makeEdgeBridge(cfg){
     if(!j||j.data===undefined){const err=new Error('upstream_error');err.code='upstream_error';err.detail='ai-bridge trả về JSON nhưng thiếu trường "data" như hợp đồng mong đợi.';throw err}
     return j.data;
   };
-  fn.limits=async()=>({images:true,text:true});
+  /* Chuyển video/audio thành văn bản: dùng opts.file (một File do người dùng chọn) HOẶC
+     opts.url (link YouTube hoặc link video/audio trực tiếp trên mạng) — chỉ truyền một trong hai. */
+  fn.media=async(opts={})=>{
+    const body={mode:'media',prompt:opts.prompt,modelTier:opts.modelTier};
+    if(opts.file){const{data,mime}=await fileToB64(opts.file);body.media={data,mime}}
+    else if(opts.url){body.mediaUrl=opts.url}
+    else throw new Error('media_or_url_required');
+    const j=await callEdge(body);
+    return{text:(j&&j.text)||''};
+  };
+  fn.limits=async()=>({images:true,text:true,media:true});
   return fn;
 }
 function tryEdgeAI(){
