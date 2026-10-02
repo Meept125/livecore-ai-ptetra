@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đăng nhập · LiveCore AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="auth" class="auth">
+  <div class="auth-pitch">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" aria-hidden="true" style="width:38px;height:38px"><circle cx="20" cy="20" r="17" fill="none" stroke="var(--accent)" stroke-width="2"/><circle cx="20" cy="20" r="6" fill="var(--accent)"/><circle cx="8" cy="14" r="2.5" fill="var(--accent)"/><circle cx="31" cy="9" r="2.5" fill="var(--accent)"/><circle cx="33" cy="27" r="2.5" fill="var(--accent)"/><path d="M20 20L8 14M20 20L31 9M20 20L33 27" stroke="var(--accent)" stroke-width="1.5"/></svg>
+      <div><b>LiveCore AI</b><span>Chuẩn an toàn – Vàng doanh số</span></div>
+    </div>
+    <h1>Một nguồn dữ liệu chuẩn cho mọi phiên livestream</h1>
+    <p class="muted" style="max-width:52ch">Đăng nhập để dùng thử. Mỗi tài khoản có hồ sơ sản phẩm, kịch bản và báo cáo riêng.</p>
+    <ul>
+      <li>Hồ sơ sản phẩm chủ: giá, khuyến mãi, chính sách chỉ ghi một chỗ, cả đội cùng dùng.</li>
+      <li>Rà soát kịch bản trước giờ live: sai giá, từ cấm, thiếu thông tin bắt buộc.</li>
+      <li>Live tập sự với AI đóng vai khách hàng, cùng báo cáo và AI Coach sau mỗi phiên.</li>
+    </ul>
+    <details class="box" id="howBox" style="margin-top:18px">
+      <summary style="cursor:pointer"><b>Vì sao cần LiveCore AI &amp; hệ thống hoạt động thế nào</b> <span class="muted small">(bấm để xem)</span></summary>
+      <div class="stack" style="margin-top:12px">
+        <p class="small" style="margin:0">Việt Nam có khoảng 2,5 triệu phiên livestream bán hàng mỗi tháng. Từ 01/7/2026, Luật Thương mại điện tử số 122/2025/QH15 (Điều 24) buộc người livestream không được cung cấp thông tin gian dối hoặc gây nhầm lẫn về công dụng, chất lượng, xuất xứ, giá cả — một câu nói sai có thể khiến streamer và nhãn hàng vướng trách nhiệm pháp lý như vụ "kẹo Kera" từng gây xôn xao. LiveCore AI giúp bạn nói đúng ngay từ đầu, thay vì phải sửa sai sau khi đã lên sóng.</p>
+        <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+          <div class="tile"><div class="small muted">1 · Đầu vào</div><b style="font-size:15px">Hồ sơ sản phẩm chủ</b><div class="small muted">Giá, khuyến mãi, chính sách, hỏi đáp — bạn khai một lần, cả đội dùng chung</div></div>
+          <div class="tile"><div class="small muted">2 · Xử lý</div><b style="font-size:15px">Đối chiếu &amp; gắn mức tin cậy</b><div class="small muted">So khớp lời nói với hồ sơ và bộ quy tắc có trích dẫn văn bản luật</div></div>
+          <div class="tile"><div class="small muted">3 · Đầu ra</div><b style="font-size:15px">Cảnh báo kèm nguồn</b><div class="small muted">Cảnh báo tức thì có căn cứ, câu nên nói thay thế, báo cáo sau live</div></div>
+          <div class="tile"><div class="small muted">4 · Phản hồi</div><b style="font-size:15px">AI Coach học từ lịch sử</b><div class="small muted">Lỗi lặp lại qua các phiên được chỉ rõ, để phiên sau tốt hơn</div></div>
+        </div>
+        <p class="small muted" style="margin:0">Hệ thống xử lý theo 3 mức tin cậy, không coi mọi cảnh báo như nhau: <b>tự động cảnh báo</b> khi sai rõ ràng (giá, hạn khuyến mãi, cụm từ bị cấm) · <b>gợi ý xem lại</b> khi có thể gây hiểu nhầm nhưng cần bạn tự quyết · <b>từ chối đoán bừa</b> khi hồ sơ chưa có đủ thông tin — hệ thống nói rõ "hồ sơ chưa có thông tin này" thay vì bịa câu trả lời.</p>
+      </div>
+    </details>
+  </div>
+  <div class="box stack" id="authCard">
+    <h2 style="margin:0 0 4px">Đăng nhập</h2>
+    <form id="loginForm" class="stack" novalidate>
+      <div class="fld"><label for="lg-email">Email</label><input type="email" id="lg-email" autocomplete="username" placeholder="ten@email.com"></div>
+      <div class="fld"><label for="lg-pw">Mật khẩu</label><div class="pw"><input type="password" id="lg-pw" autocomplete="current-password"><button type="button" class="pwt" data-for="lg-pw" aria-label="Hiện hoặc ẩn mật khẩu">Hiện</button></div></div>
+      <label class="row small muted" for="lg-remember" style="gap:6px"><input type="checkbox" id="lg-remember" checked> Ghi nhớ đăng nhập trên máy này</label>
+      <div class="err" id="lg-err" role="alert"></div>
+      <div class="small muted" id="cloudHint" hidden>Đã kết nối đám mây: đăng nhập bằng tài khoản đã đăng ký, dữ liệu sẽ theo bạn sang mọi máy.</div>
+      <button class="btn primary" type="submit" id="lg-submit">Đăng nhập</button>
+      <div class="hint">Tài khoản thử nhanh: <span class="mono">demo@livecore.vn</span> / <span class="mono">Demo@12345</span> <button type="button" class="btn" id="fillDemo" style="padding:2px 10px;margin-left:6px">Điền sẵn</button></div>
+    </form>
+    <div class="small muted" style="border-top:1px solid var(--line);padding-top:10px">Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a>.</div>
+    <details id="sbBox" class="small" style="border-top:1px solid var(--line);padding-top:10px">
+      <summary class="muted" style="cursor:pointer">Kết nối máy chủ (Supabase) <span class="tag" id="sbState">Lưu trên máy này</span></summary>
+      <div class="stack" style="margin-top:10px">
+        <div id="sbFixed" class="muted" hidden>Bản này đã được nối sẵn với máy chủ của nhóm. Tài khoản đăng ký ở đây dùng được trên mọi máy.</div>
+        <div id="sbForm" class="stack">
+          <div class="muted">Không bắt buộc. Dán địa chỉ dự án và khóa công khai (anon hoặc publishable) từ Supabase để tài khoản và dữ liệu được lưu trên đám mây thay vì trong trình duyệt. Không bao giờ dán khóa service_role hay secret.</div>
+          <div class="fld"><label for="sb-url">Project URL</label><input type="url" id="sb-url" placeholder="https://xxxx.supabase.co" autocomplete="off" spellcheck="false"></div>
+          <div class="fld"><label for="sb-key">Khóa anon / publishable</label><input type="text" id="sb-key" autocomplete="off" spellcheck="false"></div>
+          <div class="row"><button type="button" class="btn" id="sb-save">Lưu và kiểm tra</button><button type="button" class="btn" id="sb-clear">Xóa kết nối</button></div>
+        </div>
+        <div class="small muted" id="sb-msg" role="status"></div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+/* Nếu đã đăng nhập từ trước (còn phiên hợp lệ), chuyển thẳng vào app.html, không cần nhập lại. */
+(function redirectIfLoggedIn(){
+  const inSession=raw.get('lc_session','session'),inLocal=raw.get('lc_session');
+  const ss=inSession||inLocal;
+  if(ss&&users().find(x=>x.id===ss.uid)){location.href='app.html';return}
+  if(sbCfg()&&(raw.get('lc_sbsess','session')||raw.get('lc_sbsess'))){location.href='app.html';return}
+})();
+
+ensureDemoUser().catch(()=>{});
+wirePwToggles();
+wireSbBox();
+authMode();
+
+$('#fillDemo').onclick=()=>{$('#lg-email').value='demo@livecore.vn';$('#lg-pw').value='Demo@12345';$('#lg-err').textContent=''};
+
+$('#loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const err=m=>{$('#lg-err').textContent=m};
+  const g=loginGuard();
+  if(Date.now()<g.lockUntil)return err(`Nhập sai nhiều lần. Thử lại sau ${Math.ceil((g.lockUntil-Date.now())/1000)} giây.`);
+  const email=$('#lg-email').value.trim().toLowerCase(),pw=$('#lg-pw').value;
+  if(!email||!pw)return err('Nhập email và mật khẩu.');
+  const remember=$('#lg-remember').checked;
+  const btn=$('#lg-submit');btn.disabled=true;
+  try{
+    const u=users().find(x=>x.email===email);
+    if(!u&&sbCfg()){
+      try{
+        const ss=await sbSignIn(email,pw);
+        setLoginGuard({fails:0,lockUntil:0});err('');$('#lg-pw').value='';
+        /* Chỉ lưu phiên đăng nhập đám mây ở đây; app.html sẽ tự lấy hồ sơ và dữ liệu khi tải trang. */
+        sbSess=ss;sbSess.remember=remember;saveSbSess();
+        location.href='app.html';
+      }catch(x){
+        if(x&&x.code==='http'&&x.status===400){
+          const n=g.fails+1;
+          if(n>=5){setLoginGuard({fails:0,lockUntil:Date.now()+30000});return err('Nhập sai 5 lần. Đăng nhập tạm khóa 30 giây.')}
+          setLoginGuard({fails:n,lockUntil:0});
+        }
+        err(sbMsg(x));
+      }
+      return;
+    }
+    const h=await hashPw(pw,u?u.salt:newSalt());
+    if(!u||!safeEq(h,u.hash)){
+      const n=g.fails+1;
+      if(n>=5){setLoginGuard({fails:0,lockUntil:Date.now()+30000});return err('Nhập sai 5 lần. Đăng nhập tạm khóa 30 giây.')}
+      setLoginGuard({fails:n,lockUntil:0});
+      return err('Email hoặc mật khẩu chưa đúng.');
+    }
+    setLoginGuard({fails:0,lockUntil:0});err('');$('#lg-pw').value='';
+    if(!PLANS[u.plan]){u.plan='basic';const all=users(),i=all.findIndex(x=>x.id===u.id);if(i>-1){all[i]=u;saveUsers(all)}}
+    raw.del('lc_session');
+    raw.set('lc_session',{uid:u.id},remember?'local':'session');
+    location.href='app.html';
+  }finally{btn.disabled=false}
+});
+</script>
+</body>
+</html>

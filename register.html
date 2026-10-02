@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đăng ký · LiveCore AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="auth" class="auth">
+  <div class="auth-pitch">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" aria-hidden="true" style="width:38px;height:38px"><circle cx="20" cy="20" r="17" fill="none" stroke="var(--accent)" stroke-width="2"/><circle cx="20" cy="20" r="6" fill="var(--accent)"/><circle cx="8" cy="14" r="2.5" fill="var(--accent)"/><circle cx="31" cy="9" r="2.5" fill="var(--accent)"/><circle cx="33" cy="27" r="2.5" fill="var(--accent)"/><path d="M20 20L8 14M20 20L31 9M20 20L33 27" stroke="var(--accent)" stroke-width="1.5"/></svg>
+      <div><b>LiveCore AI</b><span>Chuẩn an toàn – Vàng doanh số</span></div>
+    </div>
+    <h1>Một nguồn dữ liệu chuẩn cho mọi phiên livestream</h1>
+    <p class="muted" style="max-width:52ch">Tạo tài khoản dùng thử. Mỗi tài khoản có hồ sơ sản phẩm, kịch bản và báo cáo riêng.</p>
+    <ul>
+      <li>Hồ sơ sản phẩm chủ: giá, khuyến mãi, chính sách chỉ ghi một chỗ, cả đội cùng dùng.</li>
+      <li>Rà soát kịch bản trước giờ live: sai giá, từ cấm, thiếu thông tin bắt buộc.</li>
+      <li>Live tập sự với AI đóng vai khách hàng, cùng báo cáo và AI Coach sau mỗi phiên.</li>
+    </ul>
+    <details class="box" id="howBox" style="margin-top:18px">
+      <summary style="cursor:pointer"><b>Vì sao cần LiveCore AI &amp; hệ thống hoạt động thế nào</b> <span class="muted small">(bấm để xem)</span></summary>
+      <div class="stack" style="margin-top:12px">
+        <p class="small" style="margin:0">Việt Nam có khoảng 2,5 triệu phiên livestream bán hàng mỗi tháng. Từ 01/7/2026, Luật Thương mại điện tử số 122/2025/QH15 (Điều 24) buộc người livestream không được cung cấp thông tin gian dối hoặc gây nhầm lẫn về công dụng, chất lượng, xuất xứ, giá cả — một câu nói sai có thể khiến streamer và nhãn hàng vướng trách nhiệm pháp lý như vụ "kẹo Kera" từng gây xôn xao. LiveCore AI giúp bạn nói đúng ngay từ đầu, thay vì phải sửa sai sau khi đã lên sóng.</p>
+        <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+          <div class="tile"><div class="small muted">1 · Đầu vào</div><b style="font-size:15px">Hồ sơ sản phẩm chủ</b><div class="small muted">Giá, khuyến mãi, chính sách, hỏi đáp — bạn khai một lần, cả đội dùng chung</div></div>
+          <div class="tile"><div class="small muted">2 · Xử lý</div><b style="font-size:15px">Đối chiếu &amp; gắn mức tin cậy</b><div class="small muted">So khớp lời nói với hồ sơ và bộ quy tắc có trích dẫn văn bản luật</div></div>
+          <div class="tile"><div class="small muted">3 · Đầu ra</div><b style="font-size:15px">Cảnh báo kèm nguồn</b><div class="small muted">Cảnh báo tức thì có căn cứ, câu nên nói thay thế, báo cáo sau live</div></div>
+          <div class="tile"><div class="small muted">4 · Phản hồi</div><b style="font-size:15px">AI Coach học từ lịch sử</b><div class="small muted">Lỗi lặp lại qua các phiên được chỉ rõ, để phiên sau tốt hơn</div></div>
+        </div>
+        <p class="small muted" style="margin:0">Hệ thống xử lý theo 3 mức tin cậy, không coi mọi cảnh báo như nhau: <b>tự động cảnh báo</b> khi sai rõ ràng (giá, hạn khuyến mãi, cụm từ bị cấm) · <b>gợi ý xem lại</b> khi có thể gây hiểu nhầm nhưng cần bạn tự quyết · <b>từ chối đoán bừa</b> khi hồ sơ chưa có đủ thông tin — hệ thống nói rõ "hồ sơ chưa có thông tin này" thay vì bịa câu trả lời.</p>
+      </div>
+    </details>
+  </div>
+  <div class="box stack" id="authCard">
+    <h2 style="margin:0 0 4px">Đăng ký</h2>
+    <form id="regForm" class="stack" novalidate>
+      <div class="fld"><label for="rg-name">Họ và tên</label><input type="text" id="rg-name" autocomplete="name"></div>
+      <div class="fld"><label for="rg-email">Email</label><input type="email" id="rg-email" autocomplete="email" placeholder="ten@email.com"></div>
+      <div class="fld"><label for="rg-pw">Mật khẩu (ít nhất 8 ký tự, có chữ và số)</label><div class="pw"><input type="password" id="rg-pw" autocomplete="new-password"><button type="button" class="pwt" data-for="rg-pw" aria-label="Hiện hoặc ẩn mật khẩu">Hiện</button></div></div>
+      <div class="fld"><label for="rg-pw2">Nhập lại mật khẩu</label><input type="password" id="rg-pw2" autocomplete="new-password"></div>
+      <fieldset class="plans" style="border:0;padding:0;margin:0"><legend class="small muted" style="padding:0;margin-bottom:6px;font-weight:500">Chọn gói dùng thử (bản demo, không thu phí)</legend>
+        <label class="plan" for="pl-basic"><input type="radio" name="plan" id="pl-basic" value="basic" checked><div><b>Cơ bản (Cá nhân) · 249.000đ/tháng</b><span>30 Hồ sơ Sản phẩm Chủ, 20 giờ giám sát, Live tập sự 20 phiên/6 dạng khách, Báo cáo 4 tiêu chí</span></div></label>
+        <label class="plan" for="pl-pro"><input type="radio" name="plan" id="pl-pro" value="pro"><div><b>Chuyên nghiệp (Cá nhân) · 699.000đ/tháng</b><span>200 Hồ sơ Sản phẩm Chủ, 80 giờ giám sát, Live tập sự 80 phiên/đủ 10 dạng khách, Báo cáo đủ 10 tiêu chí</span></div></label>
+        <label class="plan" for="pl-biz"><input type="radio" name="plan" id="pl-biz" value="business"><div><b>Doanh nghiệp · 2.999.000đ/tháng</b><span>1000 Hồ sơ Sản phẩm Chủ dùng chung, 1 Quản trị viên + 10 tài khoản phân quyền, Báo cáo tổng hợp theo đội ngũ</span></div></label>
+      </fieldset>
+      <div class="row small muted" style="gap:6px;flex-wrap:nowrap;align-items:flex-start"><input type="checkbox" id="rg-terms" style="margin-top:3px;flex:none"><label id="rg-terms-l" for="rg-terms">Mình hiểu đây là bản demo: tài khoản chỉ lưu trong trình duyệt này, không dùng mật khẩu thật của các dịch vụ khác.</label></div>
+      <div class="err" id="rg-err" role="alert"></div><div class="okmsg" id="rg-ok" role="status"></div>
+      <button class="btn primary" type="submit" id="rg-submit">Tạo tài khoản</button>
+    </form>
+    <div class="small muted" style="border-top:1px solid var(--line);padding-top:10px">Đã có tài khoản? <a href="login.html">Đăng nhập</a>.</div>
+    <details id="sbBox" class="small" style="border-top:1px solid var(--line);padding-top:10px">
+      <summary class="muted" style="cursor:pointer">Kết nối máy chủ (Supabase) <span class="tag" id="sbState">Lưu trên máy này</span></summary>
+      <div class="stack" style="margin-top:10px">
+        <div id="sbFixed" class="muted" hidden>Bản này đã được nối sẵn với máy chủ của nhóm. Tài khoản đăng ký ở đây dùng được trên mọi máy.</div>
+        <div id="sbForm" class="stack">
+          <div class="muted">Không bắt buộc. Dán địa chỉ dự án và khóa công khai (anon hoặc publishable) từ Supabase để tài khoản và dữ liệu được lưu trên đám mây thay vì trong trình duyệt. Không bao giờ dán khóa service_role hay secret.</div>
+          <div class="fld"><label for="sb-url">Project URL</label><input type="url" id="sb-url" placeholder="https://xxxx.supabase.co" autocomplete="off" spellcheck="false"></div>
+          <div class="fld"><label for="sb-key">Khóa anon / publishable</label><input type="text" id="sb-key" autocomplete="off" spellcheck="false"></div>
+          <div class="row"><button type="button" class="btn" id="sb-save">Lưu và kiểm tra</button><button type="button" class="btn" id="sb-clear">Xóa kết nối</button></div>
+        </div>
+        <div class="small muted" id="sb-msg" role="status"></div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+/* Nếu đã đăng nhập từ trước (còn phiên hợp lệ), chuyển thẳng vào app.html. */
+(function redirectIfLoggedIn(){
+  const inSession=raw.get('lc_session','session'),inLocal=raw.get('lc_session');
+  const ss=inSession||inLocal;
+  if(ss&&users().find(x=>x.id===ss.uid)){location.href='app.html';return}
+  if(sbCfg()&&(raw.get('lc_sbsess','session')||raw.get('lc_sbsess'))){location.href='app.html';return}
+})();
+
+wirePwToggles();
+wireSbBox();
+authMode();
+
+$('#regForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const err=m=>{$('#rg-err').textContent=m;$('#rg-ok').textContent=''};
+  const name=$('#rg-name').value.trim(),email=$('#rg-email').value.trim().toLowerCase(),pw=$('#rg-pw').value,pw2=$('#rg-pw2').value;
+  const plan=(document.querySelector('input[name=plan]:checked')||{}).value||'basic';
+  if(name.length<2)return err('Nhập họ và tên (ít nhất 2 ký tự).');
+  if(!validEmail(email))return err('Email chưa đúng định dạng, ví dụ ten@email.com.');
+  if(!validPw(pw))return err(PW_MSG);
+  if(pw!==pw2)return err('Hai mật khẩu chưa giống nhau.');
+  if(!$('#rg-terms').checked)return err('Hãy tick xác nhận đã hiểu đây là bản demo.');
+  if(!sbCfg()&&users().some(u=>u.email===email))return err('Email này đã có tài khoản. Hãy chuyển sang Đăng nhập.');
+  err('');
+  const btn=$('#rg-submit');btn.disabled=true;btn.textContent='Đang tạo…';
+  try{
+    if(sbCfg()){
+      try{
+        const ss=await sbSignUp(email,pw,name,plan);
+        ['#rg-name','#rg-email','#rg-pw','#rg-pw2'].forEach(x=>$(x).value='');$('#rg-terms').checked=false;
+        if(ss){
+          /* Chỉ lưu phiên; app.html sẽ tự tạo hồ sơ và tải dữ liệu khi mở trang. */
+          sbSess=ss;sbSess.remember=true;saveSbSess();
+          location.href='app.html';
+        }else{
+          $('#rg-ok').textContent='Đã tạo tài khoản. Máy chủ yêu cầu xác nhận email: mở thư gửi tới '+email+' (kể cả thư rác), bấm liên kết xác nhận rồi quay lại trang Đăng nhập.';
+        }
+      }catch(x){err(sbMsg(x))}
+      return;
+    }
+    const salt=newSalt();
+    const u={id:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,email,plan,salt,hash:await hashPw(pw,salt),created:Date.now()};
+    saveUsers([...users(),u]);
+    ['#rg-name','#rg-email','#rg-pw','#rg-pw2'].forEach(x=>$(x).value='');$('#rg-terms').checked=false;
+    raw.del('lc_session');
+    raw.set('lc_session',{uid:u.id},true);
+    location.href='app.html';
+  }finally{btn.disabled=false;btn.textContent='Tạo tài khoản'}
+});
+</script>
+</body>
+</html>
