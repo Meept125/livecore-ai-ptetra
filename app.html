@@ -99,7 +99,7 @@
               <div class="preview" id="vidTranscriptList" style="max-height:260px"></div>
             </div>
           </div>
-          <div class="row" style="align-items:center"><button type="button" class="btn primary" id="vidAnalyzeBtn">Phân tích nội dung</button><span class="small muted">Đã điền vào khung Kịch bản bên dưới — có thể sửa lại rồi bấm “Rà soát ngay” bất cứ lúc nào.</span></div>
+          <div class="row" style="align-items:center"><button type="button" class="btn primary" id="vidAnalyzeBtn">Phân tích nội dung</button><button type="button" class="btn" id="vidCopyBtn">Sao chép văn bản</button><span class="small muted" id="vidCopyMsg" role="status">Bấm “Phân tích nội dung” sẽ tự dán toàn bộ văn bản (không kèm mốc thời gian) xuống khung Kịch bản rồi rà soát.</span></div>
           <div class="stack" id="vidFindBox" hidden>
             <h4 style="margin:0">Phát hiện theo từng câu <span class="muted small">(bộ luật từ khóa + AI đọc hiểu ngữ nghĩa, bấm mốc thời gian để nhảy video)</span></h4>
             <div class="stack" id="vidFindOut"><div class="empty">Đang phân tích…</div></div>
@@ -1071,10 +1071,21 @@ function vidFillScriptAndShow(){
   if($('#vidResultBox'))$('#vidResultBox').hidden=false;
   if($('#vidProgressBox'))$('#vidProgressBox').hidden=true;
 }
+function vidPlainText(){return vidSegments.map(s=>String(s.text||'').trim()).filter(Boolean).join('\n')}
+if($('#vidCopyBtn'))$('#vidCopyBtn').onclick=async()=>{
+  const t=vidPlainText(),m=$('#vidCopyMsg');
+  if(!t){m.className='small bad';m.textContent='Chưa có văn bản để sao chép.';return}
+  try{await navigator.clipboard.writeText(t)}
+  catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(_){}ta.remove()}
+  m.className='small ok';m.textContent='Đã sao chép toàn bộ văn bản ('+t.split('\n').length+' câu).';
+};
 if($('#vidAnalyzeBtn'))$('#vidAnalyzeBtn').onclick=()=>{
   /* Rà soát bản chuyển y như một kịch bản gõ tay: chép nguyên văn bản (người dùng có thể đã sửa
      tay trong khung Kịch bản thì giữ bản đã sửa) rồi chạy đúng runScan() của nút "Rà soát ngay". */
-  if(!$('#scriptIn').value.trim()&&vidSegments.length)$('#scriptIn').value=vidSegments.map(s=>s.text).join('\n');
+  /* Luôn dán LẠI toàn bộ bản chuyển (chỉ chữ, không kèm mốc thời gian) đè lên khung Kịch bản,
+     để kết quả rà soát đúng là nội dung video — không lẫn kịch bản cũ hay chữ dán tay. */
+  const t=vidPlainText();
+  if(t){$('#scriptIn').value=t;store.set('lc_script',t)}
   runScan();
   ($('#scanOut')||$('#scriptIn')).scrollIntoView({behavior:'smooth',block:'start'});
   runVidAnalysis();
